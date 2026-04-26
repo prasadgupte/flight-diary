@@ -1,0 +1,226 @@
+/* =============================================
+   Prasad Gupte — Design Tokens
+   Colors + Typography
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* === PRIMARY PALETTE === */
+  --ink:           #1E1B2E;   /* foundation, slide bg, headers */
+  --charcoal:      #2D2A3E;   /* body text, landmass on globe */
+  --mid-gray:      #6E6A82;   /* secondary text, captions */
+  --light-gray:    #E9E5F5;   /* dividers, subtle borders */
+  --warm-bg:       #F8F7FF;   /* light section backgrounds */
+  --off-white:     #FAFAFA;   /* page bg on dark, foreground on dark */
+
+  /* === ACCENT COLORS === */
+  --electric:      #6C5CE7;   /* primary accent — labels, links */
+  --electric-light:#A29BFE;   /* electric on dark */
+  --coral:         #FF6B6B;   /* heat, leisure, statements */
+  --coral-soft:    #FF8E8E;
+  --mint:          #00D2A0;   /* growth, positive, stats */
+  --mint-soft:     #55EFC4;
+  --sun:           #FDCB6E;   /* warmth, work flights, callouts */
+  --sun-soft:      #FFEAA7;
+  --sky:           #74B9FF;   /* cool, supporting data */
+  --blush:         #FD79A8;   /* tertiary, rare */
+
+  /* === SEMANTIC FOREGROUND === */
+  --fg-1:          var(--ink);
+  --fg-2:          var(--charcoal);
+  --fg-3:          var(--mid-gray);
+  --fg-on-dark-1:  var(--off-white);
+  --fg-on-dark-2:  #A9A6BB;
+  --fg-on-dark-3:  var(--mid-gray);
+
+  /* === SEMANTIC BACKGROUND === */
+  --bg-page:       var(--off-white);
+  --bg-warm:       var(--warm-bg);
+  --bg-dark:       var(--ink);
+  --bg-card:       #ffffff;
+  --bg-card-dark:  rgba(30, 27, 46, 0.85);
+
+  /* === BORDERS === */
+  --border-light:  var(--light-gray);
+  --border-dark:   #3D3A4E;
+  --border-on-dark:rgba(255,255,255,0.08);
+
+  /* === SLIDE BACKGROUND GRADIENTS === */
+  --bg-electric-wash: linear-gradient(135deg, #6C5CE7 0%, #3D35A0 30%, #1E1B2E 100%);
+  --bg-mint-shift:    linear-gradient(160deg, #1E1B2E 0%, #0D2F2B 60%, #143D38 100%);
+  --bg-aurora:        linear-gradient(160deg, #1E1B2E 0%, #2D2560 35%, #1E3A5F 65%, #0D4A3B 100%);
+  --bg-mesh-electric: radial-gradient(ellipse at 25% 25%, rgba(108,92,231,0.2) 0%, transparent 50%),
+                      radial-gradient(ellipse at 75% 70%, rgba(255,107,107,0.15) 0%, transparent 45%),
+                      #1E1B2E;
+  --bg-mint-bold:     #EAEFE6;
+  --bg-coral-tinted:  linear-gradient(170deg, #F3ECEE 0%, #F0EAEB 100%);
+
+  /* === SIGNATURE GRADIENT BAR === */
+  --gradient-signature: linear-gradient(90deg, var(--electric), var(--coral), var(--mint), var(--sun));
+
+  /* === FLIGHT ARCS === */
+  --arc-leisure: linear-gradient(90deg, var(--electric), var(--coral));
+  --arc-work:    linear-gradient(90deg, var(--electric), var(--sun));
+
+  /* === TYPOGRAPHY FAMILIES === */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* === SEMANTIC TYPE === */
+  --type-display-size:   64px;
+  --type-display-weight: 700;
+  --type-display-track:  -2px;
+
+  --type-h1-size:        40px;
+  --type-h1-weight:      700;
+  --type-h1-track:       -1px;
+
+  --type-h2-size:        24px;
+  --type-h2-weight:      600;
+
+  --type-h3-size:        20px;
+  --type-h3-weight:      600;
+
+  --type-body-size:      16px;
+  --type-body-weight:    400;
+  --type-body-line:      1.7;
+
+  --type-caption-size:   13px;
+  --type-mono-label:     12px;
+
+  /* === SPACING SCALE === */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 56px;
+  --space-10: 80px;
+
+  /* === RADII === */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* === SHADOWS === */
+  --shadow-card:  0 4px 20px rgba(0,0,0,0.10);
+  --shadow-soft:  0 2px 8px rgba(30,27,46,0.06);
+  --shadow-glow-mint: 0 0 0 4px rgba(0,210,160,0.18), 0 0 20px rgba(0,210,160,0.35);
+  --shadow-glow-electric: 0 0 0 4px rgba(108,92,231,0.18), 0 0 24px rgba(108,92,231,0.4);
+}
+
+/* =============================================
+   Semantic type classes
+   ============================================= */
+
+.t-display {
+  font-family: var(--font-display);
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  letter-spacing: var(--type-display-track);
+  line-height: 1.05;
+  color: var(--fg-1);
+}
+
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--type-h1-size);
+  font-weight: var(--type-h1-weight);
+  letter-spacing: var(--type-h1-track);
+  line-height: 1.15;
+  color: var(--fg-1);
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--type-h2-size);
+  font-weight: var(--type-h2-weight);
+  color: var(--fg-1);
+  line-height: 1.25;
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: var(--type-h3-size);
+  font-weight: var(--type-h3-weight);
+  color: var(--fg-1);
+}
+
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line);
+  color: var(--fg-2);
+}
+
+.t-caption {
+  font-family: var(--font-body);
+  font-size: var(--type-caption-size);
+  color: var(--fg-3);
+  line-height: 1.6;
+}
+
+.t-mono-label {
+  font-family: var(--font-mono);
+  font-size: var(--type-mono-label);
+  font-weight: 500;
+  color: var(--electric);
+  letter-spacing: 0;
+}
+
+.t-mono-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--fg-3);
+}
+
+.t-stat {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--ink);
+}
+
+/* === REUSABLE PRIMITIVES === */
+.gradient-bar {
+  height: 4px;
+  background: var(--gradient-signature);
+  border-radius: 2px;
+}
+
+.pill-mono {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(108,92,231,0.10);
+  color: var(--electric);
+  border: 1px solid rgba(108,92,231,0.20);
+}
+
+.card-light {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.card-dark {
+  background: var(--bg-card-dark);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  color: var(--fg-on-dark-1);
+}

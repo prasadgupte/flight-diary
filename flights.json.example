@@ -1,0 +1,6 @@
+{
+  "users": {
+    "Alice": "path/to/alice_flights.csv",
+    "Bob": "../bob_tracker.csv"
+  }
+}
