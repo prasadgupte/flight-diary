@@ -22,10 +22,14 @@ echo
 # App files
 for f in index.html app.jsx data.js globe.jsx charts.jsx map2d.jsx \
          timeline.jsx quiz.jsx tokens.css enrichment.js iso-lookup.js \
-         autoplay.jsx tweaks-panel.jsx airport_enrichment.js \
-         sample_tracker.csv sample_alex.csv sample_tsu.csv \
-         sample_ari.csv sample_rumi.csv sample_kiran.csv; do
+         autoplay.jsx tweaks-panel.jsx airport_enrichment.js; do
   upload "$SCRIPT_DIR/$f" "$f"
+done
+
+# Sample data
+for f in sample_tracker.csv sample_alex.csv sample_tsu.csv \
+         sample_ari.csv sample_rumi.csv sample_kiran.csv; do
+  upload "$SCRIPT_DIR/sample/$f" "sample/$f"
 done
 
 # Config: flights.json.example → flights.json
@@ -33,7 +37,7 @@ upload "$SCRIPT_DIR/flights.json.example" "flights.json"
 
 # Data subdirectories
 upload "$SCRIPT_DIR/master_data/airports.json" "master_data/airports.json"
-upload "$SCRIPT_DIR/sample_countries.csv" "data/countries.csv"
+upload "$SCRIPT_DIR/sample/sample_countries.csv" "data/countries.csv"
 
 echo
 echo "✅  Done. Visit https://prasadgupte.com/travel-diary-demo/"

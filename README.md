@@ -6,6 +6,10 @@ A personal travel visualization app that puts your family's flight history on a 
 
 ![3D Globe](https://img.shields.io/badge/3D-Three.js%20Globe-6C5CE7) ![2D Map](https://img.shields.io/badge/2D-D3--geo-00D2A0) ![No Build Step](https://img.shields.io/badge/build-none-brightgreen)
 
+<p align="center">
+  <img src="docs/globe-flights.png" width="720" alt="3D globe with flight arcs" />
+</p>
+
 ---
 
 ## The idea
@@ -25,6 +29,10 @@ Fire up [the demo](https://www.prasadgupte.com/travel-diary-demo/) and see if yo
 
 *(Hint: the stats sidebar, country mode, and member filters are your friends.)*
 
+<p align="center">
+  <img src="docs/countries-mode.png" width="720" alt="Countries heatmap mode with journey timeline" />
+</p>
+
 ## What it does
 
 - **3D globe** with great-circle arcs — watch flights trace across the planet (Three.js + three-globe)
@@ -40,6 +48,7 @@ Fire up [the demo](https://www.prasadgupte.com/travel-diary-demo/) and see if yo
 - **Tweaks panel** — three color schemes (Ink, Aurora, Mesh), toggleable airport labels
 - **Light & dark mode** — full theme support with CSS custom properties
 
+
 ## Architecture choices
 
 **No build step.** Zero. The whole app is vanilla HTML + CDN scripts with in-browser Babel JSX transpilation. No webpack, no vite, no npm install. Open `index.html` with a local server and it just works. I wanted something I could hack on from any machine without setting up a toolchain.
@@ -50,9 +59,48 @@ Fire up [the demo](https://www.prasadgupte.com/travel-diary-demo/) and see if yo
 
 **Design system as CSS custom properties.** `tokens.css` defines the full type scale (Space Grotesk headings, Plus Jakarta Sans body, JetBrains Mono for codes), color schemes, spacing, and component tokens. Every visual choice flows from tokens — which is how three color schemes and light/dark mode work without touching component code.
 
-**Data stays private.** `flights.json` and `data/` are gitignored. Your real travel data never leaves your machine. The repo ships with sample CSVs for the Ash-Kaa family so the demo works out of the box.
+**Data stays private.** `flights.json` and `data/` are gitignored. Your real travel data never leaves your machine. The repo ships with sample CSVs so the demo works out of the box.
 
-**Flight management CLI.** `flights.sh` is an interactive menu for adding flights — paste a raw itinerary, an LLM extracts structured rows, and they're appended to your CSV. Because nobody wants to hand-type IATA codes.
+**Flight management CLI.** `tools/flights.sh` is an interactive menu for adding flights — paste a raw itinerary, an LLM extracts structured rows, and they're appended to your CSV. Because nobody wants to hand-type IATA codes.
+
+## Project structure
+
+```
+travel-diary/
+├── index.html                 ← entry point, script load order
+├── tokens.css                 ← design system (CSS custom properties)
+├── app.jsx                    ← main shell: state, filters, sidebar, stats
+├── globe.jsx                  ← 3D globe renderer (Three.js + three-globe)
+├── map2d.jsx                  ← 2D map renderer (D3-geo)
+├── data.js                    ← CSV parser, airport DB, data loader
+├── autoplay.jsx               ← chronological flight/country playback
+├── timeline.jsx               ← scrubber bar with year ticks
+├── charts.jsx                 ← stats charts (bar, pie, etc.)
+├── quiz.jsx                   ← interactive flight quiz
+├── tweaks-panel.jsx           ← runtime color scheme picker
+├── enrichment.js              ← country enrichment (REST Countries API)
+├── iso-lookup.js              ← ISO code → country name/flag
+├── airport_enrichment.js      ← elevation, ICAO codes (OurAirports)
+├── flights.json.example       ← config template
+│
+├── sample/                    ← demo data (Ash-Kaa family)
+│   ├── sample_tracker.csv     ← fallback single-user demo
+│   ├── sample_alex.csv … sample_kiran.csv
+│   └── sample_countries.csv
+│
+├── tools/                     ← CLI for managing flight data
+│   ├── flights.sh             ← interactive menu (add flights, refresh master data)
+│   ├── extract_flight.py      ← LLM-powered itinerary → CSV rows
+│   ├── update_tracker.py      ← append rows to a member's CSV
+│   ├── fetch_master.py        ← download OpenFlights reference data
+│   ├── group_trips.py         ← group flights into trips
+│   ├── normalize_airlines.py  ← standardize airline names
+│   └── requirements.txt
+│
+├── docs/                      ← screenshots for this README
+├── data/                      ← your real flight CSVs (gitignored)
+└── master_data/               ← OpenFlights airport cache (gitignored)
+```
 
 ## Data format
 

@@ -1,11 +1,11 @@
 {
   "family_name": "Ash-Kaa family",
   "users": {
-    "Alex":  "sample_alex.csv",
-    "Tsu":   "sample_tsu.csv",
-    "Ari":   "sample_ari.csv",
-    "Rumi":  "sample_rumi.csv",
-    "Kiran": "sample_kiran.csv"
+    "Alex":  "sample/sample_alex.csv",
+    "Tsu":   "sample/sample_tsu.csv",
+    "Ari":   "sample/sample_ari.csv",
+    "Rumi":  "sample/sample_rumi.csv",
+    "Kiran": "sample/sample_kiran.csv"
   },
   "countries_lived": {
     "alex":  ["NL"],

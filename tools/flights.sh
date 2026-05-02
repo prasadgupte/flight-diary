@@ -6,7 +6,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-FLIGHTS_JSON="$SCRIPT_DIR/flights.json"
+FLIGHTS_JSON="$SCRIPT_DIR/../flights.json"
 PYTHON="${PYTHON:-python3}"
 
 # ── Colours ───────────────────────────────────────────────────────────────────

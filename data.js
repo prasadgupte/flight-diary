@@ -7,7 +7,7 @@
 //   country;iso;alice;bob
 //   France;FR;2019;2020
 //
-// Without flights.json the app loads sample_tracker.csv with a single "Sample" user.
+// Without flights.json the app loads sample/sample_tracker.csv with a single "Sample" user.
 
 const AIRPORTS = {
   AAR: { city: "Aarhus", country: "Denmark", lat: 56.3, lon: 10.619 },
@@ -253,7 +253,7 @@ async function loadAllFlights() {
     }));
   } else {
     try {
-      FLIGHTS["sample"] = await loadCSV("sample_tracker.csv");
+      FLIGHTS["sample"] = await loadCSV("sample/sample_tracker.csv");
       USER_LIST.push({ key: "sample", name: "Sample" });
       console.log(`Loaded ${FLIGHTS["sample"].length} sample flights`);
     } catch (e) {
