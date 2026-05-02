@@ -60,7 +60,7 @@ function TimelineBar({ groups, currentGroupIndex, playing, speed, onPlayPause, o
     padding: "4px 9px", borderRadius: 6, border: "none",
     background: active ? "var(--t-acc-45)" : "var(--t-over-06)",
     color: active ? "var(--t-accent)" : "var(--t-fg3)",
-    fontFamily: "JetBrains Mono, monospace", fontSize: 11, fontWeight: 600,
+    fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 600,
     cursor: "pointer", transition: "background 0.15s",
   });
 
@@ -140,7 +140,7 @@ function TimelineBar({ groups, currentGroupIndex, playing, speed, onPlayPause, o
               position: "absolute",
               top: "calc(50% + 3px)",
               left: "50%", transform: "translateX(-50%)",
-              fontFamily: "JetBrains Mono, monospace",
+              fontFamily: "var(--font-mono)",
               fontSize: 9, color: "var(--t-fg3)",
               whiteSpace: "nowrap",
             }}>{yr}</div>
@@ -164,7 +164,7 @@ function TimelineBar({ groups, currentGroupIndex, playing, speed, onPlayPause, o
         padding: "5px 12px", borderRadius: 8,
         border: "1px solid var(--t-over-10)",
         background: "transparent", color: "var(--t-fg3)",
-        fontFamily: "JetBrains Mono, monospace", fontSize: 11,
+        fontFamily: "var(--font-mono)", fontSize: 11,
         cursor: "pointer", flexShrink: 0,
         transition: "color 0.15s",
       }}

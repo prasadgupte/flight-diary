@@ -179,26 +179,26 @@ function DataQualityPanel({ errors, warnings, onClose }) {
       background: "var(--t-surf-95)", border: "1px solid rgba(255,107,107,0.3)",
       borderRadius: 14, boxShadow: "0 12px 48px rgba(0,0,0,0.5)",
       backdropFilter: "blur(16px)",
-      fontFamily: "Plus Jakarta Sans, sans-serif",
+      fontFamily: "var(--font-body)",
     }}>
       {/* Header */}
       <div style={{
         display: "flex", justifyContent: "space-between", alignItems: "center",
         padding: "12px 14px 10px", borderBottom: "1px solid var(--t-over-06)",
       }}>
-        <span style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 700, fontSize: 13, color: "var(--t-fg)" }}>
+        <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 13, color: "var(--t-fg)" }}>
           Data Quality
         </span>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           {errors.length > 0 && (
-            <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#FF6B6B",
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#FF6B6B",
               background: "rgba(255,107,107,0.12)", border: "1px solid rgba(255,107,107,0.25)",
               borderRadius: 6, padding: "2px 7px" }}>
               {errors.length} error{errors.length !== 1 ? "s" : ""}
             </span>
           )}
           {warnings.length > 0 && (
-            <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#FDCB6E",
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#FDCB6E",
               background: "rgba(253,203,110,0.12)", border: "1px solid rgba(253,203,110,0.25)",
               borderRadius: 6, padding: "2px 7px" }}>
               {warnings.length} warning{warnings.length !== 1 ? "s" : ""}
@@ -216,7 +216,7 @@ function DataQualityPanel({ errors, warnings, onClose }) {
         <div style={{ padding: "6px 0 8px" }}>
           {errors.length > 0 && (
             <>
-              <div style={{ padding: "6px 14px 3px", fontFamily: "JetBrains Mono, monospace", fontSize: 9,
+              <div style={{ padding: "6px 14px 3px", fontFamily: "var(--font-mono)", fontSize: 9,
                 color: "#FF6B6B", letterSpacing: "0.07em", textTransform: "uppercase" }}>Errors</div>
               {errors.map((e, i) => (
                 <div key={i} style={{
@@ -226,7 +226,7 @@ function DataQualityPanel({ errors, warnings, onClose }) {
                   <span style={{ color: "#FF6B6B", fontSize: 11, flexShrink: 0, marginTop: 1 }}>✗</span>
                   <div>
                     <div style={{ fontSize: 12, color: "var(--t-fg)", lineHeight: 1.4 }}>{e.msg}</div>
-                    <div style={{ fontSize: 10, color: "var(--t-fg3)", fontFamily: "JetBrains Mono, monospace", marginTop: 1 }}>{e.loc}</div>
+                    <div style={{ fontSize: 10, color: "var(--t-fg3)", fontFamily: "var(--font-mono)", marginTop: 1 }}>{e.loc}</div>
                   </div>
                 </div>
               ))}
@@ -234,7 +234,7 @@ function DataQualityPanel({ errors, warnings, onClose }) {
           )}
           {warnings.length > 0 && (
             <>
-              <div style={{ padding: "8px 14px 3px", fontFamily: "JetBrains Mono, monospace", fontSize: 9,
+              <div style={{ padding: "8px 14px 3px", fontFamily: "var(--font-mono)", fontSize: 9,
                 color: "#FDCB6E", letterSpacing: "0.07em", textTransform: "uppercase",
                 borderTop: errors.length > 0 ? "1px solid var(--t-over-05)" : "none",
                 marginTop: errors.length > 0 ? 4 : 0 }}>Warnings</div>
@@ -246,7 +246,7 @@ function DataQualityPanel({ errors, warnings, onClose }) {
                   <span style={{ color: "#FDCB6E", fontSize: 11, flexShrink: 0, marginTop: 1 }}>⚠</span>
                   <div>
                     <div style={{ fontSize: 12, color: "var(--t-fg)", lineHeight: 1.4 }}>{w.msg}</div>
-                    <div style={{ fontSize: 10, color: "var(--t-fg3)", fontFamily: "JetBrains Mono, monospace", marginTop: 1 }}>{w.loc}</div>
+                    <div style={{ fontSize: 10, color: "var(--t-fg3)", fontFamily: "var(--font-mono)", marginTop: 1 }}>{w.loc}</div>
                   </div>
                 </div>
               ))}
@@ -274,19 +274,19 @@ function StatCard({ label, value, sub, color, mono, onClick, tooltip }) {
         transition: "border-color 0.15s, box-shadow 0.15s",
       }}>
       <div style={{
-        fontFamily: "JetBrains Mono, monospace",
+        fontFamily: "var(--font-mono)",
         fontSize: 10, fontWeight: 500,
         color: "var(--t-accent)", letterSpacing: 0.5,
         textTransform: "uppercase", marginBottom: 8,
       }}>{label}</div>
       <div style={{
-        fontFamily: "Space Grotesk, sans-serif",
+        fontFamily: "var(--font-display)",
         fontSize: 36, fontWeight: 700, letterSpacing: -1,
         color: color || "var(--t-fg)", lineHeight: 1,
       }}>{value}</div>
       {sub && <div style={{
         marginTop: 6,
-        fontFamily: mono ? "JetBrains Mono, monospace" : "Plus Jakarta Sans, sans-serif",
+        fontFamily: mono ? "var(--font-mono)" : "var(--font-body)",
         fontSize: 11, color: "var(--t-fg2)",
       }}>{sub}</div>}
     </div>
@@ -320,7 +320,7 @@ function MemberDropdown({ members, activeMembers, onToggle, onSolo, onAll, colla
         padding: "6px 12px", borderRadius: 999,
         border: "1px solid var(--t-acc-35)",
         background: open ? "var(--t-acc-18)" : "var(--t-surf-60)",
-        color: "var(--t-accent)", fontFamily: "Space Grotesk, sans-serif", fontWeight: 600, fontSize: 13,
+        color: "var(--t-accent)", fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 13,
         cursor: "pointer", transition: "all 0.15s",
         whiteSpace: "nowrap",
       }}>
@@ -345,7 +345,7 @@ function MemberDropdown({ members, activeMembers, onToggle, onSolo, onAll, colla
           <div onClick={() => { onAll(); setOpen(false); }} style={{
             display: "flex", alignItems: "center", gap: 8,
             padding: "7px 14px", cursor: "pointer", color: "var(--t-fg3)",
-            fontFamily: "Space Grotesk, sans-serif", fontSize: 12, fontWeight: 500,
+            fontFamily: "var(--font-display)", fontSize: 12, fontWeight: 500,
             transition: "background 0.1s",
           }}
             onMouseEnter={e => e.currentTarget.style.background = "var(--t-over-05)"}
@@ -370,7 +370,7 @@ function MemberDropdown({ members, activeMembers, onToggle, onSolo, onAll, colla
                 <span onClick={() => onToggle(m.id)} style={{
                   display: "flex", alignItems: "center", gap: 8, flex: 1, cursor: "pointer",
                   color: active ? color : "var(--t-fg3)",
-                  fontFamily: "Space Grotesk, sans-serif", fontSize: 13, fontWeight: 600,
+                  fontFamily: "var(--font-display)", fontSize: 13, fontWeight: 600,
                 }}>
                   <span style={{
                     width: 8, height: 8, borderRadius: 999,
@@ -384,7 +384,7 @@ function MemberDropdown({ members, activeMembers, onToggle, onSolo, onAll, colla
                 <button onClick={() => { onSolo(m.id); setOpen(false); }} style={{
                   padding: "2px 7px", borderRadius: 999, border: "1px solid var(--t-over-12)",
                   background: "transparent", color: "var(--t-fg3)",
-                  fontFamily: "JetBrains Mono, monospace", fontSize: 9, cursor: "pointer",
+                  fontFamily: "var(--font-mono)", fontSize: 9, cursor: "pointer",
                   transition: "all 0.1s",
                 }}
                   onMouseEnter={e => { e.currentTarget.style.color = color; e.currentTarget.style.borderColor = color + "60"; }}
@@ -427,7 +427,7 @@ function AutocompleteInput({ placeholder, value, options, onSelect, onClear, ren
         padding: "3px 8px 3px 10px", borderRadius: 999,
         background: "var(--t-acc-18)",
         border: "1px solid var(--t-acc-40)",
-        fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--t-accent)",
+        fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-accent)",
       }}>
         {renderLabel ? renderLabel(value) : value}
         <button onClick={onClear} style={{
@@ -450,7 +450,7 @@ function AutocompleteInput({ placeholder, value, options, onSelect, onClear, ren
           background: "var(--t-surf-60)",
           border: "1px solid var(--t-acc-30)",
           color: "var(--t-accent)",
-          fontFamily: "JetBrains Mono, monospace", fontSize: 11,
+          fontFamily: "var(--font-mono)", fontSize: 11,
           outline: "none",
         }}
       />
@@ -467,7 +467,7 @@ function AutocompleteInput({ placeholder, value, options, onSelect, onClear, ren
               onClick={() => { onSelect(o.value); setQuery(""); setOpen(false); }}
               style={{
                 padding: "6px 12px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center",
-                fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 12, color: "var(--t-fg)",
+                fontFamily: "var(--font-body)", fontSize: 12, color: "var(--t-fg)",
               }}
               onMouseEnter={(e) => e.currentTarget.style.background = "var(--t-acc-15)"}
               onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
@@ -476,7 +476,7 @@ function AutocompleteInput({ placeholder, value, options, onSelect, onClear, ren
                 {o.flag ? <span style={{ marginRight: 4 }}>{o.flag}</span> : null}
                 {o.label}
               </span>
-              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg3)", flexShrink: 0 }}>×{o.count}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", flexShrink: 0 }}>×{o.count}</span>
             </div>
           ))}
         </div>
@@ -498,7 +498,7 @@ function CountryCard({ iso }) {
   }, [iso]);
 
   if (loading) return (
-    <div style={{ padding: "6px 14px 8px", fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg4)" }}>loading…</div>
+    <div style={{ padding: "6px 14px 8px", fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg4)" }}>loading…</div>
   );
   if (!data) return null;
 
@@ -521,7 +521,7 @@ function CountryCard({ iso }) {
 
   return (
     <div style={{ padding: "8px 14px 10px", background: "var(--t-acc-06)", borderTop: "1px solid var(--t-over-04)" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "3px 10px", fontFamily: "JetBrains Mono, monospace", fontSize: 10, marginBottom: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "3px 10px", fontFamily: "var(--font-mono)", fontSize: 10, marginBottom: 8 }}>
         {[["capital", cap], ["pop.", pop], ["area", area], ["currency", curr], ["languages", langs], ["region", region]].map(([k, v]) => (
           <React.Fragment key={k}>
             <span style={{ color: "var(--t-fg4)" }}>{k}</span>
@@ -531,13 +531,13 @@ function CountryCard({ iso }) {
       </div>
       {data.borders?.length > 0 && (
         <div>
-          <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "var(--t-fg4)", marginBottom: 4 }}>neighbours</div>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", marginBottom: 4 }}>neighbours</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
             {data.borders.map(b => {
               const been = visitedISOs.has(b);
               return (
                 <span key={b} style={{
-                  fontFamily: "JetBrains Mono, monospace", fontSize: 9, padding: "2px 6px", borderRadius: 3,
+                  fontFamily: "var(--font-mono)", fontSize: 9, padding: "2px 6px", borderRadius: 3,
                   background: been ? "rgba(0,210,160,0.12)" : "var(--t-over-04)",
                   color: been ? "#00D2A0" : "var(--t-fg4)",
                   border: `1px solid ${been ? "rgba(0,210,160,0.25)" : "var(--t-over-06)"}`,
@@ -760,11 +760,11 @@ function DetailListView({
     background: "var(--t-acc-12)",
   };
   const subStyle = {
-    fontFamily: "Plus Jakarta Sans, sans-serif",
+    fontFamily: "var(--font-body)",
     fontSize: 11, color: "var(--t-fg3)",
   };
   const groupHeaderStyle = {
-    fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-accent)",
+    fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-accent)",
     letterSpacing: 0.5, textTransform: "uppercase",
     padding: "7px 14px 5px 14px",
     background: "var(--t-acc-06)",
@@ -784,8 +784,8 @@ function DetailListView({
         >
           <span style={{ marginRight: 6 }}>{c.flag}</span>
           <span style={{ fontSize: 13 }}>{c.name}</span>
-          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#6E6A82", marginLeft: 5 }}>({c.iso})</span>
-          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: "auto" }}>×{c.count}</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg3)", marginLeft: 5 }}>({c.iso})</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: "auto" }}>×{c.count}</span>
         </div>
         {isFocused && <CountryCard iso={c.iso} />}
       </div>
@@ -805,11 +805,11 @@ function DetailListView({
         style={{ ...rowStyle, ...(isFocused ? focusedRowExtra : {}) }}
         onClick={() => onTripClick && onTripClick(t.code)}
         onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-        onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={{ fontSize: 13 }}>{t.emoji} {t.displayCode}</span>
-          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82" }}>✈ {t.flightCount}</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)" }}>✈ {t.flightCount}</span>
         </div>
         {airportLine && <div style={{ ...subStyle, marginTop: 3 }}>{airportLine}</div>}
       </div>
@@ -848,20 +848,20 @@ function DetailListView({
         <div key={g.num}>
           <div style={groupHeaderStyle}>
             {g.num}
-            {g.airline && <span style={{ color: "#6E6A82", fontWeight: 400, textTransform: "none", marginLeft: 6 }}>{g.airline}</span>}
+            {g.airline && <span style={{ color: "var(--t-fg3)", fontWeight: 400, textTransform: "none", marginLeft: 6 }}>{g.airline}</span>}
           </div>
           {g.flights.map(f => (
             <div key={f.id} onClick={() => onFlightSelect(selectedFlight?.id === f.id ? null : f)}
-              style={{ ...rowStyle, paddingLeft: 20, background: selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent" }}
+              style={{ ...rowStyle, paddingLeft: 20, background: selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent" }}
               onMouseEnter={e => { if (selectedFlight?.id !== f.id) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent"; }}
             >
               <div style={subStyle}>{fmtDate(f.dateObj)}</div>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#00D2A0" }}>{f.From}</span>
-                <span style={{ color: "#6E6A82", fontSize: 10, margin: "0 4px" }}>→</span>
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#00D2A0" }}>{f.To}</span>
-                {type === "distance" && <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#FDCB6E", marginLeft: 8 }}>{fmtNum(f.distanceKm)} km</span>}
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#00D2A0" }}>{f.From}</span>
+                <span style={{ color: "var(--t-fg3)", fontSize: 10, margin: "0 4px" }}>→</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#00D2A0" }}>{f.To}</span>
+                {type === "distance" && <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#FDCB6E", marginLeft: 8 }}>{fmtNum(f.distanceKm)} km</span>}
               </div>
             </div>
           ))}
@@ -889,9 +889,9 @@ function DetailListView({
                 style={{ ...rowStyle, paddingLeft: 20, display: "flex", alignItems: "center", ...(isFocused ? focusedRowExtra : {}) }}
                 onClick={() => onAirportClick && onAirportClick(a.iata)}
                 onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
               >
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#00D2A0" }}>{a.iata}</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#00D2A0" }}>{a.iata}</span>
                 <span style={{ ...subStyle, marginLeft: 8 }}>×{a.count}</span>
               </div>
             );
@@ -912,7 +912,7 @@ function DetailListView({
       const groups = [...byGroup.values()].sort((a, b) => b.total - a.total);
       return groups.map(g => (
         <div key={g.group}>
-          <div style={groupHeaderStyle}>{g.group} <span style={{ color: "#6E6A82" }}>×{g.total}</span></div>
+          <div style={groupHeaderStyle}>{g.group} <span style={{ color: "var(--t-fg3)" }}>×{g.total}</span></div>
           {g.items.map(a => {
             const isFocused = focusedAircraft === a.name;
             return (
@@ -920,10 +920,10 @@ function DetailListView({
                 style={{ ...rowStyle, paddingLeft: 20, display: "flex", alignItems: "center", ...(isFocused ? focusedRowExtra : {}) }}
                 onClick={() => onAircraftClick && onAircraftClick(a.name)}
                 onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
               >
-                <span style={{ ...subStyle, color: "#A9A6BB" }}>{acName(a.name)}</span>
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665", marginLeft: 5 }}>{a.name}</span>
+                <span style={{ ...subStyle, color: "var(--t-fg2)" }}>{acName(a.name)}</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", marginLeft: 5 }}>{a.name}</span>
                 <span style={{ ...subStyle, marginLeft: 8 }}>×{a.count}</span>
               </div>
             );
@@ -944,17 +944,17 @@ function DetailListView({
         <div key={h}>
           <div style={groupHeaderStyle}>
             {h === 1 ? "under 1 hour" : `${h} hour${h === 1 ? "" : "s"}`}
-            <span style={{ color: "#6E6A82", fontWeight: 400, marginLeft: 6 }}>×{byHour.get(h).length}</span>
+            <span style={{ color: "var(--t-fg3)", fontWeight: 400, marginLeft: 6 }}>×{byHour.get(h).length}</span>
           </div>
           {byHour.get(h).map(f => (
             <div key={f.id} onClick={() => onFlightSelect(selectedFlight?.id === f.id ? null : f)}
-              style={{ ...rowStyle, paddingLeft: 20, background: selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent" }}
+              style={{ ...rowStyle, paddingLeft: 20, background: selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent" }}
               onMouseEnter={e => { if (selectedFlight?.id !== f.id) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent"; }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#00D2A0" }}>{f.From} → {f.To}</span>
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#74B9FF" }}>{fmtDur(f.durMins)}</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#00D2A0" }}>{f.From} → {f.To}</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#74B9FF" }}>{fmtDur(f.durMins)}</span>
               </div>
               <div style={subStyle}>{fmtDate(f.dateObj)} · {f.Airline || ""}</div>
             </div>
@@ -984,13 +984,13 @@ function DetailListView({
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <button onClick={onBack} style={{
-        background: "transparent", border: "none", color: "#A29BFE",
-        cursor: "pointer", fontFamily: "JetBrains Mono, monospace", fontSize: 11,
+        background: "transparent", border: "none", color: "var(--t-accent)",
+        cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: 11,
         display: "flex", alignItems: "center", gap: 4, padding: "0 0 12px 0", textAlign: "left",
       }}>← back to stats</button>
 
       <div style={{
-        fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82",
+        fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)",
         letterSpacing: 0.5, textTransform: "uppercase", marginBottom: 8,
       }}>// {({ nextday: "next-day arrivals", birthday: "birthday flights" }[type] || type)} ({filteredData.length}{search.trim() ? ` of ${listData.length}` : ""})</div>
 
@@ -1006,7 +1006,7 @@ function DetailListView({
               background: "var(--t-icon-bg)",
               border: "1px solid var(--t-icon-border)",
               color: "var(--t-icon-txt)",
-              fontFamily: "JetBrains Mono, monospace", fontSize: 11,
+              fontFamily: "var(--font-mono)", fontSize: 11,
               outline: "none",
             }}
           />
@@ -1024,7 +1024,7 @@ function DetailListView({
             background: grouped ? "var(--t-pill-active-bg)" : "var(--t-icon-bg)",
             border: `1px solid ${grouped ? "var(--t-acc-50)" : "var(--t-icon-border)"}`,
             color: grouped ? "var(--t-pill-active-txt)" : "var(--t-pill-idle-txt)",
-            fontFamily: "JetBrains Mono, monospace", fontSize: 10,
+            fontFamily: "var(--font-mono)", fontSize: 10,
             whiteSpace: "nowrap",
           }}>{grouped ? "⊟ flat" : "⊞ group"}</button>
         )}
@@ -1036,7 +1036,7 @@ function DetailListView({
                 background: routeSort === val ? "var(--t-pill-active-bg)" : "var(--t-icon-bg)",
                 border: `1px solid ${routeSort === val ? "var(--t-acc-50)" : "var(--t-icon-border)"}`,
                 color: routeSort === val ? "var(--t-pill-active-txt)" : "var(--t-pill-idle-txt)",
-                fontFamily: "JetBrains Mono, monospace", fontSize: 10,
+                fontFamily: "var(--font-mono)", fontSize: 10,
               }}>{label}</button>
             ))}
           </div>
@@ -1054,25 +1054,25 @@ function DetailListView({
         const nextDay = arrDate && sf.dateObj && arrDate.getDate() !== sf.dateObj.getDate();
         const seatLabel = { W: "Window", A: "Aisle", M: "Middle" }[sf.Seat_Type] || sf.Seat_Type || "";
         const classLabel = { Y: "Economy", J: "Business", F: "First" }[sf.Class] || sf.Class || "";
-        const monoRow = { fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg3)", marginTop: 4 };
+        const monoRow = { fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginTop: 4 };
         return (
           <div style={{
             padding: "14px 16px", borderRadius: 12, marginBottom: 12,
             background: "linear-gradient(135deg, rgba(108,92,231,0.2) 0%, rgba(0,210,160,0.1) 100%)",
-            border: "1px solid rgba(108,92,231,0.3)",
+            border: "1px solid var(--t-acc-30)",
           }}>
-            <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 600, fontSize: 15, marginBottom: 6, color: "var(--t-fg)" }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15, marginBottom: 6, color: "var(--t-fg)" }}>
               {sf.Flight_Number || "—"} · {sf.Airline || "—"}
             </div>
-            <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 13, color: "var(--t-accent)", marginBottom: 4 }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--t-accent)", marginBottom: 4 }}>
               {sf.From} → {sf.To}
               {sf.distanceKm > 0 && <span style={{ color: "var(--t-fg3)", fontSize: 11, marginLeft: 8 }}>{fmtNum(sf.distanceKm)} km</span>}
             </div>
             {/* Date + departure/arrival times */}
-            <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 12, color: "var(--t-fg2)", marginBottom: 2 }}>
+            <div style={{ fontFamily: "var(--font-body)", fontSize: 12, color: "var(--t-fg2)", marginBottom: 2 }}>
               {fmtDate(sf.dateObj)}
               {depTime && (
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, marginLeft: 8 }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, marginLeft: 8 }}>
                   {depTime}
                   {arrTime && (
                     <>
@@ -1090,7 +1090,7 @@ function DetailListView({
                 </span>
               )}
               {durMins > 0 && (
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg3)", marginLeft: 8 }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: 8 }}>
                   {fmtDur(durMins)}
                 </span>
               )}
@@ -1115,7 +1115,7 @@ function DetailListView({
             )}
             {/* Note */}
             {sf.Note && (
-              <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 11, color: "var(--t-fg2)", marginTop: 4, fontStyle: "italic" }}>
+              <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--t-fg2)", marginTop: 4, fontStyle: "italic" }}>
                 {sf.Note}
               </div>
             )}
@@ -1128,23 +1128,23 @@ function DetailListView({
           <>
             {(type === "flights" || type === "distance" || type === "nextday" || type === "birthday") && filteredData.map((f) => (
               <div key={f.id} onClick={() => onFlightSelect(selectedFlight?.id === f.id ? null : f)}
-                style={{ ...rowStyle, background: selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent" }}
+                style={{ ...rowStyle, background: selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent" }}
                 onMouseEnter={(e) => { if (selectedFlight?.id !== f.id) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent"; }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{f.From}</span>
-                    <span style={{ color: "#6E6A82", fontSize: 11, margin: "0 4px" }}>→</span>
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{f.To}</span>
-                    <span style={{ fontSize: 11, color: "#A9A6BB", marginLeft: 8 }}>{f.Airline || ""}</span>
-                    {f.Flight_Number && <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: 6 }}>{f.Flight_Number}</span>}
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{f.From}</span>
+                    <span style={{ color: "var(--t-fg3)", fontSize: 11, margin: "0 4px" }}>→</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{f.To}</span>
+                    <span style={{ fontSize: 11, color: "var(--t-fg2)", marginLeft: 8 }}>{f.Airline || ""}</span>
+                    {f.Flight_Number && <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: 6 }}>{f.Flight_Number}</span>}
                   </div>
                   {type === "distance" && (
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#FDCB6E" }}>{fmtNum(f.distanceKm)} km</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#FDCB6E" }}>{fmtNum(f.distanceKm)} km</span>
                   )}
                 </div>
-                <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 11, color: "#6E6A82", marginTop: 2 }}>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--t-fg3)", marginTop: 2 }}>
                   {fmtDate(f.dateObj)} {f.Plane ? `· ${acName(f.Plane)}` : ""}
                 </div>
               </div>
@@ -1161,14 +1161,14 @@ function DetailListView({
                     style={{ ...rowStyle, borderBottom: "none", ...(isFocused ? focusedRowExtra : {}), display: "flex", alignItems: "center" }}
                     onClick={() => onAirportClick && onAirportClick(a.iata)}
                     onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
                   >
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0", marginRight: 8 }}>{a.iata}</span>
-                    {enr?.icao && <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665", marginRight: 6 }}>{enr.icao}</span>}
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0", marginRight: 8 }}>{a.iata}</span>
+                    {enr?.icao && <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", marginRight: 6 }}>{enr.icao}</span>}
                     {a.flag && <span style={{ marginRight: 4 }}>{a.flag}</span>}
                     <span style={{ fontSize: 12 }}>{a.city}</span>
-                    {enr?.elev && <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665", marginLeft: 6 }}>{fmtNum(enr.elev)}ft</span>}
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: "auto" }}>×{a.count}</span>
+                    {enr?.elev && <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", marginLeft: 6 }}>{fmtNum(enr.elev)}ft</span>}
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: "auto" }}>×{a.count}</span>
                   </div>
                   {isFocused && (() => {
                     const apFlights = flights.filter(f => f.From === a.iata || f.To === a.iata);
@@ -1184,23 +1184,23 @@ function DetailListView({
                     const deps = apFlights.filter(f => f.From === a.iata).length;
                     const arrs = apFlights.filter(f => f.To === a.iata).length;
                     return (
-                      <div style={{ padding: "8px 14px 10px 14px", background: "rgba(108,92,231,0.06)", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-                        <div style={{ display: "flex", gap: 14, marginBottom: 5, fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 10, color: "#6E6A82" }}>
-                          <span>first <span style={{ color: "#A9A6BB" }}>{fmtDate(dates[0])}</span></span>
-                          <span>last <span style={{ color: "#A9A6BB" }}>{fmtDate(dates[dates.length - 1])}</span></span>
+                      <div style={{ padding: "8px 14px 10px 14px", background: "var(--t-acc-06)", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                        <div style={{ display: "flex", gap: 14, marginBottom: 5, fontFamily: "var(--font-body)", fontSize: 10, color: "var(--t-fg3)" }}>
+                          <span>first <span style={{ color: "var(--t-fg2)" }}>{fmtDate(dates[0])}</span></span>
+                          <span>last <span style={{ color: "var(--t-fg2)" }}>{fmtDate(dates[dates.length - 1])}</span></span>
                           <span>↑{deps} ↓{arrs}</span>
                         </div>
                         {airlines.length > 0 && (
-                          <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 10, color: "#6E6A82", marginBottom: 6 }}>
+                          <div style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--t-fg3)", marginBottom: 6 }}>
                             via {airlines.slice(0, 4).join(" · ")}
-                            {airlines.length > 4 && <span style={{ color: "#4A4665" }}> +{airlines.length - 4}</span>}
+                            {airlines.length > 4 && <span style={{ color: "var(--t-fg4)" }}> +{airlines.length - 4}</span>}
                           </div>
                         )}
                         <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
                           {topConn.map(([iata, n]) => (
-                            <span key={iata} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#00D2A0",
+                            <span key={iata} style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#00D2A0",
                               background: "rgba(0,210,160,0.08)", borderRadius: 4, padding: "2px 7px" }}>
-                              {iata} <span style={{ color: "#4A4665" }}>×{n}</span>
+                              {iata} <span style={{ color: "var(--t-fg4)" }}>×{n}</span>
                             </span>
                           ))}
                         </div>
@@ -1218,7 +1218,7 @@ function DetailListView({
                   style={{ ...rowStyle, ...(isFocused ? focusedRowExtra : {}), display: "flex", alignItems: "center" }}
                   onClick={() => onAirlineClick && onAirlineClick(a.name)}
                   onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
                 >
                   {arcColorMode === "airline" && airlineColorMap && (
                     <span style={{
@@ -1227,9 +1227,9 @@ function DetailListView({
                     }} />
                   )}
                   <span style={{ fontSize: 12 }}>{a.name}</span>
-                  {a.iata && <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, fontWeight: 300, color: "#6E6A82", marginLeft: 6 }}>{a.iata}</span>}
+                  {a.iata && <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 300, color: "var(--t-fg3)", marginLeft: 6 }}>{a.iata}</span>}
                   {AIRLINE_ALLIANCES[a.name] && (
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9,
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9,
                       color: ALLIANCE_COLORS[AIRLINE_ALLIANCES[a.name]],
                       border: `1px solid ${ALLIANCE_COLORS[AIRLINE_ALLIANCES[a.name]]}`,
                       borderRadius: 4, padding: "1px 5px", marginLeft: 6, flexShrink: 0 }}>
@@ -1237,13 +1237,13 @@ function DetailListView({
                     </span>
                   )}
                   {AIRLINE_MM.has(a.name) && (
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9,
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9,
                       color: "#1E1B2E", background: MM_COLOR,
                       borderRadius: 4, padding: "1px 4px", marginLeft: 6, flexShrink: 0, fontWeight: 700 }}>
                       M&amp;M
                     </span>
                   )}
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: "auto" }}>×{a.count}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: "auto" }}>×{a.count}</span>
                 </div>
               );
             })}
@@ -1255,26 +1255,26 @@ function DetailListView({
                   style={{ ...rowStyle, ...(isFocused ? focusedRowExtra : {}), display: "flex", alignItems: "center" }}
                   onClick={() => onAircraftClick && onAircraftClick(a.name)}
                   onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
                 >
                   <span style={{ fontSize: 12 }}>{acName(a.name)}</span>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#4A4665", marginLeft: 6 }}>{a.name}</span>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: "auto" }}>×{a.count}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg4)", marginLeft: 6 }}>{a.name}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: "auto" }}>×{a.count}</span>
                 </div>
               );
             })}
 
             {type === "duration" && filteredData.map(f => (
               <div key={f.id} onClick={() => onFlightSelect(selectedFlight?.id === f.id ? null : f)}
-                style={{ ...rowStyle, background: selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent" }}
+                style={{ ...rowStyle, background: selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent" }}
                 onMouseEnter={e => { if (selectedFlight?.id !== f.id) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = selectedFlight?.id === f.id ? "var(--t-acc-12)" : "transparent"; }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{f.From} → {f.To}</span>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#74B9FF" }}>{fmtDur(f.durMins)}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{f.From} → {f.To}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#74B9FF" }}>{fmtDur(f.durMins)}</span>
                 </div>
-                <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 11, color: "#6E6A82", marginTop: 2 }}>
+                <div style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "var(--t-fg3)", marginTop: 2 }}>
                   {fmtDate(f.dateObj)} · {f.Airline || ""}
                 </div>
               </div>
@@ -1286,8 +1286,8 @@ function DetailListView({
                 onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}
               >
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 13, color: "#A29BFE", minWidth: 40 }}>{s.seat}</span>
-                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: "auto" }}>×{s.count}</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--t-accent)", minWidth: 40 }}>{s.seat}</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: "auto" }}>×{s.count}</span>
               </div>
             ))}
 
@@ -1313,21 +1313,21 @@ function DetailListView({
                   style={{ ...rowStyle, ...(isFocused ? focusedRowExtra : {}) }}
                   onClick={() => onRouteClick && onRouteClick({ from: r.from, to: r.to })}
                   onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     {isoFrom && <span style={{ marginRight: 3 }}>{isoToFlag(isoFrom)}</span>}
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{r.from}</span>
-                    <span style={{ color: "#6E6A82", fontSize: 11, margin: "0 6px" }}>⟷</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{r.from}</span>
+                    <span style={{ color: "var(--t-fg3)", fontSize: 11, margin: "0 6px" }}>⟷</span>
                     {isoTo && <span style={{ marginRight: 3 }}>{isoToFlag(isoTo)}</span>}
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{r.to}</span>
-                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: "auto" }}>×{r.count}</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{r.to}</span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: "auto" }}>×{r.count}</span>
                   </div>
                   {r.avgDist > 0 && (
-                    <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#4A4665", marginTop: 2 }}>{fmtNum(r.avgDist)} km avg</div>
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg4)", marginTop: 2 }}>{fmtNum(r.avgDist)} km avg</div>
                   )}
                   {isFocused && r.airlines.length > 0 && (
-                    <div style={{ ...subStyle, marginTop: 4, color: "#A9A6BB" }}>
+                    <div style={{ ...subStyle, marginTop: 4, color: "var(--t-fg2)" }}>
                       {r.airlines.join(" · ")}
                     </div>
                   )}
@@ -1416,7 +1416,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
         onClick={() => onCountryClick && onCountryClick(c.iso)}
         style={{
           ...rowStyle,
-          background: focusedCountry === c.iso ? "rgba(108,92,231,0.12)" : "transparent",
+          background: focusedCountry === c.iso ? "var(--t-acc-12)" : "transparent",
           borderLeft: focusedCountry === c.iso ? "2px solid #6C5CE7" : "2px solid transparent",
         }}
         onMouseEnter={e => { if (focusedCountry !== c.iso) e.currentTarget.style.background = "var(--t-over-04)"; }}
@@ -1425,7 +1425,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
         <div style={{ fontSize: 13, fontWeight: 500, color: "var(--t-fg)" }}>{isoToFlag(c.iso.split("-")[0])} {c.names[0]}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "2px 8px", marginTop: 3 }}>
           {Object.entries(c.visits).sort((a, b) => a[1] - b[1]).map(([id, yr]) => (
-            <span key={id} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10 }}>
+            <span key={id} style={{ fontFamily: "var(--font-mono)", fontSize: 10 }}>
               <span style={{ color: memberColors[id] || "var(--t-accent)" }}>●</span>{" "}
               <span style={{ color: "var(--t-fg2)" }}>{id.charAt(0).toUpperCase() + id.slice(1)} {yr}</span>
             </span>
@@ -1437,11 +1437,11 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
     return (
       <>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-          <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5 }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5 }}>
             // countries ({countrySearch.trim() ? `${filteredCountries.length} of ${totalCountries}` : totalCountries})
           </div>
           <div onClick={() => { setDetailView(null); setCountrySearch(""); setCountryGrouped(false); }}
-            style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--t-accent)", cursor: "pointer", userSelect: "none" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-accent)", cursor: "pointer", userSelect: "none" }}
           >← back</div>
         </div>
         {/* Search + group toggle */}
@@ -1451,7 +1451,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
               placeholder="search countries..."
               style={{ width: "100%", padding: "5px 28px 5px 10px", borderRadius: 8, boxSizing: "border-box",
                 background: "var(--t-icon-bg)", border: "1px solid var(--t-icon-border)",
-                color: "var(--t-icon-txt)", fontFamily: "JetBrains Mono, monospace", fontSize: 11, outline: "none" }} />
+                color: "var(--t-icon-txt)", fontFamily: "var(--font-mono)", fontSize: 11, outline: "none" }} />
             {countrySearch && (
               <button onClick={() => setCountrySearch("")} style={{
                 position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
@@ -1464,7 +1464,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
             background: countryGrouped ? "var(--t-pill-active-bg)" : "var(--t-icon-bg)",
             border: `1px solid ${countryGrouped ? "var(--t-acc-50)" : "var(--t-icon-border)"}`,
             color: countryGrouped ? "var(--t-pill-active-txt)" : "var(--t-pill-idle-txt)",
-            fontFamily: "JetBrains Mono, monospace", fontSize: 10, whiteSpace: "nowrap" }}>
+            fontFamily: "var(--font-mono)", fontSize: 10, whiteSpace: "nowrap" }}>
             {countryGrouped ? "⊟ flat" : "⊞ continent"}
           </button>
         </div>
@@ -1478,7 +1478,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
             });
             return [...byContinent.entries()].sort((a, b) => (CONTINENT_NAMES[a[0]] || a[0]).localeCompare(CONTINENT_NAMES[b[0]] || b[0])).map(([cont, items]) => (
               <div key={cont}>
-                <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.6, padding: "10px 12px 4px" }}>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.6, padding: "10px 12px 4px" }}>
                   // {CONTINENT_NAMES[cont] || cont} ({items.length})
                 </div>
                 {items.map(c => <CountryRow key={c.iso} c={c} />)}
@@ -1494,7 +1494,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
   return (
     <>
       {/* Section label */}
-      <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", letterSpacing: 0.5 }}>
+      <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", letterSpacing: 0.5 }}>
         // {[...activeMembers].join(", ") || "none"} · countries
       </div>
 
@@ -1520,17 +1520,17 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
         <div style={{
           padding: "14px 16px", borderRadius: 14,
           background: "linear-gradient(135deg, rgba(108,92,231,0.15) 0%, rgba(0,210,160,0.10) 100%)",
-          border: "1px solid rgba(108,92,231,0.25)",
+          border: "1px solid var(--t-acc-25)",
         }}>
-          <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-accent)", marginBottom: 10, textTransform: "uppercase", letterSpacing: 0.5 }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-accent)", marginBottom: 10, textTransform: "uppercase", letterSpacing: 0.5 }}>
             // THE JOURNEY
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
             <div style={{ flex: 1 }}>
-              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--t-fg2)" }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-fg2)" }}>
                 {isoToFlag(journeySpan.earliest.iso)} {journeySpan.earliest.country}
               </div>
-              <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 600, fontSize: 15 }}>
+              <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15 }}>
                 {journeySpan.earliest.year < 9999 ? journeySpan.earliest.year : "—"}
               </div>
             </div>
@@ -1540,10 +1540,10 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
               <div style={{ position: "absolute", right: 0, top: "50%", width: 8, height: 8, borderRadius: 999, background: "#FDCB6E", transform: "translate(50%, -50%)" }} />
             </div>
             <div style={{ flex: 1, textAlign: "right" }}>
-              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--t-fg2)" }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-fg2)" }}>
                 {isoToFlag(journeySpan.latest.iso)} {journeySpan.latest.country}
               </div>
-              <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 600, fontSize: 15 }}>
+              <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15 }}>
                 {journeySpan.latest.year > 0 ? journeySpan.latest.year : "—"}
               </div>
             </div>
@@ -1560,7 +1560,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
       {/* Per-member counts — individual totals (not intersection) */}
       {activeMemberCount > 0 && (
         <div>
-          <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginBottom: 8, textTransform: "uppercase", letterSpacing: 0.5 }}>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginBottom: 8, textTransform: "uppercase", letterSpacing: 0.5 }}>
             // per member
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -1569,11 +1569,11 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
                 padding: "4px 10px", borderRadius: 999,
                 background: (memberColors[id] || "#A29BFE") + "20",
                 border: "1px solid " + (memberColors[id] || "#A29BFE") + "40",
-                fontFamily: "JetBrains Mono, monospace", fontSize: 11,
+                fontFamily: "var(--font-mono)", fontSize: 11,
                 color: memberColors[id] || "#A29BFE",
               }}>
                 {id.charAt(0).toUpperCase() + id.slice(1)}{" "}
-                <span style={{ color: "#6E6A82" }}>{individualMemberCounts[id] || 0}</span>
+                <span style={{ color: "var(--t-fg3)" }}>{individualMemberCounts[id] || 0}</span>
               </div>
             ))}
           </div>
@@ -1582,7 +1582,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
 
       {/* Country list — top 5 */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>
           // recent countries
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -1591,7 +1591,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
               onClick={() => onCountryClick && onCountryClick(c.iso)}
               style={{
                 ...rowStyle,
-                background: focusedCountry === c.iso ? "rgba(108,92,231,0.12)" : "transparent",
+                background: focusedCountry === c.iso ? "var(--t-acc-12)" : "transparent",
                 borderLeft: focusedCountry === c.iso ? "2px solid #6C5CE7" : "2px solid transparent",
               }}
               onMouseEnter={e => { if (focusedCountry !== c.iso) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
@@ -1600,9 +1600,9 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
               <div style={{ fontSize: 13, fontWeight: 500 }}>{isoToFlag(c.iso.split("-")[0])} {c.names[0]}</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "2px 8px", marginTop: 3 }}>
                 {Object.entries(c.visits).sort((a, b) => a[1] - b[1]).map(([id, yr]) => (
-                  <span key={id} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10 }}>
+                  <span key={id} style={{ fontFamily: "var(--font-mono)", fontSize: 10 }}>
                     <span style={{ color: memberColors[id] || "#A29BFE" }}>●</span>{" "}
-                    <span style={{ color: "#A9A6BB" }}>{id.charAt(0).toUpperCase() + id.slice(1)} {yr}</span>
+                    <span style={{ color: "var(--t-fg2)" }}>{id.charAt(0).toUpperCase() + id.slice(1)} {yr}</span>
                   </span>
                 ))}
               </div>
@@ -1612,7 +1612,7 @@ function CountriesSidebar({ activeMembers, countriesData, memberColors, isoToNam
         {totalCountries > 5 && (
           <div
             onClick={() => setDetailView("countries")}
-            style={{ marginTop: 8, fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#A29BFE", cursor: "pointer", userSelect: "none" }}
+            style={{ marginTop: 8, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-accent)", cursor: "pointer", userSelect: "none" }}
             onMouseEnter={e => e.currentTarget.style.color = "#6C5CE7"}
             onMouseLeave={e => e.currentTarget.style.color = "#A29BFE"}
           >
@@ -2671,14 +2671,14 @@ function App() {
   const selectStyle = {
     padding: "5px 10px", borderRadius: 8,
     background: "var(--t-icon-bg)", border: "1px solid var(--t-icon-border)",
-    color: "var(--t-accent)", fontFamily: "JetBrains Mono, monospace", fontSize: 11,
+    color: "var(--t-accent)", fontFamily: "var(--font-mono)", fontSize: 11,
     outline: "none", cursor: "pointer",
   };
 
   const zoomBtnStyle = {
     width: 36, height: 36, borderRadius: 999,
-    background: "rgba(30,27,46,0.85)", border: "1px solid rgba(108,92,231,0.3)",
-    color: "#A29BFE", fontFamily: "JetBrains Mono, monospace", fontSize: 18,
+    background: "rgba(30,27,46,0.85)", border: "1px solid var(--t-acc-30)",
+    color: "var(--t-accent)", fontFamily: "var(--font-mono)", fontSize: 18,
     cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
     backdropFilter: "blur(8px)",
   };
@@ -2687,7 +2687,7 @@ function App() {
     <div style={{
       height: "100vh", maxHeight: "100vh", overflow: "hidden",
       background: "var(--t-page-bg)",
-      color: "var(--t-fg)", fontFamily: "Plus Jakarta Sans, sans-serif",
+      color: "var(--t-fg)", fontFamily: "var(--font-body)",
       display: "flex", flexDirection: "column",
     }}>
       {/* Top bar */}
@@ -2699,9 +2699,9 @@ function App() {
         {/* Wordmark */}
         <div style={{ display: "flex", flexDirection: "column", gap: 3, marginRight: 6 }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: 7 }}>
-            <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 700, fontSize: 15, letterSpacing: -0.5 }}>Travel Diary</div>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, letterSpacing: -0.5 }}>Travel Diary</div>
             {dataReady && window.FAMILY_NAME && (
-              <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 400, fontSize: 13, color: "var(--t-fg2)", letterSpacing: 0 }}>{window.FAMILY_NAME}</div>
+              <div style={{ fontFamily: "var(--font-display)", fontWeight: 400, fontSize: 13, color: "var(--t-fg2)", letterSpacing: 0 }}>{window.FAMILY_NAME}</div>
             )}
           </div>
           <div style={{ height: 2, width: 46, background: "linear-gradient(90deg, #6C5CE7, #FF6B6B, #00D2A0, #FDCB6E)", borderRadius: 2 }} />
@@ -2727,7 +2727,7 @@ function App() {
             padding: "5px 12px", borderRadius: 999,
             background: "var(--t-pill-bg)", border: "1px solid var(--t-pill-border)",
             color: "var(--t-pill-active-txt)",
-            fontFamily: "JetBrains Mono, monospace", fontSize: 11, fontWeight: 500,
+            fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500,
             cursor: "pointer", textTransform: "uppercase",
           }}>
             <span>{appMode === "countries" ? "🌍" : "✈"}</span>
@@ -2744,26 +2744,26 @@ function App() {
               {[{key:"countries",icon:"🌍",label:"Countries"},{key:"flights",icon:"✈",label:"Flights"}].map(m => (
                 <button key={m.key} onClick={() => { switchMode(m.key); setShowModeMenu(false); }} style={{
                   display: "flex", alignItems: "center", gap: 8,
-                  width: "100%", padding: "8px 14px", background: appMode === m.key ? "rgba(108,92,231,0.15)" : "transparent",
+                  width: "100%", padding: "8px 14px", background: appMode === m.key ? "var(--t-acc-15)" : "transparent",
                   border: "none", color: appMode === m.key ? "#A29BFE" : "var(--t-fg2)",
-                  fontFamily: "JetBrains Mono, monospace", fontSize: 11, cursor: "pointer", textAlign: "left",
+                  fontFamily: "var(--font-mono)", fontSize: 11, cursor: "pointer", textAlign: "left",
                   textTransform: "uppercase",
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
-                onMouseLeave={e => e.currentTarget.style.background = appMode === m.key ? "rgba(108,92,231,0.15)" : "transparent"}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
+                onMouseLeave={e => e.currentTarget.style.background = appMode === m.key ? "var(--t-acc-15)" : "transparent"}
                 ><span>{m.icon}</span><span>{m.label}</span></button>
               ))}
               <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
               {[{key:"3d",icon:"◉",label:"3D Globe"},{key:"2d",icon:"▭",label:"2D Map"}].map(v => (
                 <button key={v.key} onClick={() => { setMode(v.key); setShowModeMenu(false); }} style={{
                   display: "flex", alignItems: "center", gap: 8,
-                  width: "100%", padding: "8px 14px", background: mode === v.key ? "rgba(108,92,231,0.15)" : "transparent",
+                  width: "100%", padding: "8px 14px", background: mode === v.key ? "var(--t-acc-15)" : "transparent",
                   border: "none", color: mode === v.key ? "#A29BFE" : "var(--t-fg2)",
-                  fontFamily: "JetBrains Mono, monospace", fontSize: 11, cursor: "pointer", textAlign: "left",
+                  fontFamily: "var(--font-mono)", fontSize: 11, cursor: "pointer", textAlign: "left",
                   textTransform: "uppercase",
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
-                onMouseLeave={e => e.currentTarget.style.background = mode === v.key ? "rgba(108,92,231,0.15)" : "transparent"}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
+                onMouseLeave={e => e.currentTarget.style.background = mode === v.key ? "var(--t-acc-15)" : "transparent"}
                 ><span>{v.icon}</span><span>{v.label}</span></button>
               ))}
               {window.QuizModal && (
@@ -2773,10 +2773,10 @@ function App() {
                     display: "flex", alignItems: "center", gap: 8,
                     width: "100%", padding: "8px 14px", background: "transparent",
                     border: "none", color: "var(--t-fg2)",
-                    fontFamily: "JetBrains Mono, monospace", fontSize: 11, cursor: "pointer", textAlign: "left",
+                    fontFamily: "var(--font-mono)", fontSize: 11, cursor: "pointer", textAlign: "left",
                     textTransform: "uppercase",
                   }}
-                  onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
+                  onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                   ><span>🎯</span><span>Quiz</span></button>
                 </>
@@ -2791,8 +2791,8 @@ function App() {
           title={autoplayMode ? "Exit autoplay" : "Play autoplay"}
           style={{
             width: 32, height: 32, borderRadius: 999,
-            background: autoplayMode ? "rgba(108,92,231,0.45)" : "rgba(108,92,231,0.15)",
-            border: "1px solid " + (autoplayMode ? "rgba(108,92,231,0.7)" : "rgba(108,92,231,0.4)"),
+            background: autoplayMode ? "var(--t-acc-45)" : "var(--t-acc-15)",
+            border: "1px solid " + (autoplayMode ? "var(--t-acc-70)" : "var(--t-acc-40)"),
             color: "var(--t-accent)", fontSize: 13,
             cursor: "pointer", flexShrink: 0,
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -2852,7 +2852,7 @@ function App() {
             />
             <label style={{
               display: "flex", alignItems: "center", gap: 4,
-              fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg3)",
+              fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)",
               cursor: "pointer", whiteSpace: "nowrap",
             }}>
               <input type="checkbox" checked={showLabels}
@@ -2896,7 +2896,7 @@ function App() {
         <div style={{ position: "relative", flexShrink: 0 }}>
           <button onClick={() => setShowOverflowMenu(p => !p)} title="More options" style={{
             width: 32, height: 32, borderRadius: 10, border: "1px solid var(--t-icon-border)",
-            background: showOverflowMenu ? "rgba(108,92,231,0.2)" : "var(--t-icon-bg)",
+            background: showOverflowMenu ? "var(--t-acc-22)" : "var(--t-icon-bg)",
             backdropFilter: "blur(8px)", color: "var(--t-icon-txt)", fontSize: 16,
             cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
           }}>⋯</button>
@@ -2911,30 +2911,30 @@ function App() {
               <button onClick={() => { reloadData(); setShowOverflowMenu(false); }} style={{
                 display: "flex", alignItems: "center", gap: 8, width: "100%",
                 padding: "8px 14px", background: "transparent", border: "none",
-                color: "var(--t-fg2)", fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 12,
+                color: "var(--t-fg2)", fontFamily: "var(--font-body)", fontSize: 12,
                 cursor: "pointer", textAlign: "left",
                 animation: !dataReady ? "spin 1s linear infinite" : "none",
               }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
+              onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
               ><span>🔄</span><span>Refresh data</span></button>
               {/* Save */}
               <button onClick={exportMapOnly} style={{
                 display: "flex", alignItems: "center", gap: 8, width: "100%",
                 padding: "8px 14px", background: "transparent", border: "none",
-                color: "var(--t-fg2)", fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 12,
+                color: "var(--t-fg2)", fontFamily: "var(--font-body)", fontSize: 12,
                 cursor: "pointer", textAlign: "left",
               }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
+              onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
               ><span>💾</span><span>Save image</span></button>
               <button onClick={exportMapAndStats} style={{
                 display: "flex", alignItems: "center", gap: 8, width: "100%",
                 padding: "8px 14px", background: "transparent", border: "none",
-                color: "var(--t-fg2)", fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 12,
+                color: "var(--t-fg2)", fontFamily: "var(--font-body)", fontSize: 12,
                 cursor: "pointer", textAlign: "left",
               }}
-              onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
+              onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
               ><span>🖼</span><span>Save map + stats</span></button>
               {/* Errors */}
@@ -2951,7 +2951,7 @@ function App() {
                     <button onClick={() => { setShowQualityPanel(p => !p); setShowOverflowMenu(false); }} style={{
                       display: "flex", alignItems: "center", gap: 8, width: "100%",
                       padding: "8px 14px", background: "transparent", border: "none",
-                      color: badgeColor, fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 12,
+                      color: badgeColor, fontFamily: "var(--font-body)", fontSize: 12,
                       cursor: "pointer", textAlign: "left",
                     }}
                     onMouseEnter={e => e.currentTarget.style.background = "rgba(255,107,107,0.08)"}
@@ -3049,7 +3049,7 @@ function App() {
               alignItems: "center", justifyContent: "center", gap: 16,
               background: "rgba(15,13,26,0.75)", backdropFilter: "blur(4px)", zIndex: 10,
             }}>
-              <div style={{ fontFamily: "Space Grotesk, sans-serif", fontSize: 18, fontWeight: 600, color: "#A9A6BB" }}>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 600, color: "var(--t-fg2)" }}>
                 {activeMembers.size === 0 ? "No members selected" : "No flight data for selected members"}
               </div>
               <button
@@ -3058,8 +3058,8 @@ function App() {
                   padding: "10px 28px", borderRadius: 999,
                   background: "linear-gradient(135deg, #6C5CE7 0%, #3D35A0 100%)",
                   border: "none", color: "#fff",
-                  fontFamily: "Space Grotesk, sans-serif", fontWeight: 600, fontSize: 14,
-                  cursor: "pointer", boxShadow: "0 4px 18px rgba(108,92,231,0.35)",
+                  fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 14,
+                  cursor: "pointer", boxShadow: "0 4px 18px var(--t-acc-35)",
                 }}>
                 {activeMembers.size === 0 ? "Select all" : "Switch to Countries"}
               </button>
@@ -3071,12 +3071,12 @@ function App() {
             const tipStyle = (pos) => ({
               position: "fixed", left: pos.x + 14, top: pos.y + 14,
               padding: "8px 12px", background: "rgba(30,27,46,0.95)",
-              border: "1px solid rgba(108,92,231,0.35)", borderRadius: 10,
-              fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 12, color: "#FAFAFA",
+              border: "1px solid var(--t-acc-35)", borderRadius: 10,
+              fontFamily: "var(--font-body)", fontSize: 12, color: "#FAFAFA",
               pointerEvents: "none", zIndex: 1000, backdropFilter: "blur(8px)", maxWidth: 300,
             });
-            const monoSm = { fontFamily: "JetBrains Mono, monospace", fontSize: 10 };
-            const monoSmDim = { ...monoSm, color: "#6E6A82" };
+            const monoSm = { fontFamily: "var(--font-mono)", fontSize: 10 };
+            const monoSmDim = { ...monoSm, color: "var(--t-fg3)" };
 
             if (hoverAirport) {
               const A = (window.AIRPORTS || {})[hoverAirport.iata];
@@ -3088,7 +3088,7 @@ function App() {
                     {A && <span style={{ color: "#FAFAFA" }}>{A.city}</span>}
                   </div>
                   {A && <div style={monoSmDim}>{A.country}</div>}
-                  {flightCount > 0 && <div style={{ ...monoSm, color: "#A29BFE", marginTop: 4 }}>{flightCount} flight{flightCount !== 1 ? "s" : ""}</div>}
+                  {flightCount > 0 && <div style={{ ...monoSm, color: "var(--t-accent)", marginTop: 4 }}>{flightCount} flight{flightCount !== 1 ? "s" : ""}</div>}
                 </div>
               );
             }
@@ -3102,7 +3102,7 @@ function App() {
                 <div style={tipStyle(hoverArc)}>
                   <div style={{ fontWeight: 700, marginBottom: 3, display: "flex", alignItems: "center", gap: 6 }}>
                     <span style={{ ...monoSm, color: "#00D2A0", fontSize: 13 }}>{f.From}</span>
-                    <span style={{ color: "#6E6A82" }}>→</span>
+                    <span style={{ color: "var(--t-fg3)" }}>→</span>
                     <span style={{ ...monoSm, color: "#00D2A0", fontSize: 13 }}>{f.To}</span>
                   </div>
                   {(fromA || toA) && (
@@ -3110,7 +3110,7 @@ function App() {
                   )}
                   <div style={{ marginTop: 4, display: "flex", flexWrap: "wrap", gap: "2px 10px" }}>
                     {f.Airline && <span style={monoSmDim}>{f.Airline}</span>}
-                    {f.Flight_Number && <span style={{ ...monoSm, color: "#A29BFE" }}>{f.Flight_Number}</span>}
+                    {f.Flight_Number && <span style={{ ...monoSm, color: "var(--t-accent)" }}>{f.Flight_Number}</span>}
                     {f.Reason && <span style={{ ...monoSm, color: "#FDCB6E" }}>{reasonLabel}</span>}
                   </div>
                   {f.Date && <div style={{ ...monoSmDim, marginTop: 2 }}>{f.Date}</div>}
@@ -3143,13 +3143,13 @@ function App() {
                         {Object.entries(visits).sort((a, b) => a[1] - b[1]).map(([id, yr]) => (
                           <span key={id} style={monoSm}>
                             <span style={{ color: MEMBER_COLORS[id] || "#A29BFE" }}>●</span>{" "}
-                            <span style={{ color: "#A9A6BB" }}>{id.charAt(0).toUpperCase() + id.slice(1)} {yr}</span>
+                            <span style={{ color: "var(--t-fg2)" }}>{id.charAt(0).toUpperCase() + id.slice(1)} {yr}</span>
                           </span>
                         ))}
                       </div>
                     );
                   })() : (
-                    <div style={{ ...monoSm, color: "#A29BFE" }}>
+                    <div style={{ ...monoSm, color: "var(--t-accent)" }}>
                       {visitedCounts[hoverCountry.iso]
                         ? `${visitedCounts[hoverCountry.iso]} flight${visitedCounts[hoverCountry.iso] === 1 ? "" : "s"}`
                         : "not visited"}
@@ -3167,16 +3167,16 @@ function App() {
             <div style={{
               position: "absolute", top: 16, left: 16,
               padding: "7px 12px 7px 14px", background: "rgba(30,27,46,0.85)",
-              border: "1px solid rgba(108,92,231,0.4)", borderRadius: 999,
+              border: "1px solid var(--t-acc-40)", borderRadius: 999,
               display: "flex", alignItems: "center", gap: 8,
               backdropFilter: "blur(12px)", zIndex: 5,
             }}>
               <span style={{ width: 8, height: 8, borderRadius: 999, background: "#A29BFE", boxShadow: "0 0 10px #A29BFE" }} />
-              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>
                 {focusedRoute.from} → {focusedRoute.to}
               </span>
               <button onClick={() => setFocusedRoute(null)} style={{
-                background: "transparent", border: "none", color: "#6E6A82",
+                background: "transparent", border: "none", color: "var(--t-fg3)",
                 cursor: "pointer", padding: 0, marginLeft: 2, fontSize: 14, lineHeight: 1,
               }}>×</button>
             </div>
@@ -3222,7 +3222,7 @@ function App() {
               display: "flex", gap: 12, padding: "8px 12px",
               background: "rgba(30,27,46,0.7)", border: "1px solid rgba(255,255,255,0.06)",
               borderRadius: 10, backdropFilter: "blur(10px)",
-              fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#A9A6BB",
+              fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg2)",
               flexWrap: "wrap",
             }}>
               {arcColorMode === "person" ? (
@@ -3301,8 +3301,8 @@ function App() {
           position: "absolute", right: sidebarOpen ? sidebarWidth : 0, top: "50%",
           transform: "translateY(-50%)", zIndex: 10,
           width: 20, height: 48,
-          background: "rgba(30,27,46,0.85)", border: "1px solid rgba(108,92,231,0.3)",
-          borderRadius: "8px 0 0 8px", color: "#A29BFE", cursor: "pointer",
+          background: "rgba(30,27,46,0.85)", border: "1px solid var(--t-acc-30)",
+          borderRadius: "8px 0 0 8px", color: "var(--t-accent)", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: 12, fontFamily: "monospace",
           transition: "right 0.25s cubic-bezier(0.4,0,0.2,1)",
@@ -3370,8 +3370,8 @@ function App() {
             <>
               {/* Section label */}
               <div style={{
-                fontFamily: "JetBrains Mono, monospace", fontSize: 10,
-                color: "#6E6A82", letterSpacing: 0.5,
+                fontFamily: "var(--font-mono)", fontSize: 10,
+                color: "var(--t-fg3)", letterSpacing: 0.5,
               }}>
                 // {[...activeMembers].map(id => id.charAt(0).toUpperCase() + id.slice(1)).join(", ") || "none"} · flights
                 {year !== "all" ? ` · ${year}` : ""}
@@ -3387,19 +3387,19 @@ function App() {
                 <div style={{
                   padding: "14px 16px", borderRadius: 14,
                   background: "linear-gradient(135deg, rgba(108,92,231,0.15) 0%, rgba(255,107,107,0.10) 100%)",
-                  border: "1px solid rgba(108,92,231,0.25)",
+                  border: "1px solid var(--t-acc-25)",
                 }}>
                   <div style={{
-                    fontFamily: "JetBrains Mono, monospace", fontSize: 10,
+                    fontFamily: "var(--font-mono)", fontSize: 10,
                     color: "var(--t-accent)", marginBottom: 10,
                     textTransform: "uppercase", letterSpacing: 0.5,
                   }}>// {(focusedAirport || focusedCountry || focusedAirline || focusedAircraft || focusedRoute || focusedReason || focusedClass || focusedSeatType) ? "THE ARC · focused" : "THE ARC"}</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--t-fg2)" }}>
+                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-fg2)" }}>
                         {stats.first.From} → {stats.first.To}
                       </div>
-                      <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 600, fontSize: 15 }}>
+                      <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15 }}>
                         {fmtDate(stats.first.dateObj)}
                       </div>
                     </div>
@@ -3413,10 +3413,10 @@ function App() {
                       <div style={{ position: "absolute", right: 0, top: "50%", width: 8, height: 8, borderRadius: 999, background: "#FDCB6E", transform: "translate(50%, -50%)" }} />
                     </div>
                     <div style={{ flex: 1, textAlign: "right" }}>
-                      <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--t-fg2)" }}>
+                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-fg2)" }}>
                         {stats.last.From} → {stats.last.To}
                       </div>
-                      <div style={{ fontFamily: "Space Grotesk, sans-serif", fontWeight: 600, fontSize: 15 }}>
+                      <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 15 }}>
                         {fmtDate(stats.last.dateObj)}
                       </div>
                     </div>
@@ -3480,8 +3480,8 @@ function App() {
               {(() => {
                 const secLabel = (label, onClick) => (
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</div>
-                    {onClick && <div onClick={onClick} style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#A29BFE", cursor: "pointer" }}>all →</div>}
+                    <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5 }}>{label}</div>
+                    {onClick && <div onClick={onClick} style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-accent)", cursor: "pointer" }}>all →</div>}
                   </div>
                 );
                 const rowBase = {
@@ -3490,10 +3490,10 @@ function App() {
                   transition: "background 0.1s",
                 };
                 const count = (n) => (
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", marginLeft: "auto", flexShrink: 0 }}>×{n}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", marginLeft: "auto", flexShrink: 0 }}>×{n}</span>
                 );
                 const hover = { onMouseEnter: e => e.currentTarget.style.background = "rgba(255,255,255,0.04)", onMouseLeave: e => e.currentTarget.style.background = "transparent" };
-                const focused = { background: "rgba(108,92,231,0.12)", borderLeft: "2px solid #6C5CE7" };
+                const focused = { background: "var(--t-acc-12)", borderLeft: "2px solid #6C5CE7" };
 
                 return (
                   <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
@@ -3510,8 +3510,8 @@ function App() {
                             <div key={iata} onClick={() => toggleFocusAirport(iata)} {...hover}
                               style={{ ...rowBase, ...(isFocused ? focused : {}) }}>
                               {iso && <span style={{ marginRight: 5 }}>{isoToFlag(iso)}</span>}
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{iata}</span>
-                              {ap?.city && <span style={{ fontSize: 11, color: "#6E6A82", marginLeft: 6 }}>{ap.city}</span>}
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{iata}</span>
+                              {ap?.city && <span style={{ fontSize: 11, color: "var(--t-fg3)", marginLeft: 6 }}>{ap.city}</span>}
                               {count(n)}
                             </div>
                           );
@@ -3533,7 +3533,7 @@ function App() {
                               )}
                               <span style={{ fontSize: 12 }}>{name}</span>
                               {AIRLINE_ALLIANCES[name] && (
-                                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9,
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9,
                                   color: ALLIANCE_COLORS[AIRLINE_ALLIANCES[name]],
                                   border: `1px solid ${ALLIANCE_COLORS[AIRLINE_ALLIANCES[name]]}`,
                                   borderRadius: 4, padding: "1px 4px", marginLeft: 5, flexShrink: 0 }}>
@@ -3541,7 +3541,7 @@ function App() {
                                 </span>
                               )}
                               {AIRLINE_MM.has(name) && (
-                                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9,
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9,
                                   color: "#1E1B2E", background: MM_COLOR,
                                   borderRadius: 4, padding: "1px 3px", marginLeft: 4, flexShrink: 0, fontWeight: 700 }}>
                                   M
@@ -3597,17 +3597,17 @@ function App() {
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                   <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
                                     {isoF && <span>{isoToFlag(isoF)}</span>}
-                                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#00D2A0" }}>{r.from}</span>
-                                    <span style={{ color: "#6E6A82", fontSize: 10, margin: "0 3px" }}>⟷</span>
+                                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#00D2A0" }}>{r.from}</span>
+                                    <span style={{ color: "var(--t-fg3)", fontSize: 10, margin: "0 3px" }}>⟷</span>
                                     {isoT && <span>{isoToFlag(isoT)}</span>}
-                                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "#00D2A0" }}>{r.to}</span>
+                                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "#00D2A0" }}>{r.to}</span>
                                   </div>
                                 </div>
                                 {/* Right: count + dist/dur stacked */}
                                 <div style={{ textAlign: "right", flexShrink: 0, paddingLeft: 8 }}>
-                                  <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82" }}>×{r.count}</div>
-                                  {r.avgDist > 0 && <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665" }}>{fmtNum(r.avgDist)} km</div>}
-                                  {durStr && <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665" }}>{durStr}</div>}
+                                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)" }}>×{r.count}</div>
+                                  {r.avgDist > 0 && <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)" }}>{fmtNum(r.avgDist)} km</div>}
+                                  {durStr && <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)" }}>{durStr}</div>}
                                 </div>
                               </div>
                               {/* Flights list: date · airline */}
@@ -3615,11 +3615,11 @@ function App() {
                                 {distinctLegs.slice(0, 6).map((f, i) => (
                                   <div key={i} style={{ display: "flex", alignItems: "center", gap: 5, padding: "1px 0" }}>
                                     <span style={{ width: 4, height: 4, borderRadius: 999, background: "#4A4665", flexShrink: 0 }} />
-                                    <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#6E6A82" }}>{f.Date}</span>
-                                    {f.Airline && <span style={{ fontSize: 9, color: "#4A4665", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.Airline}</span>}
+                                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg3)" }}>{f.Date}</span>
+                                    {f.Airline && <span style={{ fontSize: 9, color: "var(--t-fg4)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.Airline}</span>}
                                   </div>
                                 ))}
-                                {distinctLegs.length > 6 && <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665", paddingLeft: 9 }}>+{distinctLegs.length - 6} more</div>}
+                                {distinctLegs.length > 6 && <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", paddingLeft: 9 }}>+{distinctLegs.length - 6} more</div>}
                               </div>
                             </div>
                           );
@@ -3637,9 +3637,9 @@ function App() {
                             <div key={t.code} onClick={() => toggleFocusTrip(t.code)} {...hover}
                               style={{ ...rowBase, ...(isFocused ? focused : {}) }}>
                               <span style={{ marginRight: 6 }}>{t.emoji}</span>
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11 }}>{t.dest}</span>
-                              <span style={{ fontSize: 11, color: "#6E6A82", marginLeft: 5 }}>{t.sortDate.getFullYear()}</span>
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665", marginLeft: "auto" }}>{t.code}</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11 }}>{t.dest}</span>
+                              <span style={{ fontSize: 11, color: "var(--t-fg3)", marginLeft: 5 }}>{t.sortDate.getFullYear()}</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", marginLeft: "auto" }}>{t.code}</span>
                             </div>
                           );
                         })}
@@ -3661,7 +3661,7 @@ function App() {
                               style={{ ...rowBase, ...(isFocused ? focused : {}) }}>
                               <span style={{ marginRight: 6 }}>{isoToFlag(iso)}</span>
                               <span style={{ fontSize: 12 }}>{name}</span>
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#6E6A82", marginLeft: 5 }}>({iso})</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg3)", marginLeft: 5 }}>({iso})</span>
                               {count(n)}
                             </div>
                           );
@@ -3672,7 +3672,7 @@ function App() {
 
                     {/* Reason split */}
                     <div>
-                      <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// reason split</div>
+                      <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// reason split</div>
                       <div style={{ display: "flex", height: 8, borderRadius: 4, overflow: "hidden", background: "rgba(255,255,255,0.04)", cursor: "pointer" }}>
                         {stats.leisure > 0 && <div onClick={() => toggleFocusReason("L")} title="Filter: Leisure"
                           style={{ flex: stats.leisure, background: "#FF6B6B", opacity: focusedReason && focusedReason !== "L" ? 0.3 : 1 }} />}
@@ -3681,10 +3681,10 @@ function App() {
                         {stats.other > 0 && <div onClick={() => toggleFocusReason("O")} title="Filter: Other"
                           style={{ flex: stats.other, background: "#A29BFE", opacity: focusedReason && focusedReason !== "O" ? 0.3 : 1 }} />}
                       </div>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#A9A6BB" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg2)" }}>
                         <span onClick={() => toggleFocusReason("L")} style={{ cursor: "pointer", opacity: focusedReason && focusedReason !== "L" ? 0.4 : 1, fontWeight: focusedReason === "L" ? 600 : 400 }}><span style={{ color: "#FF8E8E" }}>●</span> leisure {stats.leisure}</span>
                         <span onClick={() => toggleFocusReason("B")} style={{ cursor: "pointer", opacity: focusedReason && focusedReason !== "B" ? 0.4 : 1, fontWeight: focusedReason === "B" ? 600 : 400 }}><span style={{ color: "#FDCB6E" }}>●</span> business {stats.biz}</span>
-                        {stats.other > 0 && <span onClick={() => toggleFocusReason("O")} style={{ cursor: "pointer", opacity: focusedReason && focusedReason !== "O" ? 0.4 : 1, fontWeight: focusedReason === "O" ? 600 : 400 }}><span style={{ color: "#A29BFE" }}>●</span> other {stats.other}</span>}
+                        {stats.other > 0 && <span onClick={() => toggleFocusReason("O")} style={{ cursor: "pointer", opacity: focusedReason && focusedReason !== "O" ? 0.4 : 1, fontWeight: focusedReason === "O" ? 600 : 400 }}><span style={{ color: "var(--t-accent)" }}>●</span> other {stats.other}</span>}
                       </div>
                     </div>
 
@@ -3695,7 +3695,7 @@ function App() {
                       const colors = { "Economy": "#6C5CE7", "Premium Economy": "#00D2A0", "Business": "#FDCB6E", "First": "#FF6B6B" };
                       return (
                         <div>
-                          <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// class</div>
+                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// class</div>
                           <div style={{ display: "flex", height: 8, borderRadius: 4, overflow: "hidden", background: "rgba(255,255,255,0.04)", marginBottom: 6 }}>
                             {entries.map(([label, n]) => (
                               <div key={label} onClick={() => toggleFocusClass(label)} title={`Filter: ${label}`}
@@ -3707,14 +3707,14 @@ function App() {
                             return (
                             <div key={label} onClick={() => toggleFocusClass(label)}
                               onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                              onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
-                              style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", borderRadius: 6, fontFamily: "JetBrains Mono, monospace", fontSize: 10, cursor: "pointer", ...(isFocused ? { background: "rgba(108,92,231,0.12)", borderLeft: "2px solid #6C5CE7" } : {}) }}>
+                              onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
+                              style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", borderRadius: 6, fontFamily: "var(--font-mono)", fontSize: 10, cursor: "pointer", ...(isFocused ? { background: "var(--t-acc-12)", borderLeft: "2px solid #6C5CE7" } : {}) }}>
                               <span style={{ width: 7, height: 7, borderRadius: 2, background: colors[label] || "#A29BFE", flexShrink: 0 }} />
                               <span style={{ color: isFocused ? "#FAFAFA" : "#A9A6BB", flex: 1 }}>{label}</span>
                               <div style={{ flex: 2, background: "rgba(255,255,255,0.05)", borderRadius: 2, overflow: "hidden", height: 4 }}>
                                 <div style={{ width: `${(n / total * 100).toFixed(1)}%`, height: "100%", background: colors[label] || "#A29BFE" }} />
                               </div>
-                              <span style={{ color: "#6E6A82", flexShrink: 0, minWidth: 20, textAlign: "right" }}>{n}</span>
+                              <span style={{ color: "var(--t-fg3)", flexShrink: 0, minWidth: 20, textAlign: "right" }}>{n}</span>
                             </div>
                             );
                           })}
@@ -3729,7 +3729,7 @@ function App() {
                       const colors = { "Window": "#74B9FF", "Aisle": "#55EFC4", "Middle": "#FDCB6E" };
                       return (
                         <div>
-                          <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// seat type</div>
+                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// seat type</div>
                           <div style={{ display: "flex", height: 8, borderRadius: 4, overflow: "hidden", background: "rgba(255,255,255,0.04)", marginBottom: 6 }}>
                             {entries.map(([label, n]) => (
                               <div key={label} onClick={() => toggleFocusSeatType(label)} title={`Filter: ${label}`}
@@ -3741,14 +3741,14 @@ function App() {
                             return (
                             <div key={label} onClick={() => toggleFocusSeatType(label)}
                               onMouseEnter={e => { if (!isFocused) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
-                              onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "rgba(108,92,231,0.12)" : "transparent"; }}
-                              style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", borderRadius: 6, fontFamily: "JetBrains Mono, monospace", fontSize: 10, cursor: "pointer", ...(isFocused ? { background: "rgba(108,92,231,0.12)", borderLeft: "2px solid #6C5CE7" } : {}) }}>
+                              onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
+                              style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", borderRadius: 6, fontFamily: "var(--font-mono)", fontSize: 10, cursor: "pointer", ...(isFocused ? { background: "var(--t-acc-12)", borderLeft: "2px solid #6C5CE7" } : {}) }}>
                               <span style={{ width: 7, height: 7, borderRadius: 2, background: colors[label] || "#A29BFE", flexShrink: 0 }} />
                               <span style={{ color: isFocused ? "#FAFAFA" : "#A9A6BB", flex: 1 }}>{label}</span>
                               <div style={{ flex: 2, background: "rgba(255,255,255,0.05)", borderRadius: 2, overflow: "hidden", height: 4 }}>
                                 <div style={{ width: `${(n / total * 100).toFixed(1)}%`, height: "100%", background: colors[label] || "#A29BFE" }} />
                               </div>
-                              <span style={{ color: "#6E6A82", flexShrink: 0, minWidth: 20, textAlign: "right" }}>{n}</span>
+                              <span style={{ color: "var(--t-fg3)", flexShrink: 0, minWidth: 20, textAlign: "right" }}>{n}</span>
                             </div>
                             );
                           })}
@@ -3763,7 +3763,7 @@ function App() {
                       const colors = { Boeing:"#74B9FF", Airbus:"#FF6B6B", Embraer:"#00D2A0", Bombardier:"#FDCB6E", ATR:"#A29BFE" };
                       return (
                         <div>
-                          <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// manufacturer</div>
+                          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 6 }}>// manufacturer</div>
                           <div style={{ display: "flex", height: 8, borderRadius: 4, overflow: "hidden", background: "rgba(255,255,255,0.04)", marginBottom: 6 }}>
                             {entries.map(([label, n]) => (
                               <div key={label} title={`${label}: ${n}`}
@@ -3771,13 +3771,13 @@ function App() {
                             ))}
                           </div>
                           {entries.map(([label, n]) => (
-                            <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", borderRadius: 6, fontFamily: "JetBrains Mono, monospace", fontSize: 10 }}>
+                            <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 6px", borderRadius: 6, fontFamily: "var(--font-mono)", fontSize: 10 }}>
                               <span style={{ width: 7, height: 7, borderRadius: 2, background: colors[label] || "#A29BFE", flexShrink: 0 }} />
-                              <span style={{ color: "#A9A6BB", flex: 1 }}>{label}</span>
+                              <span style={{ color: "var(--t-fg2)", flex: 1 }}>{label}</span>
                               <div style={{ flex: 2, background: "rgba(255,255,255,0.05)", borderRadius: 2, overflow: "hidden", height: 4 }}>
                                 <div style={{ width: `${(n / total * 100).toFixed(1)}%`, height: "100%", background: colors[label] || "#A29BFE" }} />
                               </div>
-                              <span style={{ color: "#6E6A82", flexShrink: 0, minWidth: 20, textAlign: "right" }}>{n}</span>
+                              <span style={{ color: "var(--t-fg3)", flexShrink: 0, minWidth: 20, textAlign: "right" }}>{n}</span>
                             </div>
                           ))}
                         </div>
@@ -3787,18 +3787,18 @@ function App() {
                     {/* Longest & shortest flights */}
                     {(stats.longestFlight || stats.shortestFlight) && (
                       <div>
-                        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>// flight duration extremes</div>
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>// flight duration extremes</div>
                         {[
                           { label: "longest", f: stats.longestFlight, color: "#FF6B6B" },
                           { label: "shortest", f: stats.shortestFlight, color: "#55EFC4" },
                         ].filter(x => x.f).map(({ label, f, color }) => (
                           <div key={label} style={{ padding: "7px 10px", borderRadius: 8, marginBottom: 4, background: "rgba(255,255,255,0.02)" }}>
-                            <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: color, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 2 }}>{label}</div>
+                            <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: color, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 2 }}>{label}</div>
                             <div style={{ display: "flex", alignItems: "center" }}>
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{f.From} → {f.To}</span>
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: color, marginLeft: "auto" }}>{fmtDur(f.durMins)}</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{f.From} → {f.To}</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: color, marginLeft: "auto" }}>{fmtDur(f.durMins)}</span>
                             </div>
-                            <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 10, color: "#6E6A82", marginTop: 2 }}>{fmtDate(f.dateObj)} · {f.Airline || ""}</div>
+                            <div style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--t-fg3)", marginTop: 2 }}>{fmtDate(f.dateObj)} · {f.Airline || ""}</div>
                           </div>
                         ))}
                       </div>
@@ -3807,7 +3807,7 @@ function App() {
                     {/* Route distance extremes */}
                     {(stats.longestRouteByKm || stats.shortestRouteByKm) && (
                       <div>
-                        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>// route distance extremes</div>
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>// route distance extremes</div>
                         {[
                           { label: "longest", r: stats.longestRouteByKm, color: "#FF6B6B", sort: "km-desc" },
                           { label: "shortest", r: stats.shortestRouteByKm, color: "#55EFC4", sort: "km-asc" },
@@ -3821,16 +3821,16 @@ function App() {
                               onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
                               onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
                               style={{ padding: "7px 10px", borderRadius: 8, marginBottom: 4, background: "rgba(255,255,255,0.02)", cursor: "pointer" }}>
-                              <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 2 }}>{label}</div>
+                              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, color, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 2 }}>{label}</div>
                               <div style={{ display: "flex", alignItems: "center" }}>
                                 {isoF && <span style={{ marginRight: 3 }}>{isoToFlag(isoF)}</span>}
-                                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{r.from}</span>
-                                <span style={{ color: "#6E6A82", fontSize: 10, margin: "0 5px" }}>⟷</span>
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{r.from}</span>
+                                <span style={{ color: "var(--t-fg3)", fontSize: 10, margin: "0 5px" }}>⟷</span>
                                 {isoT && <span style={{ marginRight: 3 }}>{isoToFlag(isoT)}</span>}
-                                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{r.to}</span>
-                                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color, marginLeft: "auto" }}>{fmtNum(r.avgDist)} km</span>
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{r.to}</span>
+                                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color, marginLeft: "auto" }}>{fmtNum(r.avgDist)} km</span>
                               </div>
-                              <div style={{ fontFamily: "Plus Jakarta Sans, sans-serif", fontSize: 10, color: "#6E6A82", marginTop: 2 }}>×{r.count} flight{r.count > 1 ? "s" : ""}</div>
+                              <div style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "var(--t-fg3)", marginTop: 2 }}>×{r.count} flight{r.count > 1 ? "s" : ""}</div>
                             </div>
                           );
                         })}
@@ -3840,7 +3840,7 @@ function App() {
                     {/* Compass airports */}
                     {stats.northmost && (
                       <div>
-                        <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "#6E6A82", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>// compass extremes</div>
+                        <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>// compass extremes</div>
                         {[
                           { dir: "N", label: "northmost", entry: stats.northmost, color: "#74B9FF" },
                           { dir: "S", label: "southmost", entry: stats.southmost, color: "#55EFC4" },
@@ -3854,11 +3854,11 @@ function App() {
                           return (
                             <div key={dir} onClick={() => toggleFocusAirport(iata)} {...hover}
                               style={{ ...rowBase }}>
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color, minWidth: 18 }}>{dir}</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color, minWidth: 18 }}>{dir}</span>
                               {iso && <span style={{ marginRight: 5 }}>{isoToFlag(iso)}</span>}
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#00D2A0" }}>{iata}</span>
-                              <span style={{ fontSize: 11, color: "#6E6A82", marginLeft: 6 }}>{ap.city}</span>
-                              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "#4A4665", marginLeft: "auto" }}>{coord}</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "#00D2A0" }}>{iata}</span>
+                              <span style={{ fontSize: 11, color: "var(--t-fg3)", marginLeft: 6 }}>{ap.city}</span>
+                              <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", marginLeft: "auto" }}>{coord}</span>
                             </div>
                           );
                         })}

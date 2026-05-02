@@ -125,20 +125,20 @@ function AutoplayOverlay({ autoplayState, groups, lightMode }) {
       pointerEvents: "none",
     }}>
       <div style={{
-        fontFamily: "Space Grotesk, sans-serif",
+        fontFamily: "var(--font-display)",
         fontSize: 76, fontWeight: 700, letterSpacing: -3,
         color: lightMode ? "#1E1B2E" : "#F0F0F0", lineHeight: 1,
         textShadow: lightMode ? "0 2px 12px rgba(255,255,255,0.6)" : "0 2px 30px rgba(0,0,0,0.7)",
       }}>{year}</div>
       <div style={{
-        fontFamily: "Space Grotesk, sans-serif",
+        fontFamily: "var(--font-display)",
         fontSize: 26, fontWeight: 500,
         color: lightMode ? "#3D3A4E" : "#8A87A0", marginTop: -2,
         textShadow: lightMode ? "0 1px 8px rgba(255,255,255,0.5)" : "0 2px 12px rgba(0,0,0,0.5)",
       }}>{month}</div>
       {routeStr && (
         <div style={{
-          fontFamily: "JetBrains Mono, monospace",
+          fontFamily: "var(--font-mono)",
           fontSize: 13, color: lightMode ? "#008C6B" : "#00D2A0",
           marginTop: 8, letterSpacing: 0.3,
           textShadow: lightMode ? "none" : "0 0 12px rgba(0,210,160,0.4)",
@@ -166,7 +166,7 @@ function CountriesAutoplayOverlay({ autoplayState, groups, lightMode }) {
       pointerEvents: "none",
     }}>
       <div style={{
-        fontFamily: "Space Grotesk, sans-serif",
+        fontFamily: "var(--font-display)",
         fontSize: 76, fontWeight: 700, letterSpacing: -3,
         color: lightMode ? "#1E1B2E" : "#F0F0F0", lineHeight: 1,
         textShadow: lightMode ? "0 2px 12px rgba(255,255,255,0.6)" : "0 2px 30px rgba(0,0,0,0.7)",
@@ -174,7 +174,7 @@ function CountriesAutoplayOverlay({ autoplayState, groups, lightMode }) {
       {countryNames.length > 0 && (
         <>
           <div style={{
-            fontFamily: "Space Grotesk, sans-serif",
+            fontFamily: "var(--font-display)",
             fontSize: 24, fontWeight: 500,
             color: lightMode ? "#3D3A4E" : "#8A87A0", marginTop: -2,
             textShadow: lightMode ? "0 1px 8px rgba(255,255,255,0.5)" : "0 2px 12px rgba(0,0,0,0.5)",
@@ -182,7 +182,7 @@ function CountriesAutoplayOverlay({ autoplayState, groups, lightMode }) {
             {countryNames.length} {countryNames.length === 1 ? "country" : "countries"} added
           </div>
           <div style={{
-            fontFamily: "Plus Jakarta Sans, sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: 14, color: lightMode ? "#0369A1" : "#74B9FF",
             marginTop: 6, letterSpacing: 0.2,
             textShadow: lightMode ? "none" : "0 0 12px rgba(116,185,255,0.35)",

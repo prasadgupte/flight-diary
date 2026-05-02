@@ -63,7 +63,22 @@
   --arc-leisure: linear-gradient(90deg, var(--electric), var(--coral));
   --arc-work:    linear-gradient(90deg, var(--electric), var(--sun));
 
-  /* === TYPOGRAPHY FAMILIES === */
+  /* === DS-COMPATIBLE ALIASES ===
+     pg-design-system uses --accent-* names for the same hex values.
+     These aliases let both naming conventions work in CSS.
+     --accent-sky intentionally NOT aliased: DS=#0EA5E9, TD=#74B9FF (different hue). */
+  --accent-violet:       var(--electric);
+  --accent-violet-light: var(--electric-light);
+  --accent-coral:        var(--coral);
+  --accent-coral-light:  var(--coral-soft);
+  --accent-mint:         var(--mint);
+  --accent-mint-light:   var(--mint-soft);
+  --accent-amber:        var(--sun);
+  --accent-amber-light:  var(--sun-soft);
+
+  /* === TYPOGRAPHY FAMILIES ===
+     Body font: Plus Jakarta Sans (intentional divergence from DS Inter).
+     PJS suits the dense data-dashboard aesthetic better; headings + mono match the DS. */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
   --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
@@ -108,7 +123,8 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
-  --radius-pill: 999px;
+  --radius-full: 9999px;
+  --radius-pill: var(--radius-full);
 
   /* === SHADOWS === */
   --shadow-card:  0 4px 20px rgba(0,0,0,0.10);

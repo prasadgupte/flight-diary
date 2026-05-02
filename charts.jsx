@@ -184,7 +184,7 @@ function StatsChart({ mode, allFlights, countriesData, activeMembers, width = 32
       }}>
         {isHovering && (
           <span style={{
-            fontFamily: "Space Grotesk, sans-serif", fontSize: 13, fontWeight: 700,
+            fontFamily: "var(--font-display)", fontSize: 13, fontWeight: 700,
             color: "var(--t-accent)", marginRight: 4, letterSpacing: -0.3,
           }}>{activeD.year}</span>
         )}
@@ -198,12 +198,12 @@ function StatsChart({ mode, allFlights, countriesData, activeMembers, width = 32
             ) : (
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: item.color, flexShrink: 0 }} />
             )}
-            <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg3)" }}>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)" }}>
               {item.label}
             </span>
             {isHovering && (
               <span style={{
-                fontFamily: "JetBrains Mono, monospace", fontSize: 11, fontWeight: 700,
+                fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 700,
                 color: item.color || "var(--t-fg)",
               }}>{item.val}</span>
             )}
@@ -278,7 +278,7 @@ function StatsChart({ mode, allFlights, countriesData, activeMembers, width = 32
               onClick={(e) => { e.stopPropagation(); onYearClick && onYearClick(y); }}>
               <line x1={x} x2={x} y1={yZero} y2={yZero + 3} style={{ stroke: "var(--t-over-25)" }} strokeWidth="1" />
               <text x={x} y={yZero + 10} textAnchor="middle"
-                fontFamily="JetBrains Mono, monospace" fontSize="7"
+                fontFamily="var(--font-mono)" fontSize="7"
                 style={{ fill: isActive ? "var(--t-accent)" : "var(--t-fg3)" }}
                 fontWeight={isActive ? "700" : "400"}>{y}</text>
               {isActive && (

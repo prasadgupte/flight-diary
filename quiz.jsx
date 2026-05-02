@@ -275,7 +275,7 @@ function QuizModal({ flights, onClose }) {
     background: "var(--t-surf-95)", border: "1px solid var(--t-acc-35)",
     borderRadius: 20, padding: "28px 32px", maxWidth: 520, width: "90%",
     boxShadow: "0 24px 80px rgba(0,0,0,0.7)",
-    fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+    fontFamily: "var(--font-body)",
     maxHeight: "90vh", overflowY: "auto",
   };
 
@@ -293,7 +293,7 @@ function QuizModal({ flights, onClose }) {
     return {
       width: "100%", textAlign: "left", padding: "11px 14px",
       background: bg, border, borderRadius: 10, color,
-      fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", fontSize: 13,
+      fontFamily: "var(--font-body)", fontSize: 13,
       cursor: answered ? "default" : "pointer", transition: "background 0.12s, border 0.12s",
       marginBottom: 7, display: "flex", alignItems: "center", gap: 10,
     };
@@ -304,12 +304,12 @@ function QuizModal({ flights, onClose }) {
       <div style={card}>
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: 15, color: "var(--t-accent)", letterSpacing: "0.05em" }}>
+          <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--t-accent)", letterSpacing: "0.05em" }}>
             ✈ FLIGHT QUIZ
           </span>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             {!done && (
-              <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 11, color: "var(--t-fg3)" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--t-fg3)" }}>
                 Q {idx + 1}/{total} · {score} pt{score !== 1 ? "s" : ""}
               </span>
             )}
@@ -323,7 +323,7 @@ function QuizModal({ flights, onClose }) {
             <div style={{ fontSize: 52, marginBottom: 14 }}>
               {score >= 9 ? "🏆" : score >= 7 ? "🥇" : score >= 5 ? "🥈" : "🧭"}
             </div>
-            <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 36, fontWeight: 700, color: "var(--t-accent)", marginBottom: 6 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 700, color: "var(--t-accent)", marginBottom: 6 }}>
               {score}/{total}
             </div>
             <div style={{ color: "var(--t-fg2)", fontSize: 14, marginBottom: 28, lineHeight: 1.6 }}>
@@ -335,7 +335,7 @@ function QuizModal({ flights, onClose }) {
             <button onClick={restart} style={{
               background: "var(--t-acc-22)", border: "1px solid var(--t-acc-45)",
               color: "var(--t-accent)", borderRadius: 10, padding: "10px 28px",
-              fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, cursor: "pointer",
+              fontFamily: "var(--font-body)", fontSize: 13, cursor: "pointer",
             }}>Play again</button>
           </div>
         ) : q ? (
@@ -350,7 +350,7 @@ function QuizModal({ flights, onClose }) {
             </div>
 
             {/* Type label */}
-            <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, color: "var(--t-fg4)", marginBottom: 10, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg4)", marginBottom: 10, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               {{ city: "city name", iata: "iata code", route: "longest route", year: "first flight year", flag: "country flag", route_airline: "route airline" }[q.type] || q.type}
             </div>
 
@@ -369,7 +369,7 @@ function QuizModal({ flights, onClose }) {
                   onMouseEnter={e => { if (!answered) e.currentTarget.style.background = "var(--t-acc-15)"; }}
                   onMouseLeave={e => { if (!answered) e.currentTarget.style.background = "var(--t-over-06)"; }}
                 >
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 10, opacity: 0.45, flexShrink: 0 }}>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, opacity: 0.45, flexShrink: 0 }}>
                     {i + 1}
                   </span>
                   {opt.label}
@@ -396,7 +396,7 @@ function QuizModal({ flights, onClose }) {
                 <button onClick={() => setShowHint(h => !h)} style={{
                   background: "none", border: "1px solid var(--t-over-10)",
                   borderRadius: 8, padding: "5px 11px", color: showHint ? "#FDCB6E" : "var(--t-fg3)",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, cursor: "pointer",
+                  fontFamily: "var(--font-body)", fontSize: 12, cursor: "pointer",
                 }}>💡 Hint</button>
                 {showHint && (
                   <span style={{ fontSize: 12, color: "var(--t-fg2)", fontStyle: "italic" }}>{q.hint}</span>
@@ -406,7 +406,7 @@ function QuizModal({ flights, onClose }) {
                 <button onClick={next} style={{
                   background: "var(--t-acc-22)", border: "1px solid var(--t-acc-45)",
                   color: "var(--t-accent)", borderRadius: 10, padding: "8px 18px", flexShrink: 0,
-                  fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, cursor: "pointer",
+                  fontFamily: "var(--font-body)", fontSize: 13, cursor: "pointer",
                 }}>
                   {idx + 1 >= total ? "See results" : "Next →"}
                 </button>
@@ -415,7 +415,7 @@ function QuizModal({ flights, onClose }) {
 
             {/* Keyboard shortcut hint */}
             {!answered && (
-              <div style={{ marginTop: 14, fontSize: 10, color: "var(--t-fg5)", fontFamily: "JetBrains Mono, monospace" }}>
+              <div style={{ marginTop: 14, fontSize: 10, color: "var(--t-fg5)", fontFamily: "var(--font-mono)" }}>
                 press 1–4 to answer · Esc to close
               </div>
             )}
