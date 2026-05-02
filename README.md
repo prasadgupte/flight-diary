@@ -30,7 +30,8 @@ Fire up [the demo](https://www.prasadgupte.com/travel-diary-demo/) and see if yo
 *(Hint: the stats sidebar, country mode, and member filters are your friends.)*
 
 <p align="center">
-  <img src="docs/countries-mode.png" width="720" alt="Countries heatmap mode with journey timeline" />
+  <img src="docs/countries-mode.png" width="350" alt="Countries heatmap mode with journey timeline" />
+  <img src="docs/map-2d.png" width="350" alt="2D flat map with flight arcs and stats" />
 </p>
 
 ## What it does
