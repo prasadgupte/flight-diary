@@ -18,13 +18,12 @@ const AIRLINE_PALETTE = [
   "#FD79A8", "#A29BFE", "#55EFC4", "#FF8E8E", "#FFEAA7",
 ];
 
-const MEMBER_COLORS = {
-  prasad: "#6C5CE7",
-  aditi:  "#FF6B6B",
-  gatik:  "#00D2A0",
-  samik:  "#FDCB6E",
-  aruna:  "#74B9FF",
-};
+const MEMBER_COLOR_PALETTE = ["#6C5CE7", "#FF6B6B", "#00D2A0", "#FDCB6E", "#74B9FF", "#FD79A8", "#A29BFE", "#55EFC4"];
+function buildMemberColors(members) {
+  const map = {};
+  (members || []).forEach((m, i) => { map[m.id] = MEMBER_COLOR_PALETTE[i % MEMBER_COLOR_PALETTE.length]; });
+  return map;
+}
 
 const AIRLINE_ALLIANCES = {
   // Star Alliance
@@ -294,7 +293,8 @@ function StatCard({ label, value, sub, color, mono, onClick, tooltip }) {
   );
 }
 
-function MemberDropdown({ members, activeMembers, onToggle, onSolo, onAll, collapseRef }) {
+function MemberDropdown({ members, activeMembers, onToggle, onSolo, onAll, collapseRef, memberColors }) {
+  const MEMBER_COLORS = memberColors || {};
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -1771,6 +1771,9 @@ function App() {
   // Sync showLabels with tweaks
   useEffect(() => { setShowLabels(tweaks.showLabels); }, [tweaks.showLabels]);
 
+  // Build member→color map dynamically from MEMBER_LIST order
+  const MEMBER_COLORS = useMemo(() => buildMemberColors(window.MEMBER_LIST || []), [dataReady]);
+
   // Initialize all members selected once data is ready; restore URL state on first load
   useEffect(() => {
     if (!dataReady) return;
@@ -2713,6 +2716,7 @@ function App() {
             onSolo={(id) => setActiveMembers(new Set([id]))}
             onAll={selectAllMembers}
             collapseRef={memberDropdownCollapseRef}
+            memberColors={MEMBER_COLORS}
           />
         )}
 
@@ -2727,7 +2731,7 @@ function App() {
             cursor: "pointer", textTransform: "uppercase",
           }}>
             <span>{appMode === "countries" ? "🌍" : "✈"}</span>
-            <span>{appMode === "countries" ? "Countries" : "Flights"}</span>
+            <span>{appMode === "countries" ? "Countries" : "Flights"} {mode === "3d" ? "◉" : "▭"}</span>
             <span style={{ fontSize: 8, opacity: 0.5 }}>▾</span>
           </button>
           {showModeMenu && (
@@ -2748,6 +2752,19 @@ function App() {
                 onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
                 onMouseLeave={e => e.currentTarget.style.background = appMode === m.key ? "rgba(108,92,231,0.15)" : "transparent"}
                 ><span>{m.icon}</span><span>{m.label}</span></button>
+              ))}
+              <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
+              {[{key:"3d",icon:"◉",label:"3D Globe"},{key:"2d",icon:"▭",label:"2D Map"}].map(v => (
+                <button key={v.key} onClick={() => { setMode(v.key); setShowModeMenu(false); }} style={{
+                  display: "flex", alignItems: "center", gap: 8,
+                  width: "100%", padding: "8px 14px", background: mode === v.key ? "rgba(108,92,231,0.15)" : "transparent",
+                  border: "none", color: mode === v.key ? "#A29BFE" : "var(--t-fg2)",
+                  fontFamily: "JetBrains Mono, monospace", fontSize: 11, cursor: "pointer", textAlign: "left",
+                  textTransform: "uppercase",
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(108,92,231,0.1)"}
+                onMouseLeave={e => e.currentTarget.style.background = mode === v.key ? "rgba(108,92,231,0.15)" : "transparent"}
+                ><span>{v.icon}</span><span>{v.label}</span></button>
               ))}
               {window.QuizModal && (
                 <>
@@ -2890,20 +2907,6 @@ function App() {
               backdropFilter: "blur(12px)", borderRadius: 10, padding: "6px 0", minWidth: 180,
               boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
             }}>
-              {/* 3D / 2D toggle */}
-              <div style={{ padding: "6px 14px 4px", fontFamily: "JetBrains Mono, monospace", fontSize: 9, color: "var(--t-fg3)", textTransform: "uppercase", letterSpacing: 0.5 }}>View</div>
-              <div style={{ display: "flex", gap: 4, padding: "2px 14px 6px" }}>
-                {["3d","2d"].map(m => (
-                  <button key={m} onClick={() => { setMode(m); }} style={{
-                    flex: 1, padding: "5px 8px", borderRadius: 6,
-                    background: mode === m ? "rgba(108,92,231,0.3)" : "rgba(255,255,255,0.06)",
-                    border: mode === m ? "1px solid rgba(108,92,231,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                    color: mode === m ? "#A29BFE" : "var(--t-fg3)",
-                    fontFamily: "JetBrains Mono, monospace", fontSize: 11, cursor: "pointer", textTransform: "uppercase",
-                  }}>{m}</button>
-                ))}
-              </div>
-              <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "2px 0" }} />
               {/* Reload */}
               <button onClick={() => { reloadData(); setShowOverflowMenu(false); }} style={{
                 display: "flex", alignItems: "center", gap: 8, width: "100%",
