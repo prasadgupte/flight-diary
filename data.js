@@ -1,7 +1,11 @@
-// Flight diary data — loads CSVs via config or falls back to sample.
+// Travel diary data — loads flight CSVs + countries CSV via config or falls back to samples.
 //
 // Config: place a flights.json next to this file:
-//   { "users": { "Alice": "path/to/tracker.csv", "Bob": "other.csv" } }
+//   { "users": { "Alice": "data/alice_flights.csv", "Bob": "data/bob_flights.csv" } }
+//
+// Countries: place data/countries.csv (semicolon-delimited):
+//   country;iso;alice;bob
+//   France;FR;2019;2020
 //
 // Without flights.json the app loads sample_tracker.csv with a single "Sample" user.
 
@@ -18,6 +22,7 @@ const AIRPORTS = {
   BCN: { city: "Barcelona", country: "Spain", lat: 41.2971, lon: 2.0785 },
   BEG: { city: "Belgrade", country: "Serbia", lat: 44.8184, lon: 20.3091 },
   BER: { city: "Berlin", country: "Germany", lat: 52.3667, lon: 13.5033 },
+  BGY: { city: "Bergamo", country: "Italy", lat: 45.6739, lon: 9.7042 },
   BKK: { city: "Bangkok", country: "Thailand", lat: 13.6811, lon: 100.747 },
   BLL: { city: "Billund", country: "Denmark", lat: 55.7403, lon: 9.1518 },
   BLR: { city: "Bangalore", country: "India", lat: 13.1979, lon: 77.7063 },
@@ -145,23 +150,94 @@ function parseCSV(text) {
 }
 
 async function loadCSV(url) {
-  const resp = await fetch(url);
+  const resp = await fetch(url, { cache: "no-cache" });
   if (!resp.ok) throw new Error(`${resp.status} ${url}`);
   const text = await resp.text();
   return parseCSV(text).map(rowToFlight).sort((a, b) => b.dateObj - a.dateObj);
 }
 
+// Parse semicolon-delimited countries CSV
+// Format: country;iso;member1;member2;...
+// Returns { members: [{id, name}], countries: [{country, iso, visits: {memberId: year}}] }
+function parseCountriesCSV(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return { members: [], countries: [] };
+
+  const header = lines[0].split(";");
+  // header[0] = "country", header[1] = "iso", rest = member IDs
+  const memberIds = header.slice(2);
+  const members = memberIds.map(id => ({
+    id: id.trim(),
+    name: id.trim().charAt(0).toUpperCase() + id.trim().slice(1),
+  }));
+
+  const countries = [];
+  for (let i = 1; i < lines.length; i++) {
+    const parts = lines[i].split(";");
+    if (!parts[0].trim()) continue;
+    const entry = {
+      country: parts[0].trim(),
+      iso: (parts[1] || "").trim(),
+      visits: {},
+    };
+    for (let j = 2; j < parts.length; j++) {
+      const yr = (parts[j] || "").trim();
+      if (yr && memberIds[j - 2]) {
+        entry.visits[memberIds[j - 2].trim()] = parseInt(yr, 10);
+      }
+    }
+    countries.push(entry);
+  }
+  return { members, countries };
+}
+
 // FLIGHTS keyed by lowercase slug (used internally)
 // USER_LIST ordered array of { key, name } for the UI
+// COUNTRIES_DATA: { members, countries } from countries CSV
+// MEMBER_LIST: unified [{id, name, hasFlights}] — all family members
 const FLIGHTS = {};
 const USER_LIST = [];
+let COUNTRIES_DATA = { members: [], countries: [] };
+const MEMBER_LIST = [];
 
 async function loadAllFlights() {
+  // Clear previous data so a reload doesn't duplicate entries
+  Object.keys(FLIGHTS).forEach(k => delete FLIGHTS[k]);
+  USER_LIST.length = 0;
+  MEMBER_LIST.length = 0;
+
+  // Extend hardcoded airports with full OpenFlights database if available
+  try {
+    const r = await fetch("master_data/airports.json", { cache: "no-cache" });
+    if (r.ok) {
+      const extra = await r.json();
+      Object.assign(AIRPORTS, extra);
+      console.log(`Airport database: ${Object.keys(AIRPORTS).length} airports loaded`);
+    }
+  } catch { /* master_data/airports.json not generated yet — fall back to hardcoded ~99 */ }
+
   let config = null;
   try {
-    const resp = await fetch("flights.json");
+    const resp = await fetch("flights.json", { cache: "no-cache" });
     if (resp.ok) config = await resp.json();
   } catch { /* no config — use sample */ }
+
+  if (config && config.aircraft_types) {
+    window.AIRCRAFT_TYPES = config.aircraft_types;
+  }
+  if (config && config.birthdays) {
+    window.BIRTHDAYS = config.birthdays;
+  }
+  if (config && config.countries_lived) {
+    // Normalise keys to lowercase; values are arrays of ISO-2 strings
+    const lived = {};
+    Object.entries(config.countries_lived).forEach(([k, v]) => { lived[k.toLowerCase()] = v; });
+    window.COUNTRIES_LIVED = lived;
+  }
+  if (config && config.family_name) {
+    window.FAMILY_NAME = String(config.family_name).trim().slice(0, 20);
+  }
 
   if (config && config.users && Object.keys(config.users).length > 0) {
     const entries = Object.entries(config.users);
@@ -176,7 +252,6 @@ async function loadAllFlights() {
       }
     }));
   } else {
-    // Fallback: load sample
     try {
       FLIGHTS["sample"] = await loadCSV("sample_tracker.csv");
       USER_LIST.push({ key: "sample", name: "Sample" });
@@ -186,10 +261,38 @@ async function loadAllFlights() {
     }
   }
 
+  // Load countries CSV
+  try {
+    const resp = await fetch("data/countries.csv", { cache: "no-cache" });
+    if (resp.ok) {
+      const text = await resp.text();
+      COUNTRIES_DATA = parseCountriesCSV(text);
+      window.COUNTRIES_DATA = COUNTRIES_DATA; // update reference after reassignment
+      console.log(`Loaded ${COUNTRIES_DATA.countries.length} countries for ${COUNTRIES_DATA.members.length} members`);
+    }
+  } catch (e) {
+    console.warn("Failed to load data/countries.csv:", e);
+  }
+
+  // Build unified MEMBER_LIST from countries CSV members, annotated with flight availability
+  MEMBER_LIST.length = 0; // clear in case called again
+  if (COUNTRIES_DATA.members.length > 0) {
+    COUNTRIES_DATA.members.forEach(m => {
+      MEMBER_LIST.push({ id: m.id, name: m.name, hasFlights: !!FLIGHTS[m.id] });
+    });
+  } else {
+    // Fallback: use USER_LIST when no countries CSV is present
+    USER_LIST.forEach(u => {
+      MEMBER_LIST.push({ id: u.key, name: u.name, hasFlights: true });
+    });
+  }
+
   window.dispatchEvent(new Event("flights-loaded"));
 }
 
 window.AIRPORTS = AIRPORTS;
 window.FLIGHTS = FLIGHTS;
 window.USER_LIST = USER_LIST;
+window.COUNTRIES_DATA = COUNTRIES_DATA;
+window.MEMBER_LIST = MEMBER_LIST;
 window.loadAllFlights = loadAllFlights;

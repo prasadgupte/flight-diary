@@ -117,6 +117,146 @@
   --shadow-glow-electric: 0 0 0 4px rgba(108,92,231,0.18), 0 0 24px rgba(108,92,231,0.4);
 }
 
+/* ── Theme tokens (dark default, light override) ── */
+:root {
+  --t-page-bg:  radial-gradient(ellipse at 30% 0%, #2A2347 0%, #1E1B2E 60%, #0F0D1A 100%);
+  --t-fg:       #FAFAFA;
+  --t-fg2:      #A9A6BB;
+  --t-fg3:      #6E6A82;
+  --t-fg4:      #4A4665;
+  --t-fg5:      #3A3650;
+  --t-accent:   #A29BFE;
+  --t-surf-65:  rgba(30,27,46,0.65);
+  --t-surf-60:  rgba(30,27,46,0.6);
+  --t-surf-70:  rgba(30,27,46,0.7);
+  --t-surf-85:  rgba(30,27,46,0.85);
+  --t-surf-95:  rgba(30,27,46,0.95);
+  --t-sidebar:  rgba(15,13,26,0.4);
+  --t-timeline: rgba(15,13,26,0.90);
+  --t-tooltip:  rgba(15,13,26,0.92);
+  --t-over-02:  rgba(255,255,255,0.02);
+  --t-over-03:  rgba(255,255,255,0.03);
+  --t-over-04:  rgba(255,255,255,0.04);
+  --t-over-05:  rgba(255,255,255,0.05);
+  --t-over-06:  rgba(255,255,255,0.06);
+  --t-over-07:  rgba(255,255,255,0.07);
+  --t-over-08:  rgba(255,255,255,0.08);
+  --t-over-10:  rgba(255,255,255,0.10);
+  --t-over-12:  rgba(255,255,255,0.12);
+  --t-over-15:  rgba(255,255,255,0.15);
+  --t-over-18:  rgba(255,255,255,0.18);
+  --t-over-25:  rgba(255,255,255,0.25);
+  --t-acc-06:   rgba(108,92,231,0.06);
+  --t-acc-12:   rgba(108,92,231,0.12);
+  --t-acc-15:   rgba(108,92,231,0.15);
+  --t-acc-18:   rgba(108,92,231,0.18);
+  --t-acc-22:   rgba(108,92,231,0.22);
+  --t-acc-25:   rgba(108,92,231,0.25);
+  --t-acc-30:   rgba(108,92,231,0.3);
+  --t-acc-35:   rgba(108,92,231,0.35);
+  --t-acc-40:   rgba(108,92,231,0.4);
+  --t-acc-45:   rgba(108,92,231,0.45);
+  --t-acc-50:   rgba(108,92,231,0.5);
+  --t-acc-55:   rgba(108,92,231,0.55);
+  --t-acc-70:   rgba(108,92,231,0.7);
+  --t-hdr-border: rgba(255,255,255,0.05);
+  --t-btn-text:  #A29BFE;
+  /* Pill/toggle controls */
+  --t-pill-bg:         rgba(30,27,46,0.6);
+  --t-pill-border:     rgba(255,255,255,0.08);
+  --t-pill-active-bg:  rgba(108,92,231,0.25);
+  --t-pill-active-txt: #A29BFE;
+  --t-pill-idle-txt:   #6E6A82;
+  /* Icon buttons (reload, quiz, export, arcs select) */
+  --t-icon-bg:         rgba(30,27,46,0.7);
+  --t-icon-border:     rgba(108,92,231,0.3);
+  --t-icon-txt:        #A29BFE;
+  /* Sidebar left border */
+  --t-sidebar-border:  rgba(255,255,255,0.05);
+  /* Stat value accent colors (neons — legible on dark) */
+  --t-stat-mint:       #55EFC4;
+  --t-stat-amber:      #FDCB6E;
+  --t-stat-sky:        #74B9FF;
+  --t-stat-blush:      #FD79A8;
+  --t-stat-violet:     #A29BFE;
+  /* Card elevation */
+  --t-card-shadow:     none;
+  --t-card-border:     var(--t-over-06);
+}
+
+body.light {
+  /* Page — fades to near-white at centre instead of staying lavender */
+  --t-page-bg:  radial-gradient(ellipse at 25% 0%, #EAE7FF 0%, #F2F0FF 45%, #FAFAFA 100%);
+  /* Text */
+  --t-fg:       #1E1B2E;
+  --t-fg2:      #3D3A4E;
+  --t-fg3:      #6E6A82;
+  --t-fg4:      #9B97AD;
+  --t-fg5:      #C5C1D6;
+  /* Primary accent — saturated violet (not the muted #A29BFE used on dark) */
+  --t-accent:   #6C5CE7;
+  /* Card surfaces — near-opaque white (was 0.75–0.85, too transparent) */
+  --t-surf-65:  rgba(255,255,255,0.95);
+  --t-surf-60:  rgba(255,255,255,0.90);
+  --t-surf-70:  rgba(255,255,255,0.97);
+  --t-surf-85:  rgba(255,255,255,0.98);
+  --t-surf-95:  rgba(255,255,255,1.0);
+  /* Sidebar — near-white distinct panel */
+  --t-sidebar:        rgba(245,243,255,0.97);
+  --t-sidebar-border: rgba(108,92,231,0.12);
+  --t-timeline: rgba(248,246,255,0.96);
+  --t-tooltip:  rgba(255,255,255,0.97);
+  /* Overlays — dark-on-light (inverted from dark mode white-on-dark) */
+  --t-over-02:  rgba(108,92,231,0.02);
+  --t-over-03:  rgba(108,92,231,0.03);
+  --t-over-04:  rgba(108,92,231,0.05);
+  --t-over-05:  rgba(30,27,46,0.04);
+  --t-over-06:  rgba(30,27,46,0.06);
+  --t-over-07:  rgba(30,27,46,0.07);
+  --t-over-08:  rgba(30,27,46,0.09);
+  --t-over-10:  rgba(30,27,46,0.10);
+  --t-over-12:  rgba(30,27,46,0.11);
+  --t-over-15:  rgba(30,27,46,0.13);
+  --t-over-18:  rgba(30,27,46,0.15);
+  --t-over-25:  rgba(30,27,46,0.18);
+  /* Accent overlays */
+  --t-acc-06:   rgba(108,92,231,0.06);
+  --t-acc-12:   rgba(108,92,231,0.09);
+  --t-acc-15:   rgba(108,92,231,0.11);
+  --t-acc-18:   rgba(108,92,231,0.13);
+  --t-acc-22:   rgba(108,92,231,0.15);
+  --t-acc-25:   rgba(108,92,231,0.16);
+  --t-acc-30:   rgba(108,92,231,0.22);
+  --t-acc-35:   rgba(108,92,231,0.28);
+  --t-acc-40:   rgba(108,92,231,0.34);
+  --t-acc-45:   rgba(108,92,231,0.40);
+  --t-acc-50:   rgba(108,92,231,0.45);
+  --t-acc-55:   rgba(108,92,231,0.50);
+  --t-acc-70:   rgba(108,92,231,0.65);
+  /* Header border — slightly more visible than dark mode */
+  --t-hdr-border: rgba(30,27,46,0.08);
+  --t-btn-text:   #6C5CE7;
+  /* Pill toggle controls — lavender pill, violet border */
+  --t-pill-bg:         rgba(232,228,255,0.88);
+  --t-pill-border:     rgba(108,92,231,0.18);
+  --t-pill-active-bg:  rgba(108,92,231,0.12);
+  --t-pill-active-txt: #5A4BD4;
+  --t-pill-idle-txt:   #6E6A82;
+  /* Icon buttons — white glass */
+  --t-icon-bg:         rgba(255,255,255,0.92);
+  --t-icon-border:     rgba(108,92,231,0.22);
+  --t-icon-txt:        #6C5CE7;
+  /* Card elevation — visible lift in light (glassmorphism alone isn't enough) */
+  --t-card-shadow: 0 1px 4px rgba(30,27,46,0.07), 0 0 0 1px rgba(30,27,46,0.05);
+  --t-card-border: rgba(30,27,46,0.08);
+  /* Accessible stat value colors — WCAG AA for large text (≥14pt bold) on white */
+  --t-stat-mint:   #008C6B;   /* 4.3:1 on white */
+  --t-stat-amber:  #A07800;   /* 4.1:1 on white */
+  --t-stat-sky:    #0369A1;   /* 6.0:1 on white */
+  --t-stat-blush:  #BE185D;   /* 6.0:1 on white */
+  --t-stat-violet: #5A4BD4;   /* 6.1:1 on white */
+}
+
 /* =============================================
    Semantic type classes
    ============================================= */

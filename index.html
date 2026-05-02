@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Flight Diary</title>
+  <title>Travel Diary</title>
   <link rel="stylesheet" href="tokens.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
     body {
       font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      background: #1E1B2E;
-      color: #FAFAFA;
+      background: var(--t-page-bg, #1E1B2E);
+      color: var(--t-fg, #FAFAFA);
       overscroll-behavior: none;
     }
+    body.light aside::-webkit-scrollbar-thumb { background: rgba(108,92,231,0.2); }
     #root { min-height: 100vh; }
     /* Scrollbar polish for sidebar */
     aside::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -23,6 +24,7 @@
     /* Year filter scroll */
     header > div::-webkit-scrollbar { height: 4px; }
     header > div::-webkit-scrollbar-thumb { background: rgba(108,92,231,0.2); border-radius: 999px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -41,11 +43,18 @@
   <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
   <script src="https://unpkg.com/three-globe@2.31.1/dist/three-globe.min.js"></script>
   <script>window.ThreeGlobe = window.ThreeGlobe || ThreeGlobe;</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="iso-lookup.js"></script>
   <script src="data.js"></script>
   <script type="text/babel" src="tweaks-panel.jsx"></script>
   <script type="text/babel" src="globe.jsx"></script>
   <script type="text/babel" src="map2d.jsx"></script>
+  <script type="text/babel" src="autoplay.jsx"></script>
+  <script type="text/babel" src="timeline.jsx"></script>
+  <script type="text/babel" src="charts.jsx"></script>
+  <script src="enrichment.js"></script>
+  <script src="airport_enrichment.js"></script>
+  <script type="text/babel" src="quiz.jsx"></script>
   <script type="text/babel" src="app.jsx"></script>
 </body>
 </html>
