@@ -1,6 +1,6 @@
-// Trip mode — Redesigned two-level timeline
-// Level 1: Day strip (horizontal tiles) — Level 2: Hourly timeline (vertical)
-// Orchestrates: TripDayStrip, TripHourlyTimeline, TripSummary, TripActivityDrawer, TripGoogleMap
+// Trip mode — Two-level timeline with multi-lane navigator
+// Layout: Header → Main area (list|map toggle) → Timeline (bottom, collapsible)
+// Orchestrates: TripTimeline, TripHourlyTimeline, TripSummary, TripActivityDrawer
 
 const TRAVELER_COLORS = {
   PG: "#6C5CE7",
@@ -46,32 +46,13 @@ function TripSelector({ trips, onSelect }) {
   );
 }
 
-function TripPhaseStrip({ phases, days, onPhaseClick }) {
-  const totalDays = days.length;
-  return (
-    <div className="trip-phase-strip">
-      {phases.map(phase => {
-        const width = (phase.days.length / totalDays) * 100;
-        return (
-          <div key={phase.id}
-            className="trip-phase-segment"
-            style={{ width: `${width}%`, background: phase.color + "22", borderBottom: `2px solid ${phase.color}` }}
-            onClick={() => onPhaseClick(phase)}
-            title={`${phase.name} (${phase.days.length} days)`}
-          >
-            {width > 8 ? phase.name : ""}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 function TripView({ trips, lightMode }) {
   const [activeSlug, setActiveSlug] = React.useState(trips.length === 1 ? trips[0].slug : null);
   const [selectedDay, setSelectedDay] = React.useState(null);
   const [selectedActivity, setSelectedActivity] = React.useState(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [viewMode, setViewMode] = React.useState("list"); // "list" | "map"
+  const [timelineCollapsed, setTimelineCollapsed] = React.useState(false);
 
   const trip = trips.find(t => t.slug === activeSlug);
 
@@ -85,13 +66,6 @@ function TripView({ trips, lightMode }) {
     } else {
       setSelectedDay(dayNum);
     }
-    setDrawerOpen(false);
-    setSelectedActivity(null);
-  };
-
-  const handlePhaseClick = (phase) => {
-    const firstDay = phase.days[0];
-    setSelectedDay(firstDay);
     setDrawerOpen(false);
     setSelectedActivity(null);
   };
@@ -110,95 +84,122 @@ function TripView({ trips, lightMode }) {
     ? trip.days.find(d => d.dayNum === selectedDay)
     : null;
 
+  // Phase info for selected day
+  const selectedPhase = selectedDayObj
+    ? trip.phases.find(p => p.id === selectedDayObj.phase)
+    : null;
+
   return (
     <div className="trip-view">
       {/* Header */}
       <div className="trip-header">
-        {trips.length > 1 && (
-          <button className="trip-header__back" onClick={() => { setActiveSlug(null); setSelectedDay(null); setDrawerOpen(false); setSelectedActivity(null); }}>
-            {"← Back"}
-          </button>
-        )}
-        <span className="trip-header__title">{trip.name}</span>
-        <span className="trip-header__meta">
-          {trip.dates.start} {"→"} {trip.dates.end} {"·"} {trip.days.length} days
-        </span>
-        <span className="trip-header__travelers">
-          {trip.travelers.map(t => (
-            <span key={t.code} className="trip-header__dot"
-              style={{ background: TRAVELER_COLORS[t.code] || "#9B97B0" }}
-              title={`${t.name} — ${t.role}`}
-            />
-          ))}
-        </span>
+        <div className="trip-header__left">
+          {trips.length > 1 && (
+            <button className="trip-header__back" onClick={() => { setActiveSlug(null); setSelectedDay(null); setDrawerOpen(false); setSelectedActivity(null); }}>
+              {"←"}
+            </button>
+          )}
+          <span className="trip-header__title">{trip.name}</span>
+          <span className="trip-header__meta">
+            {trip.dates.start} {"→"} {trip.dates.end} {"·"} {trip.days.length} days
+          </span>
+        </div>
+        <div className="trip-header__right">
+          {/* List / Map toggle */}
+          <div className="trip-view-toggle">
+            <button
+              className={`trip-view-toggle__btn ${viewMode === "list" ? "trip-view-toggle__btn--active" : ""}`}
+              onClick={() => setViewMode("list")}
+            >List</button>
+            <button
+              className={`trip-view-toggle__btn ${viewMode === "map" ? "trip-view-toggle__btn--active" : ""}`}
+              onClick={() => setViewMode("map")}
+            >Map</button>
+          </div>
+          <span className="trip-header__travelers">
+            {trip.travelers.map(t => (
+              <span key={t.code} className="trip-header__dot"
+                style={{ background: TRAVELER_COLORS[t.code] || "#9B97B0" }}
+                title={`${t.name} — ${t.role}`}
+              />
+            ))}
+          </span>
+        </div>
       </div>
 
-      {/* Phase strip */}
-      <TripPhaseStrip
-        phases={trip.phases}
-        days={trip.days}
-        onPhaseClick={handlePhaseClick}
-      />
-
-      {/* Day strip (level 1 timeline) */}
-      {window.TripDayStrip && (
-        <window.TripDayStrip
-          days={trip.days}
-          phases={trip.phases}
-          transport={trip.transport}
-          accommodation={trip.accommodation}
-          selectedDay={selectedDay}
-          onDayClick={handleDayClick}
-          travelerColors={TRAVELER_COLORS}
-        />
-      )}
-
-      {/* Main content: map + timeline/summary */}
+      {/* Main content area (full width) */}
       <div className="trip-main">
-        {/* Map panel */}
-        <div className="trip-map-panel">
-          {window.TripGoogleMap ? (
-            <window.TripGoogleMap
-              trip={trip}
-              selectedDay={selectedDay}
-              selectedActivity={selectedActivity}
-              style={{ width: "100%", height: "100%" }}
-            />
-          ) : (
-            <div className="td-map-fallback" style={{ width: "100%", height: "100%" }}>
-              <div className="td-map-fallback__inner">
-                <div className="td-map-fallback__icon">{"🗺️"}</div>
-                <div className="td-map-fallback__title">Map loading...</div>
+        {viewMode === "list" ? (
+          <div className="trip-content-panel">
+            {selectedDayObj ? (
+              /* Day selected: show daily view header + hourly timeline */
+              <div className="trip-day-view">
+                <div className="trip-day-view__header">
+                  <div className="trip-day-view__day-badge" style={selectedPhase ? { "--badge-accent": selectedPhase.color } : {}}>
+                    Day {selectedDayObj.dayNum}
+                  </div>
+                  <div className="trip-day-view__info">
+                    <span className="trip-day-view__city">{selectedDayObj.city}</span>
+                    <span className="trip-day-view__date">
+                      {new Date(selectedDayObj.date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short" })}
+                    </span>
+                  </div>
+                  <div className="trip-day-view__headline">{selectedDayObj.headline}</div>
+                </div>
+                {window.TripHourlyTimeline && (
+                  <window.TripHourlyTimeline
+                    day={selectedDayObj}
+                    trip={trip}
+                    onActivityClick={handleActivityClick}
+                  />
+                )}
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Content panel: hourly timeline or summary */}
-        <div className="trip-content-panel">
-          {selectedDayObj ? (
-            window.TripHourlyTimeline ? (
-              <window.TripHourlyTimeline
-                day={selectedDayObj}
+            ) : (
+              /* No day selected: trip overview */
+              window.TripSummary ? (
+                <window.TripSummary trip={trip} />
+              ) : (
+                <div style={{ color: "var(--t-fg3)", fontFamily: "var(--font-body)", fontSize: 14, textAlign: "center", paddingTop: 40 }}>
+                  Select a day to see the schedule
+                </div>
+              )
+            )}
+          </div>
+        ) : (
+          /* Map view */
+          <div className="trip-map-panel trip-map-panel--full">
+            {window.TripGoogleMap ? (
+              <window.TripGoogleMap
                 trip={trip}
-                onActivityClick={handleActivityClick}
+                selectedDay={selectedDay}
+                selectedActivity={selectedActivity}
+                style={{ width: "100%", height: "100%" }}
               />
             ) : (
-              <div style={{ color: "var(--t-fg3)", fontFamily: "var(--font-body)", fontSize: 14 }}>
-                Timeline loading...
+              <div className="td-map-fallback" style={{ width: "100%", height: "100%" }}>
+                <div className="td-map-fallback__inner">
+                  <div className="td-map-fallback__icon">{"🗺️"}</div>
+                  <div className="td-map-fallback__title">Map view</div>
+                  <div className="td-map-fallback__hint">
+                    Map integration coming soon.
+                  </div>
+                </div>
               </div>
-            )
-          ) : (
-            window.TripSummary ? (
-              <window.TripSummary trip={trip} />
-            ) : (
-              <div style={{ color: "var(--t-fg3)", fontFamily: "var(--font-body)", fontSize: 14, textAlign: "center", paddingTop: 40 }}>
-                Select a day to see the schedule
-              </div>
-            )
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Multi-lane timeline (bottom) */}
+      {window.TripTimeline && (
+        <window.TripTimeline
+          trip={trip}
+          selectedDay={selectedDay}
+          onDayClick={handleDayClick}
+          collapsed={timelineCollapsed}
+          onToggleCollapse={() => setTimelineCollapsed(!timelineCollapsed)}
+        />
+      )}
 
       {/* Activity drawer */}
       {drawerOpen && window.TripActivityDrawer && (
