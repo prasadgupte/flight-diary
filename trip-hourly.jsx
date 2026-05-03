@@ -39,26 +39,6 @@ function buildTimelineEntries(day, trip) {
     return `${sym}${cost.amount.toLocaleString()} (~€${eur})`;
   };
 
-  // --- Home node: first day, leave home before first flight ---
-  const isFirstDay = day.dayNum === trip.days[0].dayNum;
-  const isLastDay = day.dayNum === trip.days[trip.days.length - 1].dayNum;
-  if (isFirstDay) {
-    const firstFlight = (day.transport || [])
-      .map(id => (trip.transport || []).find(t => t.id === id))
-      .find(t => t && t.type === "flight" && t.depart);
-    if (firstFlight) {
-      const depH = parseTime(firstFlight.depart.slice(11, 16));
-      const homeCity = trip.route[0] ? trip.route[0].city : "Home";
-      const homeCoords = trip.route[0] ? trip.route[0].coords : null;
-      const leaveTime = depH - 3.5; // 3.5h buffer for international
-      entries.push({
-        sortTime: Math.max(0, leaveTime), kind: "home", type: "depart",
-        icon: "🏠", title: `Leave ${homeCity}`,
-        subtitle: "3.5h before departure",
-        color: "#9B97B0", coords: homeCoords, data: null,
-      });
-    }
-  }
 
   // --- Hotel logic ---
   // Accommodation represents where you SLEEP tonight
@@ -143,26 +123,6 @@ function buildTimelineEntries(day, trip) {
       time: m.slot, color: "#9B97B0", data: m,
     });
   });
-
-  // --- Home node: last day, arrive home after last flight ---
-  if (isLastDay) {
-    const lastFlight = (day.transport || [])
-      .map(id => (trip.transport || []).find(t => t.id === id))
-      .filter(t => t && t.type === "flight" && t.arrive)
-      .pop();
-    if (lastFlight) {
-      const arrH = parseTime(lastFlight.arrive.slice(11, 16));
-      const homeCity = trip.route[0] ? trip.route[0].city : "Home";
-      const homeCoords = trip.route[0] ? trip.route[0].coords : null;
-      const arriveTime = arrH + 2; // 2h after landing
-      entries.push({
-        sortTime: Math.min(23.5, arriveTime), kind: "home", type: "arrive",
-        icon: "🏠", title: `Arrive ${homeCity}`,
-        subtitle: "~2h after landing",
-        color: "#9B97B0", coords: homeCoords, data: null,
-      });
-    }
-  }
 
   entries.sort((a, b) => a.sortTime - b.sortTime);
   return entries;
