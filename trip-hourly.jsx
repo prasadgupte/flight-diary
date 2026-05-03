@@ -36,36 +36,66 @@ function buildTimelineEntries(day, trip) {
     return `${sym}${cost.amount.toLocaleString()} (~€${eur})`;
   };
 
-  // --- Hotel bookend: checkout (start of day) ---
-  // If yesterday had a DIFFERENT accommodation, show checkout
-  const prevDay = trip.days.find(d => d.dayNum === day.dayNum - 1);
-  if (prevDay && prevDay.accommodation && prevDay.accommodation !== day.accommodation) {
-    const prevAccom = (trip.accommodation || []).find(a => a.id === prevDay.accommodation);
-    if (prevAccom) {
+  // --- Home node: first day, leave home before first flight ---
+  const isFirstDay = day.dayNum === trip.days[0].dayNum;
+  const isLastDay = day.dayNum === trip.days[trip.days.length - 1].dayNum;
+  if (isFirstDay) {
+    const firstFlight = (day.transport || [])
+      .map(id => (trip.transport || []).find(t => t.id === id))
+      .find(t => t && t.type === "flight" && t.depart);
+    if (firstFlight) {
+      const depH = parseTime(firstFlight.depart.slice(11, 16));
+      const homeCity = trip.route[0] ? trip.route[0].city : "Home";
+      const homeCoords = trip.route[0] ? trip.route[0].coords : null;
+      const leaveTime = depH - 3.5; // 3.5h buffer for international
       entries.push({
-        sortTime: 0, kind: "checkout", type: "checkout",
-        icon: "🚪", title: `Checkout: ${prevAccom.name}`,
-        time: prevAccom.dates.out === day.date ? "checkout" : "",
-        timeLabel: "TBD", timeLabelRed: true,
-        subtitle: prevAccom.type, color: "#9B97B0", coords: prevAccom.coords, data: prevAccom,
+        sortTime: Math.max(0, leaveTime), kind: "home", type: "depart",
+        icon: "🏠", title: `Leave ${homeCity}`,
+        subtitle: "3.5h before departure",
+        color: "#9B97B0", coords: homeCoords, data: null,
       });
     }
   }
 
-  // --- Today's accommodation (at start) ---
-  if (day.accommodation) {
-    const accom = (trip.accommodation || []).find(a => a.id === day.accommodation);
-    if (accom) {
-      const isCheckin = accom.dates.in === day.date;
-      entries.push({
-        sortTime: isCheckin ? 0.5 : 0.1, kind: "accommodation", type: accom.type || "hotel",
-        icon: HOURLY_TYPE_ICONS[accom.type] || "🏨", title: accom.name,
-        time: `${accom.dates.in} → ${accom.dates.out}`,
-        timeLabel: isCheckin ? "Check-in" : null,
-        subtitle: [accom.status, accom.ref ? `ref ${accom.ref}` : null].filter(Boolean).join(" · "),
-        cost: formatCost(accom.cost), color: "#9B97B0", coords: accom.coords, data: accom,
-      });
-    }
+  // --- Hotel logic ---
+  // Accommodation represents where you SLEEP tonight
+  // accom.dates.in = check-in date, accom.dates.out = check-out date
+  const prevDay = trip.days.find(d => d.dayNum === day.dayNum - 1);
+  const accom = day.accommodation ? (trip.accommodation || []).find(a => a.id === day.accommodation) : null;
+  const prevAccom = prevDay && prevDay.accommodation ? (trip.accommodation || []).find(a => a.id === prevDay.accommodation) : null;
+
+  // Morning checkout: if previous day had a different hotel, show checkout at start
+  if (prevAccom && (!accom || prevAccom.id !== accom.id)) {
+    entries.push({
+      sortTime: 0, kind: "checkout", type: "checkout",
+      icon: "🚪", title: `Checkout: ${prevAccom.name}`,
+      timeLabel: prevAccom.dates.out === day.date ? "Checkout" : "TBD",
+      timeLabelRed: prevAccom.dates.out !== day.date,
+      subtitle: prevAccom.type, color: "#9B97B0", coords: prevAccom.coords, data: prevAccom,
+    });
+  }
+
+  // Staying at (waking up here — hotel from previous night, same as today)
+  if (accom && accom.dates.in < day.date) {
+    entries.push({
+      sortTime: 0.1, kind: "accommodation", type: accom.type || "hotel",
+      icon: HOURLY_TYPE_ICONS[accom.type] || "🏨", title: accom.name,
+      timeLabel: "Staying",
+      subtitle: [accom.status, accom.ref ? `ref ${accom.ref}` : null].filter(Boolean).join(" · "),
+      color: "#9B97B0", coords: accom.coords, data: accom,
+    });
+  }
+
+  // Check-in tonight (new hotel, dates.in === today) — goes at END of day
+  if (accom && accom.dates.in === day.date) {
+    entries.push({
+      sortTime: 22, kind: "checkin", type: accom.type || "hotel",
+      icon: "🏨", title: `Check-in: ${accom.name}`,
+      timeLabel: "Check-in",
+      time: `${accom.dates.in} → ${accom.dates.out}`,
+      subtitle: [accom.status, accom.ref ? `ref ${accom.ref}` : null].filter(Boolean).join(" · "),
+      cost: formatCost(accom.cost), color: "#9B97B0", coords: accom.coords, data: accom,
+    });
   }
 
   // Transport
@@ -107,18 +137,22 @@ function buildTimelineEntries(day, trip) {
     });
   });
 
-  // --- Hotel bookend: check-in at end of day ---
-  // If tomorrow has a DIFFERENT accommodation, show tonight's check-in at bottom
-  const nextDay = trip.days.find(d => d.dayNum === day.dayNum + 1);
-  if (nextDay && nextDay.accommodation && nextDay.accommodation !== day.accommodation) {
-    const nextAccom = (trip.accommodation || []).find(a => a.id === nextDay.accommodation);
-    if (nextAccom) {
-      const isCheckin = nextAccom.dates.in === day.date;
+  // --- Home node: last day, arrive home after last flight ---
+  if (isLastDay) {
+    const lastFlight = (day.transport || [])
+      .map(id => (trip.transport || []).find(t => t.id === id))
+      .filter(t => t && t.type === "flight" && t.arrive)
+      .pop();
+    if (lastFlight) {
+      const arrH = parseTime(lastFlight.arrive.slice(11, 16));
+      const homeCity = trip.route[0] ? trip.route[0].city : "Home";
+      const homeCoords = trip.route[0] ? trip.route[0].coords : null;
+      const arriveTime = arrH + 2; // 2h after landing
       entries.push({
-        sortTime: 22, kind: "checkin-tonight", type: "checkin",
-        icon: "🏨", title: `Tonight: ${nextAccom.name}`,
-        timeLabel: isCheckin ? "Check-in" : "TBD", timeLabelRed: !isCheckin,
-        subtitle: nextAccom.type, color: "#9B97B0", coords: nextAccom.coords, data: nextAccom,
+        sortTime: Math.min(23.5, arriveTime), kind: "home", type: "arrive",
+        icon: "🏠", title: `Arrive ${homeCity}`,
+        subtitle: "~2h after landing",
+        color: "#9B97B0", coords: homeCoords, data: null,
       });
     }
   }
