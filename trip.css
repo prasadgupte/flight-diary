@@ -313,53 +313,116 @@
   margin-right: var(--space-2);
 }
 
+/* Group sub-tabs */
+.td-group-tabs {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.td-group-tab {
+  background: none;
+  border: 1px solid var(--t-over-08);
+  border-radius: var(--radius-sm);
+  padding: 3px 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--t-fg3);
+  cursor: pointer;
+  transition: background 150ms, color 150ms, border-color 150ms;
+}
+.td-group-tab:hover { background: var(--t-acc-06); }
+.td-group-tab--active {
+  background: var(--t-acc-12);
+  color: var(--t-accent);
+  border-color: var(--t-acc-30);
+}
+
+.td-group-tabs__plan {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--t-fg3);
+  font-style: italic;
+  margin-left: var(--space-2);
+}
+
+/* Timeline with time markers */
 .td-hourly__timeline {
   position: relative;
-  padding-left: 24px;
-}
-.td-hourly__timeline::before {
-  content: "";
-  position: absolute;
-  left: 7px;
-  top: 4px;
-  bottom: 4px;
-  width: 2px;
-  background: var(--t-over-08);
-  border-radius: 1px;
 }
 
 .td-hourly__entry {
-  position: relative;
-  padding: var(--space-3) 0;
-  padding-left: var(--space-3);
   display: flex;
-  gap: var(--space-3);
-}
-.td-hourly__entry--clickable {
+  gap: 0;
+  padding: var(--space-2) 0;
   cursor: pointer;
   border-radius: var(--radius-sm);
-  margin-left: -4px;
-  padding-left: calc(var(--space-3) + 4px);
   transition: background 150ms;
 }
-.td-hourly__entry--clickable:hover { background: var(--t-acc-06); }
+.td-hourly__entry--clickable {}
+.td-hourly__entry:hover { background: var(--t-acc-06); }
 .td-hourly__entry--focused {
   background: var(--t-acc-12);
-  border-radius: var(--radius-sm);
-  box-shadow: inset 3px 0 0 var(--entry-color, var(--t-accent));
+  box-shadow: inset 3px 0 0 var(--t-accent);
+}
+
+/* Time marker column */
+.td-hourly__time-col {
+  width: 56px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4px;
+  position: relative;
+}
+
+/* Vertical line connecting dots */
+.td-hourly__time-col::after {
+  content: "";
+  position: absolute;
+  top: 28px;
+  bottom: -8px;
+  left: 50%;
+  width: 1px;
+  background: var(--t-over-08);
+  transform: translateX(-0.5px);
+}
+.td-hourly__entry:last-child .td-hourly__time-col::after { display: none; }
+
+.td-hourly__time-marker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--t-fg3);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.td-hourly__time-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--t-fg3);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.td-hourly__time-label--red {
+  color: #E04E4E;
 }
 
 .td-hourly__entry-dot {
-  position: absolute;
-  left: -20px;
-  top: 18px;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--entry-color, var(--t-accent));
+  background: #C5C1D6;
   border: 2px solid var(--t-surf-95);
   flex-shrink: 0;
   z-index: 1;
+  position: relative;
 }
 
 .td-hourly__entry-content { flex: 1; min-width: 0; }

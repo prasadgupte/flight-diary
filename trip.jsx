@@ -45,6 +45,7 @@ function TripView({ trips, lightMode }) {
   const [playing, setPlaying] = React.useState(false);
   const [prevDay, setPrevDay] = React.useState(null); // for swipe direction
   const [splitRatio, setSplitRatio] = React.useState(0.5); // list:map ratio
+  const [activeGroupIdx, setActiveGroupIdx] = React.useState(null); // group tab
   const dividerRef = React.useRef(null);
   const playRef = React.useRef(null);
 
@@ -79,6 +80,7 @@ function TripView({ trips, lightMode }) {
       setFocusedEntry(null);
     }
     setPlaying(false);
+    setActiveGroupIdx(null);
   };
 
   const handleActivityClick = (entry) => {
@@ -207,6 +209,8 @@ function TripView({ trips, lightMode }) {
                   trip={trip}
                   onActivityClick={handleActivityClick}
                   focusedEntry={focusedEntry}
+                  activeGroupIdx={activeGroupIdx}
+                  onGroupChange={setActiveGroupIdx}
                 />
               )}
             </div>
@@ -235,7 +239,7 @@ function TripView({ trips, lightMode }) {
             )}
             <div className="trip-map-container">
               {window.TripMapView ? (
-                <window.TripMapView trip={trip} selectedDay={selectedDay} focusedEntry={focusedEntry} lightMode={lightMode} />
+                <window.TripMapView trip={trip} selectedDay={selectedDay} focusedEntry={focusedEntry} lightMode={lightMode} onPinClick={handleActivityClick} />
               ) : (
                 <div className="td-map-fallback"><div className="td-map-fallback__inner">
                   <div className="td-map-fallback__icon">🗺️</div>
