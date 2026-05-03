@@ -196,10 +196,12 @@ function parseCountriesCSV(text) {
 // USER_LIST ordered array of { key, name } for the UI
 // COUNTRIES_DATA: { members, countries } from countries CSV
 // MEMBER_LIST: unified [{id, name, hasFlights}] — all family members
+// TRIPS_DATA: array of loaded trip objects from data/trips/*.json
 const FLIGHTS = {};
 const USER_LIST = [];
 let COUNTRIES_DATA = { members: [], countries: [] };
 const MEMBER_LIST = [];
+const TRIPS_DATA = [];
 
 async function loadAllFlights() {
   // Clear previous data so a reload doesn't duplicate entries
@@ -274,6 +276,21 @@ async function loadAllFlights() {
     console.warn("Failed to load data/countries.csv:", e);
   }
 
+  // Load trips from config
+  TRIPS_DATA.length = 0;
+  if (config && config.trips && Array.isArray(config.trips)) {
+    await Promise.allSettled(config.trips.map(async (t) => {
+      try {
+        const resp = await fetch(t.path, { cache: "no-cache" });
+        if (resp.ok) {
+          const trip = await resp.json();
+          TRIPS_DATA.push(trip);
+          console.log(`Loaded trip: ${trip.name} (${trip.days.length} days)`);
+        }
+      } catch (e) { console.warn(`Failed to load trip ${t.slug}:`, e); }
+    }));
+  }
+
   // Build unified MEMBER_LIST from countries CSV members, annotated with flight availability
   MEMBER_LIST.length = 0; // clear in case called again
   if (COUNTRIES_DATA.members.length > 0) {
@@ -295,4 +312,5 @@ window.FLIGHTS = FLIGHTS;
 window.USER_LIST = USER_LIST;
 window.COUNTRIES_DATA = COUNTRIES_DATA;
 window.MEMBER_LIST = MEMBER_LIST;
+window.TRIPS_DATA = TRIPS_DATA;
 window.loadAllFlights = loadAllFlights;
