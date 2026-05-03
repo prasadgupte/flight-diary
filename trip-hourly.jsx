@@ -171,22 +171,22 @@ function buildTimelineEntries(day, trip) {
   return entries;
 }
 
-function TripHourlyTimeline({ day, trip, onActivityClick }) {
+function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry }) {
   if (!day) return null;
 
   const entries = buildTimelineEntries(day, trip);
-  const dateStr = new Date(day.date).toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
+
+  // Scroll focused entry into view
+  const focusRef = React.useRef(null);
+  React.useEffect(() => {
+    if (focusRef.current) focusRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [focusedEntry]);
 
   return (
     <div className="td-hourly">
       <div className="td-hourly__header">
         <span className="td-hourly__day-label">Day {day.dayNum}</span>
-        <span className="td-hourly__date">{dateStr}</span>
+        <span className="td-hourly__date">{new Date(day.date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "short", year: "numeric" })}</span>
         <span className="td-hourly__city">{day.city}</span>
       </div>
 
@@ -205,15 +205,16 @@ function TripHourlyTimeline({ day, trip, onActivityClick }) {
       )}
 
       <div className="td-hourly__timeline">
-        {entries.map((entry, i) => (
+        {entries.map((entry, i) => {
+          const isFocused = focusedEntry && entry.title === focusedEntry.title && entry.kind === focusedEntry.kind;
+          return (
           <div
             key={i}
-            className={`td-hourly__entry ${entry.kind === "activity" ? "td-hourly__entry--clickable" : ""}`}
+            ref={isFocused ? focusRef : null}
+            className={`td-hourly__entry ${entry.kind === "activity" ? "td-hourly__entry--clickable" : ""} ${isFocused ? "td-hourly__entry--focused" : ""}`}
             style={{ "--entry-color": entry.color }}
             onClick={() => {
-              if (entry.kind === "activity" && onActivityClick) {
-                onActivityClick(entry);
-              }
+              if (onActivityClick) onActivityClick(entry);
             }}
           >
             <div className="td-hourly__entry-dot" />
@@ -236,7 +237,8 @@ function TripHourlyTimeline({ day, trip, onActivityClick }) {
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Day notes */}
@@ -299,3 +301,4 @@ function TripSummary({ trip }) {
 
 window.TripHourlyTimeline = TripHourlyTimeline;
 window.TripSummary = TripSummary;
+window.buildTimelineEntries = buildTimelineEntries;
