@@ -1758,7 +1758,7 @@ function App() {
     setYear("all");
   }, []);
 
-  const [lightMode, setLightMode] = useState(() => localStorage.getItem('flightLightMode') === '1');
+  const [lightMode, setLightMode] = useState(() => { const v = localStorage.getItem('flightLightMode'); return v === null ? true : v === '1'; });
   useEffect(() => {
     document.body.classList.toggle('light', lightMode);
     localStorage.setItem('flightLightMode', lightMode ? '1' : '0');
@@ -2741,7 +2741,7 @@ function App() {
               backdropFilter: "blur(12px)", borderRadius: 10, padding: "6px 0", minWidth: 140,
               boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
             }}>
-              {[{key:"countries",icon:"🌍",label:"Countries"},{key:"flights",icon:"✈",label:"Flights"}].map(m => (
+              {[{key:"countries",icon:"🌍",label:"Countries"},{key:"flights",icon:"✈",label:"Flights"},{key:"trips",icon:"🗺",label:"Trips"}].map(m => (
                 <button key={m.key} onClick={() => { switchMode(m.key); setShowModeMenu(false); }} style={{
                   display: "flex", alignItems: "center", gap: 8,
                   width: "100%", padding: "8px 14px", background: appMode === m.key ? "var(--t-acc-15)" : "transparent",
@@ -2975,6 +2975,13 @@ function App() {
 
       {/* Main */}
       <div ref={mainPanelRef} style={{ flex: 1, display: "flex", minHeight: 0, minWidth: 0, position: "relative", width: "100%" }}>
+        {appMode === "trips" && window.TripView ? (
+          <window.TripView
+            trips={window.TRIPS_DATA}
+            lightMode={lightMode}
+          />
+        ) : (
+        <>
         {/* Globe / Map */}
         <div ref={mapPanelRef} style={{ flex: 1, position: "relative", minWidth: 0 }}>
           {mode === "3d" ? (
@@ -3871,6 +3878,8 @@ function App() {
             </>
           )}
         </aside>
+        </>
+        )}
       </div>
 
       {/* Quiz modal */}
