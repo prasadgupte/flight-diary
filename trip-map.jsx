@@ -1,5 +1,5 @@
 // TripMapView — MapLibre GL JS + OpenFreeMap (bright/positron)
-// Day view: shows only that day's activity pins + transport routes, clickable
+// Day view: activity pins + color-coded transit routes, clickable pins
 
 const flip = (c) => [c[1], c[0]]; // trip [lat,lng] → MapLibre [lng,lat]
 
@@ -8,7 +8,6 @@ function addOverviewLayers(map, trip, markersRef) {
   markersRef.current = [];
   if (!trip.route || trip.route.length === 0) return;
 
-  // Route line
   const routeCoords = trip.route.map(r => flip(r.coords));
   if (!map.getSource("route")) {
     map.addSource("route", { type: "geojson", data: { type: "Feature", geometry: { type: "LineString", coordinates: routeCoords } } });
@@ -47,34 +46,38 @@ function clearSources(map, prefix) {
   Object.keys(style.sources || {}).forEach(s => { if (s.startsWith(prefix)) try { map.removeSource(s); } catch(e){} });
 }
 
-function addDayLayers(map, day, trip, markersRef, onPinClick) {
+function addDayLayers(map, day, trip, markersRef, onPinClick, focusedEntry) {
   (markersRef.current || []).forEach(m => m.remove());
   markersRef.current = [];
 
   const bounds = new maplibregl.LngLatBounds();
   const entries = window.buildTimelineEntries ? window.buildTimelineEntries(day, trip) : [];
 
-  // Activity/accommodation pins
-  entries.forEach((entry, idx) => {
+  // Activity/accommodation pins — all gray by default, focused one pulses green
+  entries.forEach((entry) => {
     if (!entry.coords) return;
     const lngLat = flip(entry.coords);
     bounds.extend(lngLat);
 
+    const isFocused = focusedEntry && entry.title === focusedEntry.title && entry.kind === focusedEntry.kind;
     const el = document.createElement("div");
-    el.style.cssText = `width:14px;height:14px;border-radius:50%;background:#6C5CE7;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.25);cursor:pointer;transition:transform 150ms;`;
+    if (isFocused) {
+      el.className = "trip-map-pulse-green";
+      el.style.cssText = `width:18px;height:18px;border-radius:50%;background:#00D2A0;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,210,160,0.4);cursor:pointer;`;
+    } else {
+      el.style.cssText = `width:12px;height:12px;border-radius:50%;background:#9B97B0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer;transition:transform 150ms;`;
+      el.addEventListener("mouseenter", () => { el.style.transform = "scale(1.3)"; });
+      el.addEventListener("mouseleave", () => { el.style.transform = "scale(1)"; });
+    }
     el.title = entry.title;
-    el.addEventListener("mouseenter", () => { el.style.transform = "scale(1.3)"; });
-    el.addEventListener("mouseleave", () => { el.style.transform = "scale(1)"; });
     el.addEventListener("click", (e) => { e.stopPropagation(); if (onPinClick) onPinClick(entry); });
-
     markersRef.current.push(new maplibregl.Marker({ element: el }).setLngLat(lngLat).addTo(map));
   });
 
-  // Transport routes for this day
-  (day.transport || []).forEach((tId, i) => {
-    const t = (trip.transport || []).find(x => x.id === tId);
-    if (!t || !t.from || !t.to) return;
-    const from = flip(t.from.coords), to = flip(t.to.coords);
+  // Transport routes — color-coded using entry.transitColor
+  const transports = entries.filter(e => e.kind === "transport" && e.fromCoords && e.toCoords);
+  transports.forEach((t, i) => {
+    const from = flip(t.fromCoords), to = flip(t.toCoords);
     bounds.extend(from);
     bounds.extend(to);
     const srcId = "day-route-" + i;
@@ -89,13 +92,13 @@ function addDayLayers(map, day, trip, markersRef, onPinClick) {
         return r;
       })() : [from, to];
       map.addSource(srcId, { type: "geojson", data: { type: "Feature", geometry: { type: "LineString", coordinates: pts } } });
-      const paint = { "line-color": "#6C5CE7", "line-opacity": 0.6, "line-width": 2 };
+      const lineColor = t.transitColor || "#6C5CE7";
+      const paint = { "line-color": lineColor, "line-opacity": 0.8, "line-width": 3 };
       if (isDashed) paint["line-dasharray"] = [4, 3];
       map.addLayer({ id: srcId + "-line", type: "line", source: srcId, paint });
     }
   });
 
-  // Fit bounds to all day pins + routes
   if (!bounds.isEmpty()) {
     map.fitBounds(bounds, { padding: 60, duration: 600, maxZoom: 14 });
   }
@@ -105,9 +108,9 @@ function TripMapView({ trip, selectedDay, focusedEntry, lightMode, onPinClick })
   const containerRef = React.useRef(null);
   const mapRef = React.useRef(null);
   const markersRef = React.useRef([]);
-  const highlightRef = React.useRef(null);
   const initDone = React.useRef(false);
   const prevDayRef = React.useRef(null);
+  const prevFocusRef = React.useRef(null);
 
   const hasMapLibre = typeof maplibregl !== "undefined";
   const styleUrl = lightMode
@@ -138,10 +141,10 @@ function TripMapView({ trip, selectedDay, focusedEntry, lightMode, onPinClick })
     if (!map || !initDone.current) return;
     map.setStyle(styleUrl);
     map.once("style.load", () => {
-      prevDayRef.current = null; // force re-add
+      prevDayRef.current = null;
       if (selectedDay != null) {
         const day = trip.days.find(d => d.dayNum === selectedDay);
-        if (day) addDayLayers(map, day, trip, markersRef, onPinClick);
+        if (day) addDayLayers(map, day, trip, markersRef, onPinClick, focusedEntry);
       } else {
         addOverviewLayers(map, trip, markersRef);
       }
@@ -153,29 +156,29 @@ function TripMapView({ trip, selectedDay, focusedEntry, lightMode, onPinClick })
     const map = mapRef.current;
     if (!map || !initDone.current) return;
 
-    if (highlightRef.current) { highlightRef.current.remove(); highlightRef.current = null; }
-
     if (selectedDay != null) {
       const day = trip.days.find(d => d.dayNum === selectedDay);
-      if (day && prevDayRef.current !== selectedDay) {
-        // Clear overview layers, add day-specific
-        clearSources(map, "route");
-        clearSources(map, "flight-");
-        clearSources(map, "day-route-");
-        addDayLayers(map, day, trip, markersRef, onPinClick);
-        prevDayRef.current = selectedDay;
-      }
+      const focusChanged = focusedEntry !== prevFocusRef.current;
+      const dayChanged = prevDayRef.current !== selectedDay;
 
-      // Focused entry highlight
-      if (focusedEntry && focusedEntry.coords) {
-        map.flyTo({ center: flip(focusedEntry.coords), zoom: 15, duration: 600 });
-        const el = document.createElement("div");
-        el.className = "trip-map-pulse";
-        el.style.cssText = `width:20px;height:20px;border-radius:50%;background:#6C5CE7;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);`;
-        highlightRef.current = new maplibregl.Marker({ element: el }).setLngLat(flip(focusedEntry.coords)).addTo(map);
+      if (day && (dayChanged || focusChanged)) {
+        if (dayChanged) {
+          clearSources(map, "route");
+          clearSources(map, "flight-");
+        }
+        clearSources(map, "day-route-");
+        addDayLayers(map, day, trip, markersRef, onPinClick, focusedEntry);
+        prevDayRef.current = selectedDay;
+        prevFocusRef.current = focusedEntry;
+
+        // Fly to focused entry
+        if (focusedEntry && focusedEntry.coords) {
+          map.flyTo({ center: flip(focusedEntry.coords), zoom: 15, duration: 600 });
+        } else if (dayChanged) {
+          // Day just changed, fitBounds handled by addDayLayers
+        }
       }
     } else {
-      // Overview mode
       if (prevDayRef.current !== null) {
         clearSources(map, "day-route-");
         addOverviewLayers(map, trip, markersRef);
@@ -185,6 +188,7 @@ function TripMapView({ trip, selectedDay, focusedEntry, lightMode, onPinClick })
           map.fitBounds(bounds, { padding: 60, duration: 600 });
         }
         prevDayRef.current = null;
+        prevFocusRef.current = null;
       }
     }
   }, [selectedDay, focusedEntry]);

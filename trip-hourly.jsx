@@ -11,6 +11,9 @@ const HOURLY_TYPE_ICONS = {
   breakfast: "☕", lunch: "🍜", dinner: "🍽️",
 };
 
+// 4 transit colors from the gradient signature (violet, coral, mint, sun)
+const TRANSIT_PALETTE = ["#6C5CE7", "#FF6B6B", "#00D2A0", "#FDCB6E"];
+
 function parseTime(timeStr) {
   if (!timeStr) return 99;
   const match = timeStr.match(/(\d{1,2}):(\d{2})/);
@@ -98,12 +101,15 @@ function buildTimelineEntries(day, trip) {
     });
   }
 
-  // Transport
+  // Transport — assign rotating transit colors from palette
+  let transitIdx = 0;
   (day.transport || []).forEach(tId => {
     const t = (trip.transport || []).find(x => x.id === tId);
     if (!t) return;
     const depTime = t.depart ? t.depart.slice(11, 16) : null;
     const arrTime = t.arrive ? t.arrive.slice(11, 16) : null;
+    const transitColor = TRANSIT_PALETTE[transitIdx % TRANSIT_PALETTE.length];
+    transitIdx++;
     entries.push({
       sortTime: parseTime(depTime), kind: "transport", type: t.type,
       icon: HOURLY_TYPE_ICONS[t.type] || "🚗",
@@ -111,8 +117,9 @@ function buildTimelineEntries(day, trip) {
       time: depTime && arrTime ? `${depTime} → ${arrTime}` : t.type,
       subtitle: `${t.from.name} → ${t.to.name}`,
       status: t.status, jrPass: t.jrPass,
-      color: "#9B97B0", coords: t.to.coords, data: t,
+      color: transitColor, coords: t.to.coords, data: t,
       fromCoords: t.from.coords, toCoords: t.to.coords,
+      transitColor,
     });
   });
 
@@ -223,6 +230,7 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
               key={i}
               ref={isFocused ? focusRef : null}
               className={`td-hourly__entry td-hourly__entry--clickable ${isFocused ? "td-hourly__entry--focused" : ""}`}
+              style={entry.transitColor ? { "--dot-color": entry.transitColor, "--line-color": entry.transitColor } : {}}
               onClick={() => { if (onActivityClick) onActivityClick(entry); }}
             >
               {/* Time marker column */}

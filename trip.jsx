@@ -227,14 +227,25 @@ function TripView({ trips, lightMode }) {
         {/* Map panel (wide: always visible; narrow: hidden) */}
         {isWide && (
           <div className="trip-map-panel" style={{ flex: `0 0 ${(1 - splitRatio) * 100}%` }}>
-            {/* Inline focus panel pushes map down on desktop */}
+            {/* Drawer pushes map down on desktop */}
             {focusedEntry && (
-              <div className="trip-focus-bar">
-                <span className="trip-focus-bar__icon">{focusedEntry.icon}</span>
-                <span className="trip-focus-bar__title">{focusedEntry.title}</span>
-                {focusedEntry.time && <span className="trip-focus-bar__time">{focusedEntry.time}</span>}
-                {focusedEntry.cost && <span className="trip-focus-bar__cost">{focusedEntry.cost}</span>}
-                <button className="trip-focus-bar__close" onClick={handleFocusClose}>✕</button>
+              <div className="trip-drawer-inline">
+                <div className="trip-drawer-inline__header">
+                  <span className="trip-drawer-inline__icon">{focusedEntry.icon}</span>
+                  <span className="trip-drawer-inline__title">{focusedEntry.title}</span>
+                  <button className="trip-drawer-inline__close" onClick={handleFocusClose}>✕</button>
+                </div>
+                <div className="trip-drawer-inline__meta">
+                  <span className="trip-drawer-inline__badge">{focusedEntry.type}</span>
+                  {focusedEntry.time && <span className="trip-drawer-inline__time">{focusedEntry.time}</span>}
+                  {focusedEntry.subtitle && <span className="trip-drawer-inline__subtitle">{focusedEntry.subtitle}</span>}
+                </div>
+                {focusedEntry.cost && <div className="trip-drawer-inline__cost">{focusedEntry.cost}</div>}
+                {focusedEntry.status && <div className="trip-drawer-inline__status">Status: {focusedEntry.status}{focusedEntry.data && focusedEntry.data.ref ? ` · ${focusedEntry.data.ref}` : ""}</div>}
+                {focusedEntry.jrPass && <div className="trip-drawer-inline__jr">🎫 JR Pass covered</div>}
+                {focusedEntry.coords && (
+                  <a className="trip-drawer-inline__maps" href={`https://www.google.com/maps/search/?api=1&query=${focusedEntry.coords[0]},${focusedEntry.coords[1]}`} target="_blank" rel="noopener">📍 Open in Maps</a>
+                )}
               </div>
             )}
             <div className="trip-map-container">
