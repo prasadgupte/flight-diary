@@ -1638,6 +1638,8 @@ function App() {
   const [focusedRoute, setFocusedRoute] = useState(null);
   const [focusedCity, setFocusedCity] = useState(null);
   const [focusedTrip, setFocusedTrip] = useState(null);
+  const [focusedActivityType, setFocusedActivityType] = useState(null);
+  const [tripViewMode, setTripViewMode] = useState("day");
   const [focusedReason, setFocusedReason] = useState(null);
   const [focusedClass, setFocusedClass] = useState(null);
   const [focusedSeatType, setFocusedSeatType] = useState(null);
@@ -1673,8 +1675,9 @@ function App() {
   const clearFocus = () => {
     setFocusedAirport(null); setFocusedCountry(null); setFocusedAirline(null);
     setFocusedAircraft(null); setFocusedRoute(null); setFocusedCity(null);
-    setFocusedTrip(null); setFocusedReason(null); setFocusedClass(null);
-    setFocusedSeatType(null); setDetailView(null); setSelectedFlight(null);
+    setFocusedTrip(null); setFocusedActivityType(null); setFocusedReason(null);
+    setFocusedClass(null); setFocusedSeatType(null); setDetailView(null);
+    setSelectedFlight(null);
   };
 
   const toggleFocusCountry = useCallback((iso) => {
@@ -1758,6 +1761,7 @@ function App() {
     clearFocus();
     setYear("all");
     setTripPlaying(false);
+    setTripViewMode("day");
   }, []);
 
   const [lightMode, setLightMode] = useState(() => { const v = localStorage.getItem('flightLightMode'); return v === null ? true : v === '1'; });
@@ -1807,6 +1811,8 @@ function App() {
       if (p.get("al")) setFocusedAirline(p.get("al"));
       if (p.get("ac")) setFocusedAircraft(p.get("ac"));
       if (p.get("tr")) setFocusedTrip(p.get("tr"));
+      if (p.get("at")) setFocusedActivityType(p.get("at"));
+      if (p.get("tvm") === "list") setTripViewMode("list");
       if (p.get("ct")) setFocusedCity(p.get("ct"));
       if (p.get("ro")) {
         const parts = p.get("ro").split("-");
@@ -1836,10 +1842,12 @@ function App() {
     if (focusedAircraft) p.set("ac", focusedAircraft);
     if (focusedRoute) p.set("ro", focusedRoute.from + "-" + focusedRoute.to);
     if (focusedTrip) p.set("tr", focusedTrip);
+    if (focusedActivityType) p.set("at", focusedActivityType);
+    if (tripViewMode !== "day") p.set("tvm", tripViewMode);
     if (focusedCity) p.set("ct", focusedCity);
     const qs = p.toString();
     window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
-  }, [appMode, mode, activeMembers, year, detailView, focusedAirport, focusedCountry, focusedAirline, focusedAircraft, focusedRoute, focusedTrip, focusedCity, arcColorMode, mapColorTheme]);
+  }, [appMode, mode, activeMembers, year, detailView, focusedAirport, focusedCountry, focusedAirline, focusedAircraft, focusedRoute, focusedTrip, focusedActivityType, tripViewMode, focusedCity, arcColorMode, mapColorTheme]);
 
   useEffect(() => {
     const onLoaded = () => setDataReady(true);
@@ -2478,6 +2486,52 @@ function App() {
     return [...m.entries()].sort((a, b) => b[1] - a[1]).map(([name, count]) => ({ value: name, label: acName(name) || name, count }));
   }, [allFlights]);
 
+  // Trip options (sorted newest first)
+  const tripOptions = useMemo(() => {
+    if (!window.TRIPS_DATA) return [];
+    return [...window.TRIPS_DATA]
+      .sort((a, b) => b.dates.start.localeCompare(a.dates.start))
+      .map(t => ({ value: t.slug, label: t.name, count: t.days.length }));
+  }, [dataReady]);
+
+  // Auto-select when only 1 trip
+  useEffect(() => {
+    if (tripOptions.length === 1 && !focusedTrip) setFocusedTrip(tripOptions[0].value);
+  }, [tripOptions]);
+
+  // Clear activity filter when trip changes
+  useEffect(() => { setFocusedActivityType(null); }, [focusedTrip]);
+
+  // Activity type options (grouped by category, with emoji prefixes)
+  const activityTypeOptions = useMemo(() => {
+    if (!window.TRIPS_DATA || !focusedTrip || !window.buildTimelineEntries) return [];
+    const trip = window.TRIPS_DATA.find(t => t.slug === focusedTrip);
+    if (!trip) return [];
+    const counts = {};
+    trip.days.forEach(d => {
+      window.buildTimelineEntries(d, trip).forEach(e => { if (e.type) counts[e.type] = (counts[e.type] || 0) + 1; });
+    });
+    const CATS = [
+      ["Transport", "\u{1F686}", ["flight","train","ferry","car","taxi"]],
+      ["Culture", "\u{1F3EF}", ["temple","shrine","castle","museum","palace","art"]],
+      ["Outdoor", "\u{1F33F}", ["park","garden","nature","theme park","observation","memorial"]],
+      ["Urban", "\u{1F3D9}", ["neighbourhood","market"]],
+      ["Experience", "\u2728", ["experience"]],
+      ["Food", "\u{1F35C}", ["restaurant","street food","food hall"]],
+      ["Meals", "\u{1F37D}", ["breakfast","lunch","dinner"]],
+      ["Stay", "\u{1F3E8}", ["hotel","apartment","ryokan"]],
+    ];
+    const result = [];
+    const seen = new Set();
+    CATS.forEach(([, emoji, types]) => {
+      types.forEach(type => {
+        if (counts[type]) { result.push({ value: type, label: `${emoji} ${type}`, count: counts[type] }); seen.add(type); }
+      });
+    });
+    Object.keys(counts).forEach(type => { if (!seen.has(type)) result.push({ value: type, label: type, count: counts[type] }); });
+    return result;
+  }, [focusedTrip, dataReady]);
+
   // Zoom handler
   const handleZoom = useCallback((dir) => {
     if (mode === "3d" && window.__globe) {
@@ -2893,17 +2947,35 @@ function App() {
           </div>
         )}
 
-        {/* Trip filter — only shown in trips mode */}
-        {appMode === "trips" && window.TRIPS_DATA && window.TRIPS_DATA.length > 0 && (
+        {/* Trip filters — only shown in trips mode */}
+        {appMode === "trips" && (
           <div style={{
             display: "flex", gap: 8, alignItems: "center", flex: 1, minWidth: 0, flexWrap: "wrap",
           }}>
-            <select value={focusedTrip || ""} onChange={(e) => setFocusedTrip(e.target.value || null)} style={selectStyle}>
-              <option value="">All trips</option>
-              {window.TRIPS_DATA.map(t => (
-                <option key={t.slug} value={t.slug}>{t.name}</option>
+            <AutocompleteInput placeholder="Trip" value={focusedTrip}
+              options={tripOptions}
+              onSelect={(v) => setFocusedTrip(v)}
+              onClear={() => setFocusedTrip(null)}
+              renderLabel={(v) => { const t = (window.TRIPS_DATA || []).find(x => x.slug === v); return t ? t.name : v; }}
+            />
+            {/* Day / List toggle */}
+            <div style={{ display: "inline-flex", borderRadius: 8, overflow: "hidden", border: "1px solid var(--t-acc-30)" }}>
+              {[{key:"day",icon:"calendar-days",label:"Day"},{key:"list",icon:"list",label:"List"}].map(v => (
+                <button key={v.key} onClick={() => setTripViewMode(v.key)} style={{
+                  display: "flex", alignItems: "center", gap: 4,
+                  padding: "4px 10px", border: "none", cursor: "pointer",
+                  fontFamily: "var(--font-mono)", fontSize: 11,
+                  background: tripViewMode === v.key ? "var(--t-acc-22)" : "transparent",
+                  color: tripViewMode === v.key ? "var(--t-accent)" : "var(--t-fg3)",
+                }}><LucideIcon name={v.icon} size={12} />{v.label}</button>
               ))}
-            </select>
+            </div>
+            {/* Activity type filter */}
+            <AutocompleteInput placeholder="Activity" value={focusedActivityType}
+              options={activityTypeOptions}
+              onSelect={(v) => setFocusedActivityType(v)}
+              onClear={() => setFocusedActivityType(null)}
+            />
           </div>
         )}
 
@@ -3007,6 +3079,8 @@ function App() {
             onPlayToggle={() => setTripPlaying(p => !p)}
             activeSlug={focusedTrip}
             onSlugChange={setFocusedTrip}
+            tripViewMode={tripViewMode}
+            activityTypeFilter={focusedActivityType}
           />
         ) : (
         <>

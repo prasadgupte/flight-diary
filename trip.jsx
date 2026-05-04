@@ -37,7 +37,7 @@ function TripSelector({ trips, onSelect }) {
   );
 }
 
-function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPlayToggle, activeSlug: activeSlugProp, onSlugChange }) {
+function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPlayToggle, activeSlug: activeSlugProp, onSlugChange, tripViewMode, activityTypeFilter }) {
   const [localSlug, setLocalSlug] = React.useState(trips.length === 1 ? trips[0].slug : null);
   const activeSlug = activeSlugProp != null ? activeSlugProp : localSlug;
   const setActiveSlug = (slug) => { if (onSlugChange) onSlugChange(slug); else setLocalSlug(slug); };
@@ -92,7 +92,7 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
       setSelectedDay(dayNum);
       setFocusedEntry(null);
     }
-    setPlaying(false);
+    if (playing && onPlayToggle) onPlayToggle();
     setActiveGroupIdx(null);
   };
 
@@ -207,7 +207,31 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
       <div className={`trip-main ${isWide ? "trip-main--split" : ""}`}>
         {/* List panel */}
         <div className="trip-content-panel" style={isWide ? { flex: `0 0 ${splitRatio * 100}%` } : {}}>
-          {selectedDayObj ? (
+          {tripViewMode === "list" ? (
+            /* List view: all days in one scrollable list */
+            <div className="trip-list-view">
+              {trip.days.map((dayObj, idx) => {
+                const entries = dayEntries[idx] || [];
+                if (activityTypeFilter && !entries.some(e => e.type === activityTypeFilter)) return null;
+                return (
+                  <div key={dayObj.dayNum}>
+                    {window.TripHourlyTimeline && (
+                      <window.TripHourlyTimeline
+                        day={dayObj}
+                        trip={trip}
+                        onActivityClick={handleActivityClick}
+                        focusedEntry={focusedEntry}
+                        activeGroupIdx={null}
+                        onGroupChange={() => {}}
+                        activeMemberFilter={activeMembers}
+                        activityTypeFilter={activityTypeFilter}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : selectedDayObj ? (
             <div key={selectedDay} className={`trip-day-view trip-day-view--enter-${swipeDir}`}>
               <div className="trip-day-view__header">
                 <div className="trip-day-view__day-badge" style={selectedPhase ? { "--badge-accent": selectedPhase.color } : {}}>
@@ -230,6 +254,7 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
                   activeGroupIdx={activeGroupIdx}
                   onGroupChange={setActiveGroupIdx}
                   activeMemberFilter={activeMembers}
+                  activityTypeFilter={activityTypeFilter}
                 />
               )}
             </div>

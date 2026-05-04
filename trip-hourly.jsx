@@ -140,7 +140,7 @@ function buildGroupTabs(day, trip) {
   }));
 }
 
-function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange, activeMemberFilter }) {
+function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange, activeMemberFilter, activityTypeFilter }) {
   if (!day) return null;
 
   const entries = buildTimelineEntries(day, trip);
@@ -162,6 +162,9 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
       const gMembers = groupTabs[activeGroupIdx].travelers;
       if (entry.kind === "activity" && !et.some(c => gMembers.includes(c))) return false;
     }
+
+    // Activity type filter from header
+    if (activityTypeFilter && entry.type !== activityTypeFilter) return false;
 
     return true;
   });
