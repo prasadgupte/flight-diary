@@ -1663,6 +1663,7 @@ function App() {
   const [quizOpen, setQuizOpen] = useState(false);
   const [autoplayMode, setAutoplayMode] = useState(false);
   const [autoplayState, setAutoplayState] = useState(null);
+  const [tripPlaying, setTripPlaying] = useState(false);
   const mapPanelRef = useRef(null);
   const mainPanelRef = useRef(null);
   const sidebarRef = useRef(null);
@@ -1756,6 +1757,7 @@ function App() {
     setAppMode(newMode);
     clearFocus();
     setYear("all");
+    setTripPlaying(false);
   }, []);
 
   const [lightMode, setLightMode] = useState(() => { const v = localStorage.getItem('flightLightMode'); return v === null ? true : v === '1'; });
@@ -1794,6 +1796,7 @@ function App() {
 
       // mode
       if (p.get("m") === "flights") setAppMode("flights");
+      if (p.get("m") === "trips") setAppMode("trips");
       if (p.get("v") === "2d") setMode("2d");
       if (p.get("arc")) setArcColorMode(p.get("arc"));
       if (p.get("mct")) setMapColorTheme(p.get("mct"));
@@ -2720,7 +2723,7 @@ function App() {
           />
         )}
 
-        {/* Mode dropdown (Countries / Flights / Quiz) */}
+        {/* Mode dropdown (Countries / Flights / Trips / Quiz) */}
         <div style={{ position: "relative", flexShrink: 0 }}>
           <button onClick={() => setShowModeMenu(p => !p)} style={{
             display: "flex", alignItems: "center", gap: 6,
@@ -2730,8 +2733,8 @@ function App() {
             fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500,
             cursor: "pointer", textTransform: "uppercase",
           }}>
-            <span><LucideIcon name={appMode === "countries" ? "globe" : "plane"} size={13} /></span>
-            <span>{appMode === "countries" ? "Countries" : "Flights"} {mode === "3d" ? "◉" : "▭"}</span>
+            <span><LucideIcon name={appMode === "countries" ? "globe" : appMode === "trips" ? "map" : "plane"} size={13} /></span>
+            <span>{appMode === "countries" ? "Countries" : appMode === "trips" ? "Trips" : "Flights"}</span>
             <span style={{ fontSize: 8, opacity: 0.5 }}>▾</span>
           </button>
           {showModeMenu && (
@@ -2753,19 +2756,6 @@ function App() {
                 onMouseLeave={e => e.currentTarget.style.background = appMode === m.key ? "var(--t-acc-15)" : "transparent"}
                 ><span><LucideIcon name={m.icon} size={13} /></span><span>{m.label}</span></button>
               ))}
-              <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
-              {[{key:"3d",icon:"◉",label:"3D Globe"},{key:"2d",icon:"▭",label:"2D Map"}].map(v => (
-                <button key={v.key} onClick={() => { setMode(v.key); setShowModeMenu(false); }} style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  width: "100%", padding: "8px 14px", background: mode === v.key ? "var(--t-acc-15)" : "transparent",
-                  border: "none", color: mode === v.key ? "#A29BFE" : "var(--t-fg2)",
-                  fontFamily: "var(--font-mono)", fontSize: 11, cursor: "pointer", textAlign: "left",
-                  textTransform: "uppercase",
-                }}
-                onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
-                onMouseLeave={e => e.currentTarget.style.background = mode === v.key ? "var(--t-acc-15)" : "transparent"}
-                ><span>{v.icon}</span><span>{v.label}</span></button>
-              ))}
               {window.QuizModal && (
                 <>
                   <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
@@ -2785,20 +2775,39 @@ function App() {
           )}
         </div>
 
+        {/* 2D / 3D toggle — hidden in trips mode */}
+        {appMode !== "trips" && (
+          <button onClick={() => setMode(m => m === "3d" ? "2d" : "3d")} title={mode === "3d" ? "Switch to 2D map" : "Switch to 3D globe"} style={{
+            display: "flex", alignItems: "center", gap: 4,
+            padding: "5px 10px", borderRadius: 999,
+            background: "var(--t-pill-bg)", border: "1px solid var(--t-pill-border)",
+            color: "var(--t-pill-active-txt)",
+            fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500,
+            cursor: "pointer",
+          }}>
+            <span style={{ fontSize: 12 }}>{mode === "3d" ? "◉" : "▭"}</span>
+            <span>{mode === "3d" ? "3D" : "2D"}</span>
+          </button>
+        )}
+
         {/* Autoplay — icon only */}
         <button
-          onClick={autoplayMode ? stopAutoplay : startAutoplay}
-          title={autoplayMode ? "Exit autoplay" : "Play autoplay"}
+          onClick={appMode === "trips"
+            ? () => setTripPlaying(p => !p)
+            : (autoplayMode ? stopAutoplay : startAutoplay)}
+          title={appMode === "trips"
+            ? (tripPlaying ? "Pause trip" : "Play trip")
+            : (autoplayMode ? "Exit autoplay" : "Play autoplay")}
           style={{
             width: 32, height: 32, borderRadius: 999,
-            background: autoplayMode ? "var(--t-acc-45)" : "var(--t-acc-15)",
-            border: "1px solid " + (autoplayMode ? "var(--t-acc-70)" : "var(--t-acc-40)"),
+            background: (autoplayMode || tripPlaying) ? "var(--t-acc-45)" : "var(--t-acc-15)",
+            border: "1px solid " + ((autoplayMode || tripPlaying) ? "var(--t-acc-70)" : "var(--t-acc-40)"),
             color: "var(--t-accent)", fontSize: 13,
             cursor: "pointer", flexShrink: 0,
             display: "flex", alignItems: "center", justifyContent: "center",
             transition: "all 0.2s",
           }}
-        ><LucideIcon name={autoplayMode ? "x" : "play"} size={14} /></button>
+        ><LucideIcon name={autoplayMode ? "x" : (tripPlaying ? "pause" : "play")} size={14} /></button>
 
         {/* Countries filters — only shown in countries mode */}
         {appMode === "countries" && (
@@ -2880,6 +2889,20 @@ function App() {
               <option value="seat_type">Arcs: seat type</option>
               <option value="aircraft_mfr">Arcs: manufacturer</option>
               {activeMembers.size > 1 && <option value="person">Arcs: person</option>}
+            </select>
+          </div>
+        )}
+
+        {/* Trip filter — only shown in trips mode */}
+        {appMode === "trips" && window.TRIPS_DATA && window.TRIPS_DATA.length > 0 && (
+          <div style={{
+            display: "flex", gap: 8, alignItems: "center", flex: 1, minWidth: 0, flexWrap: "wrap",
+          }}>
+            <select value={focusedTrip || ""} onChange={(e) => setFocusedTrip(e.target.value || null)} style={selectStyle}>
+              <option value="">All trips</option>
+              {window.TRIPS_DATA.map(t => (
+                <option key={t.slug} value={t.slug}>{t.name}</option>
+              ))}
             </select>
           </div>
         )}
@@ -2980,6 +3003,10 @@ function App() {
             trips={window.TRIPS_DATA}
             lightMode={lightMode}
             activeMembers={activeMembers}
+            playing={tripPlaying}
+            onPlayToggle={() => setTripPlaying(p => !p)}
+            activeSlug={focusedTrip}
+            onSlugChange={setFocusedTrip}
           />
         ) : (
         <>

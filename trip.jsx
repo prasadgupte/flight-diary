@@ -37,12 +37,14 @@ function TripSelector({ trips, onSelect }) {
   );
 }
 
-function TripView({ trips, lightMode, activeMembers }) {
-  const [activeSlug, setActiveSlug] = React.useState(trips.length === 1 ? trips[0].slug : null);
+function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPlayToggle, activeSlug: activeSlugProp, onSlugChange }) {
+  const [localSlug, setLocalSlug] = React.useState(trips.length === 1 ? trips[0].slug : null);
+  const activeSlug = activeSlugProp != null ? activeSlugProp : localSlug;
+  const setActiveSlug = (slug) => { if (onSlugChange) onSlugChange(slug); else setLocalSlug(slug); };
   const [selectedDay, setSelectedDay] = React.useState(null);
   const [focusedEntry, setFocusedEntry] = React.useState(null);
   const [timelineCollapsed, setTimelineCollapsed] = React.useState(false);
-  const [playing, setPlaying] = React.useState(false);
+  const playing = playingProp != null ? playingProp : false;
   const [prevDay, setPrevDay] = React.useState(null); // for swipe direction
   const [splitRatio, setSplitRatio] = React.useState(0.5); // list:map ratio
   const [activeGroupIdx, setActiveGroupIdx] = React.useState(null); // group tab
@@ -56,6 +58,17 @@ function TripView({ trips, lightMode, activeMembers }) {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  // Reset day/entry selection when trip changes
+  const prevSlugRef = React.useRef(activeSlug);
+  React.useEffect(() => {
+    if (prevSlugRef.current !== activeSlug) {
+      setSelectedDay(null);
+      setFocusedEntry(null);
+      setActiveGroupIdx(null);
+      prevSlugRef.current = activeSlug;
+    }
+  }, [activeSlug]);
 
   const trip = trips.find(t => t.slug === activeSlug);
   if (!trip) return <TripSelector trips={trips} onSelect={setActiveSlug} />;
@@ -132,7 +145,7 @@ function TripView({ trips, lightMode, activeMembers }) {
         dayIdx++;
         entryIdx = 0;
         if (dayIdx >= trip.days.length) {
-          setPlaying(false);
+          if (onPlayToggle) onPlayToggle();
           return;
         }
         setPrevDay(selectedDay);
@@ -291,7 +304,7 @@ function TripView({ trips, lightMode, activeMembers }) {
           onScrub={handleScrub}
           onScrubEnd={handleScrubEnd}
           playing={playing}
-          onPlayToggle={() => setPlaying(!playing)}
+          onPlayToggle={null}
         />
       )}
     </div>
