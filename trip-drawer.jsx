@@ -50,10 +50,10 @@ function TripActivityDrawer({ entry, day, trip, onClose }) {
         {/* Header */}
         <div className="td-drawer__header">
           <div className="td-drawer__title">
-            <span className="td-drawer__icon">{entry.icon}</span>
+            <span className="td-drawer__icon"><LucideIcon name={entry.icon} size={18} /></span>
             {entry.title}
           </div>
-          <button className="td-drawer__close" onClick={handleClose}>✕</button>
+          <button className="td-drawer__close" onClick={handleClose}><LucideIcon name="x" size={16} /></button>
         </div>
 
         {/* Meta */}
@@ -99,7 +99,7 @@ function TripActivityDrawer({ entry, day, trip, onClose }) {
               {data.jrPass && (
                 <div className="td-drawer__detail-row">
                   <span className="td-drawer__detail-label">Pass</span>
-                  <span className="td-drawer__detail-value">🎫 JR Pass covered</span>
+                  <span className="td-drawer__detail-value"><LucideIcon name="ticket" size={12} /> JR Pass covered</span>
                 </div>
               )}
             </div>
@@ -160,7 +160,7 @@ function TripActivityDrawer({ entry, day, trip, onClose }) {
         <div className="td-drawer__links">
           {mapsUrl && (
             <a href={mapsUrl} target="_blank" rel="noopener" className="td-drawer__link">
-              📍 Open in Maps
+              <LucideIcon name="map-pin" size={12} /> Open in Maps
             </a>
           )}
           {data && data.links && Object.entries(data.links).map(([key, url]) => (

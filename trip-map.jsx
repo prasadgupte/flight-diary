@@ -197,7 +197,7 @@ function TripMapView({ trip, selectedDay, focusedEntry, lightMode, onPinClick })
     return (
       <div className="td-map-fallback">
         <div className="td-map-fallback__inner">
-          <div className="td-map-fallback__icon">🗺️</div>
+          <div className="td-map-fallback__icon"><LucideIcon name="map" size={32} /></div>
           <div className="td-map-fallback__title">Loading map...</div>
           <div className="td-map-fallback__hint">MapLibre GL JS required</div>
         </div>

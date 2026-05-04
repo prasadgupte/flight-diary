@@ -1,14 +1,14 @@
 // TripHourlyTimeline — vertical chronological schedule with time markers
 
 const HOURLY_TYPE_ICONS = {
-  flight: "✈️", train: "🚆", ferry: "⛴️", car: "🚗", taxi: "🚕",
-  temple: "⛩️", shrine: "⛩️", castle: "🏰", museum: "🏛️",
-  park: "🌳", garden: "🌸", nature: "🌿", "theme park": "🎢",
-  neighbourhood: "🏘️", market: "🛒", observation: "🔭", memorial: "🕊️",
-  landmark: "🗼", experience: "✨", restaurant: "🍽️",
-  "street food": "🍢", "food hall": "🍱", art: "🎨", palace: "🏯",
-  hotel: "🏨", apartment: "🏠", ryokan: "🏯",
-  breakfast: "☕", lunch: "🍜", dinner: "🍽️",
+  flight: "plane", train: "train-front", ferry: "ship", car: "car", taxi: "taxi",
+  temple: "landmark", shrine: "landmark", castle: "castle", museum: "building-2",
+  park: "tree-pine", garden: "flower-2", nature: "leaf", "theme park": "ferris-wheel",
+  neighbourhood: "building", market: "shopping-bag", observation: "telescope", memorial: "heart",
+  landmark: "landmark", experience: "sparkles", restaurant: "utensils-crossed",
+  "street food": "utensils", "food hall": "utensils", art: "palette", palace: "building-2",
+  hotel: "hotel", apartment: "house", ryokan: "building-2",
+  breakfast: "coffee", lunch: "soup", dinner: "utensils-crossed",
 };
 
 // 4 transit colors from the gradient signature (violet, coral, mint, sun)
@@ -51,7 +51,7 @@ function buildTimelineEntries(day, trip) {
   if (prevAccom && (!accom || prevAccom.id !== accom.id)) {
     entries.push({
       sortTime: 0, kind: "checkout", type: "checkout",
-      icon: "🚪", title: `Checkout: ${prevAccom.name}`,
+      icon: "door-open", title: `Checkout: ${prevAccom.name}`,
       timeLabel: prevAccom.dates.out === day.date ? "Checkout" : "TBD",
       timeLabelRed: prevAccom.dates.out !== day.date,
       subtitle: prevAccom.type, color: "#9B97B0", coords: prevAccom.coords, data: prevAccom,
@@ -62,7 +62,7 @@ function buildTimelineEntries(day, trip) {
   if (accom && accom.dates.in < day.date) {
     entries.push({
       sortTime: 0.1, kind: "accommodation", type: accom.type || "hotel",
-      icon: HOURLY_TYPE_ICONS[accom.type] || "🏨", title: accom.name,
+      icon: HOURLY_TYPE_ICONS[accom.type] || "hotel", title: accom.name,
       timeLabel: "Staying",
       subtitle: [accom.status, accom.ref ? `ref ${accom.ref}` : null].filter(Boolean).join(" · "),
       color: "#9B97B0", coords: accom.coords, data: accom,
@@ -73,7 +73,7 @@ function buildTimelineEntries(day, trip) {
   if (accom && accom.dates.in === day.date) {
     entries.push({
       sortTime: 22, kind: "checkin", type: accom.type || "hotel",
-      icon: "🏨", title: `Check-in: ${accom.name}`,
+      icon: "hotel", title: `Check-in: ${accom.name}`,
       timeLabel: "Check-in",
       time: `${accom.dates.in} → ${accom.dates.out}`,
       subtitle: [accom.status, accom.ref ? `ref ${accom.ref}` : null].filter(Boolean).join(" · "),
@@ -92,7 +92,7 @@ function buildTimelineEntries(day, trip) {
     transitIdx++;
     entries.push({
       sortTime: parseTime(depTime), kind: "transport", type: t.type,
-      icon: HOURLY_TYPE_ICONS[t.type] || "🚗",
+      icon: HOURLY_TYPE_ICONS[t.type] || "car",
       title: `${t.airline || t.subtype || t.type}${t.number ? " " + t.number : ""}`,
       time: depTime && arrTime ? `${depTime} → ${arrTime}` : t.type,
       subtitle: `${t.from.name} → ${t.to.name}`,
@@ -108,7 +108,7 @@ function buildTimelineEntries(day, trip) {
     const startTime = a.time ? a.time.split("–")[0].split("-")[0].trim() : null;
     entries.push({
       sortTime: parseTime(startTime), kind: "activity", type: a.type || "experience",
-      icon: HOURLY_TYPE_ICONS[a.type] || "✨", title: a.name,
+      icon: HOURLY_TYPE_ICONS[a.type] || "sparkles", title: a.name,
       time: a.time || "", cost: formatCost(a.cost),
       color: "#9B97B0", coords: a.coords, data: a, activityIndex: idx,
       travelers: a.travelers || null,
@@ -120,7 +120,7 @@ function buildTimelineEntries(day, trip) {
     const mealTimes = { breakfast: 8, lunch: 12.5, dinner: 19 };
     entries.push({
       sortTime: mealTimes[m.slot] || 12, kind: "meal", type: m.type || m.slot,
-      icon: HOURLY_TYPE_ICONS[m.slot] || "🍽️", title: m.name,
+      icon: HOURLY_TYPE_ICONS[m.slot] || "utensils-crossed", title: m.name,
       time: m.slot, color: "#9B97B0", data: m,
     });
   });
@@ -237,7 +237,7 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
               {/* Content */}
               <div className="td-hourly__entry-content">
                 <div className="td-hourly__entry-top">
-                  <span className="td-hourly__entry-icon">{entry.icon}</span>
+                  <span className="td-hourly__entry-icon"><LucideIcon name={entry.icon} size={14} /></span>
                   <span className="td-hourly__entry-title">{entry.title}</span>
                   {/* Group pills inline */}
                   {pills && pills.map(p => (
@@ -254,7 +254,7 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
                       {entry.status}
                     </span>
                   )}
-                  {entry.jrPass && <span className="td-hourly__entry-jr">🎫 JR Pass</span>}
+                  {entry.jrPass && <span className="td-hourly__entry-jr"><LucideIcon name="ticket" size={12} /> JR Pass</span>}
                 </div>
               </div>
             </div>
@@ -263,7 +263,7 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
       </div>
 
       {day.notes && (
-        <div className="td-hourly__notes">💡 {day.notes}</div>
+        <div className="td-hourly__notes"><LucideIcon name="lightbulb" size={13} /> {day.notes}</div>
       )}
     </div>
   );

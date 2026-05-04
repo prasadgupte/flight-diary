@@ -83,7 +83,7 @@ function TimelineBar({ groups, currentGroupIndex, playing, speed, onPlayPause, o
         color: "var(--t-accent)", fontSize: 13, cursor: "pointer",
         display: "flex", alignItems: "center", justifyContent: "center",
         flexShrink: 0, transition: "background 0.15s",
-      }}>{playing ? "❚❚" : "▶"}</button>
+      }}><LucideIcon name={playing ? "pause" : "play"} size={13} /></button>
 
       {/* Speed selector */}
       <div style={{ display: "flex", gap: 3, flexShrink: 0 }}>
@@ -170,7 +170,7 @@ function TimelineBar({ groups, currentGroupIndex, playing, speed, onPlayPause, o
       }}
         onMouseEnter={e => e.currentTarget.style.color = "var(--t-fg)"}
         onMouseLeave={e => e.currentTarget.style.color = "var(--t-fg3)"}
-      >✕ exit</button>
+      ><LucideIcon name="x" size={12} /> exit</button>
     </div>
   );
 }

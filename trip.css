@@ -655,7 +655,7 @@
 .td-summary__phase {
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
-  border-left: 3px solid var(--phase-color, var(--t-accent));
+  border-top: 3px solid var(--phase-color, var(--t-accent));
   background: var(--t-surf-70);
 }
 

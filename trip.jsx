@@ -10,7 +10,7 @@ function TripSelector({ trips, onSelect }) {
     return (
       <div className="trip-selector">
         <div style={{ textAlign: "center", color: "var(--t-fg3)" }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>🗺</div>
+          <div style={{ fontSize: 32, marginBottom: 12 }}><LucideIcon name="map" size={32} /></div>
           <div style={{ fontFamily: "var(--font-body)", fontSize: 14 }}>No trips loaded</div>
         </div>
       </div>
@@ -237,9 +237,9 @@ function TripView({ trips, lightMode, activeMembers }) {
             {focusedEntry && (
               <div className="trip-drawer-inline">
                 <div className="trip-drawer-inline__header" onClick={handleFocusClose} style={{ cursor: "pointer" }}>
-                  <span className="trip-drawer-inline__icon">{focusedEntry.icon}</span>
+                  <span className="trip-drawer-inline__icon"><LucideIcon name={focusedEntry.icon} size={16} /></span>
                   <span className="trip-drawer-inline__title">{focusedEntry.title}</span>
-                  <button className="trip-drawer-inline__close" onClick={(e) => { e.stopPropagation(); handleFocusClose(); }}>✕</button>
+                  <button className="trip-drawer-inline__close" onClick={(e) => { e.stopPropagation(); handleFocusClose(); }}><LucideIcon name="x" size={14} /></button>
                 </div>
                 <div className="trip-drawer-inline__meta">
                   <span className="trip-drawer-inline__badge">{focusedEntry.type}</span>
@@ -248,9 +248,9 @@ function TripView({ trips, lightMode, activeMembers }) {
                 </div>
                 {focusedEntry.cost && <div className="trip-drawer-inline__cost">{focusedEntry.cost}</div>}
                 {focusedEntry.status && <div className="trip-drawer-inline__status">Status: {focusedEntry.status}{focusedEntry.data && focusedEntry.data.ref ? ` · ${focusedEntry.data.ref}` : ""}</div>}
-                {focusedEntry.jrPass && <div className="trip-drawer-inline__jr">🎫 JR Pass covered</div>}
+                {focusedEntry.jrPass && <div className="trip-drawer-inline__jr"><LucideIcon name="ticket" size={12} /> JR Pass covered</div>}
                 {focusedEntry.coords && (
-                  <a className="trip-drawer-inline__maps" href={`https://www.google.com/maps/search/?api=1&query=${focusedEntry.coords[0]},${focusedEntry.coords[1]}`} target="_blank" rel="noopener">📍 Open in Maps</a>
+                  <a className="trip-drawer-inline__maps" href={`https://www.google.com/maps/search/?api=1&query=${focusedEntry.coords[0]},${focusedEntry.coords[1]}`} target="_blank" rel="noopener"><LucideIcon name="map-pin" size={12} /> Open in Maps</a>
                 )}
               </div>
             )}
@@ -259,7 +259,7 @@ function TripView({ trips, lightMode, activeMembers }) {
                 <window.TripMapView trip={trip} selectedDay={selectedDay} focusedEntry={focusedEntry} lightMode={lightMode} onPinClick={handleActivityClick} />
               ) : (
                 <div className="td-map-fallback"><div className="td-map-fallback__inner">
-                  <div className="td-map-fallback__icon">🗺️</div>
+                  <div className="td-map-fallback__icon"><LucideIcon name="map" size={32} /></div>
                   <div className="td-map-fallback__title">Map loading...</div>
                 </div></div>
               )}
@@ -271,12 +271,12 @@ function TripView({ trips, lightMode, activeMembers }) {
       {/* Inline focus panel (narrow screens, above timeline) */}
       {!isWide && focusedEntry && (
         <div className="trip-focus-bar">
-          <span className="trip-focus-bar__icon">{focusedEntry.icon}</span>
+          <span className="trip-focus-bar__icon"><LucideIcon name={focusedEntry.icon} size={14} /></span>
           <span className="trip-focus-bar__title">{focusedEntry.title}</span>
           {focusedEntry.time && <span className="trip-focus-bar__time">{focusedEntry.time}</span>}
           {focusedEntry.cost && <span className="trip-focus-bar__cost">{focusedEntry.cost}</span>}
-          <a className="trip-focus-bar__maps" href={focusedEntry.coords ? `https://www.google.com/maps/search/?api=1&query=${focusedEntry.coords[0]},${focusedEntry.coords[1]}` : "#"} target="_blank" rel="noopener">📍</a>
-          <button className="trip-focus-bar__close" onClick={handleFocusClose}>✕</button>
+          <a className="trip-focus-bar__maps" href={focusedEntry.coords ? `https://www.google.com/maps/search/?api=1&query=${focusedEntry.coords[0]},${focusedEntry.coords[1]}` : "#"} target="_blank" rel="noopener"><LucideIcon name="map-pin" size={14} /></a>
+          <button className="trip-focus-bar__close" onClick={handleFocusClose}><LucideIcon name="x" size={14} /></button>
         </div>
       )}
 

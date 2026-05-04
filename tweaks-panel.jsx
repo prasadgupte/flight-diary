@@ -237,7 +237,7 @@ function TweaksPanel({ title = 'Tweaks', children }) {
           <b>{title}</b>
           <button className="twk-x" aria-label="Close tweaks"
                   onMouseDown={(e) => e.stopPropagation()}
-                  onClick={dismiss}>✕</button>
+                  onClick={dismiss}><LucideIcon name="x" size={14} /></button>
         </div>
         <div className="twk-body">{children}</div>
       </div>

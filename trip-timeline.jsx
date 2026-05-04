@@ -1,7 +1,7 @@
 // TripTimeline — Multi-lane timeline with draggable scrubber and autoplay
 
 const TL_TRANSPORT_ICONS = {
-  flight: "✈️", train: "🚆", ferry: "⛴️", car: "🚗", taxi: "🚕",
+  flight: "plane", train: "train-front", ferry: "ship", car: "car", taxi: "taxi",
 };
 
 function TripTimeline({ trip, selectedDay, onDayClick, collapsed, onToggleCollapse,
@@ -49,12 +49,12 @@ function TripTimeline({ trip, selectedDay, onDayClick, collapsed, onToggleCollap
       const icons = [];
       (d.transport || []).forEach(tId => {
         const t = (trip.transport || []).find(x => x.id === tId);
-        if (t && t.from && t.to) icons.push({ icon: TL_TRANSPORT_ICONS[t.type] || "🚗", label: `${t.from.name} \u2192 ${t.to.name}` });
+        if (t && t.from && t.to) icons.push({ icon: TL_TRANSPORT_ICONS[t.type] || "car", label: `${t.from.name} \u2192 ${t.to.name}` });
       });
       if (d.accommodation) {
         const prev = days.find(x => x.dayNum === d.dayNum - 1);
         if (!prev || prev.accommodation !== d.accommodation) {
-          icons.push({ icon: "🏨", label: (trip.accommodation || []).find(a => a.id === d.accommodation)?.name || "" });
+          icons.push({ icon: "hotel", label: (trip.accommodation || []).find(a => a.id === d.accommodation)?.name || "" });
         }
       }
       return icons;
@@ -165,7 +165,7 @@ function TripTimeline({ trip, selectedDay, onDayClick, collapsed, onToggleCollap
                 <div key={d.dayNum} className="tl-cell tl-cell--icon" style={{ width: DAY_W }}
                   onClick={() => onDayClick(d.dayNum)}>
                   {iconLane[i].map((ic, j) => (
-                    <span key={j} className="tl-icon" title={ic.label}>{ic.icon}</span>
+                    <span key={j} className="tl-icon" title={ic.label}><LucideIcon name={ic.icon} size={11} /></span>
                   ))}
                 </div>
               ))}

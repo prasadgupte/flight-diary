@@ -204,13 +204,13 @@ function DataQualityPanel({ errors, warnings, onClose }) {
               {warnings.length} warning{warnings.length !== 1 ? "s" : ""}
             </span>
           )}
-          <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--t-fg3)", fontSize: 14, cursor: "pointer", padding: 0, lineHeight: 1 }}>✕</button>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--t-fg3)", fontSize: 14, cursor: "pointer", padding: 0, lineHeight: 1 }}><LucideIcon name="x" size={14} /></button>
         </div>
       </div>
 
       {total === 0 ? (
         <div style={{ padding: "24px 14px", textAlign: "center", color: "var(--t-fg3)", fontSize: 13 }}>
-          ✓ No issues found
+          <LucideIcon name="check" size={13} color="#00D2A0" /> No issues found
         </div>
       ) : (
         <div style={{ padding: "6px 0 8px" }}>
@@ -223,7 +223,7 @@ function DataQualityPanel({ errors, warnings, onClose }) {
                   padding: "5px 14px", display: "flex", gap: 8, alignItems: "flex-start",
                   borderBottom: i < errors.length - 1 ? "1px solid var(--t-over-03)" : "none",
                 }}>
-                  <span style={{ color: "#FF6B6B", fontSize: 11, flexShrink: 0, marginTop: 1 }}>✗</span>
+                  <span style={{ color: "#FF6B6B", fontSize: 11, flexShrink: 0, marginTop: 1 }}><LucideIcon name="x" size={11} color="#FF6B6B" /></span>
                   <div>
                     <div style={{ fontSize: 12, color: "var(--t-fg)", lineHeight: 1.4 }}>{e.msg}</div>
                     <div style={{ fontSize: 10, color: "var(--t-fg3)", fontFamily: "var(--font-mono)", marginTop: 1 }}>{e.loc}</div>
@@ -243,7 +243,7 @@ function DataQualityPanel({ errors, warnings, onClose }) {
                   padding: "5px 14px", display: "flex", gap: 8, alignItems: "flex-start",
                   borderBottom: i < warnings.length - 1 ? "1px solid var(--t-over-03)" : "none",
                 }}>
-                  <span style={{ color: "#FDCB6E", fontSize: 11, flexShrink: 0, marginTop: 1 }}>⚠</span>
+                  <span style={{ color: "#FDCB6E", fontSize: 11, flexShrink: 0, marginTop: 1 }}><LucideIcon name="triangle-alert" size={11} color="#FDCB6E" /></span>
                   <div>
                     <div style={{ fontSize: 12, color: "var(--t-fg)", lineHeight: 1.4 }}>{w.msg}</div>
                     <div style={{ fontSize: 10, color: "var(--t-fg3)", fontFamily: "var(--font-mono)", marginTop: 1 }}>{w.loc}</div>
@@ -379,7 +379,7 @@ function MemberDropdown({ members, activeMembers, onToggle, onSolo, onAll, colla
                     flexShrink: 0, transition: "all 0.15s",
                   }} />
                   {m.name}
-                  {m.hasFlights && <span style={{ fontSize: 10, opacity: active ? 0.8 : 0.3 }}>✈</span>}
+                  {m.hasFlights && <span style={{ fontSize: 10, opacity: active ? 0.8 : 0.3 }}><LucideIcon name="plane" size={10} /></span>}
                 </span>
                 <button onClick={() => { onSolo(m.id); setOpen(false); }} style={{
                   padding: "2px 7px", borderRadius: 999, border: "1px solid var(--t-over-12)",
@@ -542,7 +542,7 @@ function CountryCard({ iso }) {
                   color: been ? "#00D2A0" : "var(--t-fg4)",
                   border: `1px solid ${been ? "rgba(0,210,160,0.25)" : "var(--t-over-06)"}`,
                   title: been ? "visited" : "",
-                }}>{b}{been ? " ✓" : ""}</span>
+                }}>{b}{been ? <> <LucideIcon name="check" size={9} /></> : ""}</span>
               );
             })}
           </div>
@@ -644,12 +644,12 @@ function DetailListView({
           const dest = parts[1] || "";
           const rawLast = parts[parts.length - 1] || "";
           const typeChar = rawLast.slice(-1).toLowerCase();
-          const emoji = typeChar === "f" ? "🌴" : (typeChar === "b" || typeChar === "w") ? "💼" : "✈";
+          const tripIcon = typeChar === "f" ? "tree-palm" : (typeChar === "b" || typeChar === "w") ? "briefcase" : "plane";
           const displayCode = parts.slice(0, -1).join(" ");
           return {
             code: entry.code,
             displayCode,
-            emoji,
+            tripIcon,
             dest,
             year: fullYear,
             month: mm,
@@ -808,8 +808,8 @@ function DetailListView({
         onMouseLeave={e => { e.currentTarget.style.background = isFocused ? "var(--t-acc-12)" : "transparent"; }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ fontSize: 13 }}>{t.emoji} {t.displayCode}</span>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)" }}>✈ {t.flightCount}</span>
+          <span style={{ fontSize: 13 }}><LucideIcon name={t.tripIcon} size={13} /> {t.displayCode}</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--t-fg3)", display: "flex", alignItems: "center", gap: 3 }}><LucideIcon name="plane" size={10} /> {t.flightCount}</span>
         </div>
         {airportLine && <div style={{ ...subStyle, marginTop: 3 }}>{airportLine}</div>}
       </div>
@@ -2245,7 +2245,7 @@ function App() {
         tripMap.set(f.Trip, {
           code: f.Trip,
           dest: parts[1] || "",
-          emoji: typeChar === "f" ? "🌴" : (typeChar === "b" || typeChar === "w") ? "💼" : "✈",
+          tripIcon: typeChar === "f" ? "tree-palm" : (typeChar === "b" || typeChar === "w") ? "briefcase" : "plane",
           sortDate: new Date(fullYear, (mm || 1) - 1, 1),
         });
       }
@@ -2730,7 +2730,7 @@ function App() {
             fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500,
             cursor: "pointer", textTransform: "uppercase",
           }}>
-            <span>{appMode === "countries" ? "🌍" : "✈"}</span>
+            <span><LucideIcon name={appMode === "countries" ? "globe" : "plane"} size={13} /></span>
             <span>{appMode === "countries" ? "Countries" : "Flights"} {mode === "3d" ? "◉" : "▭"}</span>
             <span style={{ fontSize: 8, opacity: 0.5 }}>▾</span>
           </button>
@@ -2741,7 +2741,7 @@ function App() {
               backdropFilter: "blur(12px)", borderRadius: 10, padding: "6px 0", minWidth: 140,
               boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
             }}>
-              {[{key:"countries",icon:"🌍",label:"Countries"},{key:"flights",icon:"✈",label:"Flights"},{key:"trips",icon:"🗺",label:"Trips"}].map(m => (
+              {[{key:"countries",icon:"globe",label:"Countries"},{key:"flights",icon:"plane",label:"Flights"},{key:"trips",icon:"map",label:"Trips"}].map(m => (
                 <button key={m.key} onClick={() => { switchMode(m.key); setShowModeMenu(false); }} style={{
                   display: "flex", alignItems: "center", gap: 8,
                   width: "100%", padding: "8px 14px", background: appMode === m.key ? "var(--t-acc-15)" : "transparent",
@@ -2751,7 +2751,7 @@ function App() {
                 }}
                 onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
                 onMouseLeave={e => e.currentTarget.style.background = appMode === m.key ? "var(--t-acc-15)" : "transparent"}
-                ><span>{m.icon}</span><span>{m.label}</span></button>
+                ><span><LucideIcon name={m.icon} size={13} /></span><span>{m.label}</span></button>
               ))}
               <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" }} />
               {[{key:"3d",icon:"◉",label:"3D Globe"},{key:"2d",icon:"▭",label:"2D Map"}].map(v => (
@@ -2778,7 +2778,7 @@ function App() {
                   }}
                   onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                  ><span>🎯</span><span>Quiz</span></button>
+                  ><span><LucideIcon name="target" size={13} /></span><span>Quiz</span></button>
                 </>
               )}
             </div>
@@ -2798,7 +2798,7 @@ function App() {
             display: "flex", alignItems: "center", justifyContent: "center",
             transition: "all 0.2s",
           }}
-        >{autoplayMode ? "✕" : "▶"}</button>
+        ><LucideIcon name={autoplayMode ? "x" : "play"} size={14} /></button>
 
         {/* Countries filters — only shown in countries mode */}
         {appMode === "countries" && (
@@ -2890,7 +2890,7 @@ function App() {
           background: "var(--t-surf-70)", backdropFilter: "blur(8px)",
           color: "var(--t-accent)", fontSize: 14, cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-        }}>{lightMode ? "🌙" : "☀️"}</button>
+        }}><LucideIcon name={lightMode ? "moon" : "sun"} size={14} /></button>
 
         {/* Overflow menu — 3D/2D, reload, errors, save */}
         <div style={{ position: "relative", flexShrink: 0 }}>
@@ -2917,7 +2917,7 @@ function App() {
               }}
               onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-              ><span>🔄</span><span>Refresh data</span></button>
+              ><span><LucideIcon name="refresh-cw" size={13} /></span><span>Refresh data</span></button>
               {/* Save */}
               <button onClick={exportMapOnly} style={{
                 display: "flex", alignItems: "center", gap: 8, width: "100%",
@@ -2927,7 +2927,7 @@ function App() {
               }}
               onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-              ><span>💾</span><span>Save image</span></button>
+              ><span><LucideIcon name="download" size={13} /></span><span>Save image</span></button>
               <button onClick={exportMapAndStats} style={{
                 display: "flex", alignItems: "center", gap: 8, width: "100%",
                 padding: "8px 14px", background: "transparent", border: "none",
@@ -2936,7 +2936,7 @@ function App() {
               }}
               onMouseEnter={e => e.currentTarget.style.background = "var(--t-acc-12)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-              ><span>🖼</span><span>Save map + stats</span></button>
+              ><span><LucideIcon name="image" size={13} /></span><span>Save map + stats</span></button>
               {/* Errors */}
               {dataReady && (() => {
                 const errCount = dataQuality.errorCount;
@@ -2956,7 +2956,7 @@ function App() {
                     }}
                     onMouseEnter={e => e.currentTarget.style.background = "rgba(255,107,107,0.08)"}
                     onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                    ><span>⚠</span><span>{total} issue{total !== 1 ? "s" : ""}</span></button>
+                    ><span><LucideIcon name="triangle-alert" size={13} /></span><span>{total} issue{total !== 1 ? "s" : ""}</span></button>
                   </>
                 );
               })()}
@@ -3644,7 +3644,7 @@ function App() {
                           return (
                             <div key={t.code} onClick={() => toggleFocusTrip(t.code)} {...hover}
                               style={{ ...rowBase, ...(isFocused ? focused : {}) }}>
-                              <span style={{ marginRight: 6 }}>{t.emoji}</span>
+                              <span style={{ marginRight: 6 }}><LucideIcon name={t.tripIcon} size={12} /></span>
                               <span style={{ fontFamily: "var(--font-mono)", fontSize: 11 }}>{t.dest}</span>
                               <span style={{ fontSize: 11, color: "var(--t-fg3)", marginLeft: 5 }}>{t.sortDate.getFullYear()}</span>
                               <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "var(--t-fg4)", marginLeft: "auto" }}>{t.code}</span>

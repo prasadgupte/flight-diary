@@ -3,7 +3,7 @@ const { useState, useEffect } = React;
 
 /* ── Utilities ─────────────────────────────────────────────────────────────── */
 function flagEmoji(iso2) {
-  if (!iso2 || iso2.length !== 2) return "🌍";
+  if (!iso2 || iso2.length !== 2) return "?";
   return String.fromCodePoint(
     ...iso2.toUpperCase().split("").map(c => 0x1F1E6 + c.charCodeAt(0) - 65)
   );
@@ -305,7 +305,7 @@ function QuizModal({ flights, onClose }) {
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: "var(--t-accent)", letterSpacing: "0.05em" }}>
-            ✈ FLIGHT QUIZ
+            <LucideIcon name="plane" size={14} /> FLIGHT QUIZ
           </span>
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
             {!done && (
@@ -313,7 +313,7 @@ function QuizModal({ flights, onClose }) {
                 Q {idx + 1}/{total} · {score} pt{score !== 1 ? "s" : ""}
               </span>
             )}
-            <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--t-fg3)", fontSize: 16, cursor: "pointer", padding: "0 2px", lineHeight: 1 }}>✕</button>
+            <button onClick={onClose} style={{ background: "none", border: "none", color: "var(--t-fg3)", fontSize: 16, cursor: "pointer", padding: "0 2px", lineHeight: 1 }}><LucideIcon name="x" size={16} /></button>
           </div>
         </div>
 
@@ -321,7 +321,7 @@ function QuizModal({ flights, onClose }) {
           /* ── End screen ── */
           <div style={{ textAlign: "center", padding: "24px 0 8px" }}>
             <div style={{ fontSize: 52, marginBottom: 14 }}>
-              {score >= 9 ? "🏆" : score >= 7 ? "🥇" : score >= 5 ? "🥈" : "🧭"}
+              <LucideIcon name={score >= 9 ? "trophy" : score >= 7 ? "medal" : score >= 5 ? "award" : "compass"} size={52} />
             </div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 700, color: "var(--t-accent)", marginBottom: 6 }}>
               {score}/{total}
@@ -373,8 +373,8 @@ function QuizModal({ flights, onClose }) {
                     {i + 1}
                   </span>
                   {opt.label}
-                  {answered && opt.correct && <span style={{ marginLeft: "auto", fontSize: 12 }}>✓</span>}
-                  {answered && !opt.correct && i === chosen && <span style={{ marginLeft: "auto", fontSize: 12 }}>✗</span>}
+                  {answered && opt.correct && <span style={{ marginLeft: "auto" }}><LucideIcon name="check" size={14} color="#00D2A0" /></span>}
+                  {answered && !opt.correct && i === chosen && <span style={{ marginLeft: "auto" }}><LucideIcon name="x" size={14} color="#FF6B6B" /></span>}
                 </button>
               ))}
             </div>
@@ -386,7 +386,7 @@ function QuizModal({ flights, onClose }) {
                 background: isCorrect ? "rgba(0,210,160,0.08)" : "rgba(255,107,107,0.08)",
                 color: isCorrect ? "#00D2A0" : "#FF6B6B", fontSize: 13,
               }}>
-                {isCorrect ? "✓ Correct!" : `✗ Answer: ${q.options.find(o => o.correct)?.label}`}
+                {isCorrect ? <><LucideIcon name="check" size={13} /> Correct!</> : <><LucideIcon name="x" size={13} /> Answer: {q.options.find(o => o.correct)?.label}</>}
               </div>
             )}
 
@@ -397,7 +397,7 @@ function QuizModal({ flights, onClose }) {
                   background: "none", border: "1px solid var(--t-over-10)",
                   borderRadius: 8, padding: "5px 11px", color: showHint ? "#FDCB6E" : "var(--t-fg3)",
                   fontFamily: "var(--font-body)", fontSize: 12, cursor: "pointer",
-                }}>💡 Hint</button>
+                }}><LucideIcon name="lightbulb" size={12} /> Hint</button>
                 {showHint && (
                   <span style={{ fontSize: 12, color: "var(--t-fg2)", fontStyle: "italic" }}>{q.hint}</span>
                 )}
