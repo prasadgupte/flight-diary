@@ -2979,6 +2979,7 @@ function App() {
           <window.TripView
             trips={window.TRIPS_DATA}
             lightMode={lightMode}
+            activeMembers={activeMembers}
           />
         ) : (
         <>

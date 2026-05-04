@@ -128,23 +128,98 @@ function buildTimelineEntries(day, trip) {
   return entries;
 }
 
-// Build group labels for sub-tabs
+// Resolve which group(s) an activity belongs to based on day.groups labels
+function resolveActivityGroups(entry, day, trip) {
+  if (!day.groups || day.groups.length <= 1) return null;
+  // Match by group label containing activity name (heuristic)
+  const matched = [];
+  day.groups.forEach((g, i) => {
+    if (g.label && entry.title && g.label.toLowerCase().includes(entry.title.split(" ")[0].toLowerCase())) {
+      matched.push(i);
+    }
+  });
+  // If no match, it's a shared activity (everyone does it)
+  return matched.length > 0 ? matched : null;
+}
+
+// Build group tabs
 function buildGroupTabs(day, trip) {
   if (!day.groups || day.groups.length <= 1) return null;
   const travelerNames = {};
   (trip.travelers || []).forEach(t => { travelerNames[t.code] = t.name; });
-  return day.groups.map(g => {
-    // Label: if all travelers except one, show "{name} | Everyone else" style
-    const names = g.travelers.map(c => travelerNames[c] || c);
-    return { travelers: g.travelers, label: g.label, tabName: names.join(", ") };
-  });
+  return day.groups.map(g => ({
+    travelers: g.travelers, label: g.label,
+    tabName: g.travelers.map(c => travelerNames[c] || c).join(", "),
+  }));
 }
 
-function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange }) {
+function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange, activeMemberFilter }) {
   if (!day) return null;
 
   const entries = buildTimelineEntries(day, trip);
   const groupTabs = buildGroupTabs(day, trip);
+  const travelerNames = {};
+  (trip.travelers || []).forEach(t => { travelerNames[t.code] = t.name; });
+
+  // Filter entries by active group or member filter
+  const filtered = entries.filter(entry => {
+    // Member filter from header (activeMembers set)
+    if (activeMemberFilter && activeMemberFilter.size > 0 && activeMemberFilter.size < (trip.travelers || []).length) {
+      // Transport/accommodation: always show. Activities: check if any group member matches.
+      if (entry.kind === "activity" && day.groups && day.groups.length > 1) {
+        // Check if this activity's group overlaps with filtered members
+        const activityGroups = day.groups.filter(g =>
+          g.label && entry.title && (
+            g.label.toLowerCase().includes(entry.title.split("(")[0].trim().split(" ")[0].toLowerCase()) ||
+            g.label.toLowerCase().includes(entry.title.toLowerCase().slice(0, 8))
+          )
+        );
+        if (activityGroups.length > 0) {
+          const groupMembers = activityGroups.flatMap(g => g.travelers);
+          if (!groupMembers.some(c => activeMemberFilter.has(c))) return false;
+        }
+      }
+    }
+    // Group tab filter
+    if (activeGroupIdx != null && groupTabs && groupTabs[activeGroupIdx]) {
+      const gMembers = groupTabs[activeGroupIdx].travelers;
+      if (entry.kind === "activity" && day.groups && day.groups.length > 1) {
+        const activityGroups = day.groups.filter(g =>
+          g.label && entry.title && (
+            g.label.toLowerCase().includes(entry.title.split("(")[0].trim().split(" ")[0].toLowerCase()) ||
+            g.label.toLowerCase().includes(entry.title.toLowerCase().slice(0, 8))
+          )
+        );
+        if (activityGroups.length > 0) {
+          const groupMembers = activityGroups.flatMap(g => g.travelers);
+          if (!groupMembers.some(c => gMembers.includes(c))) return false;
+        }
+      }
+    }
+    return true;
+  });
+
+  // Determine group pills for each entry
+  const getGroupPills = (entry) => {
+    if (!day.groups || day.groups.length <= 1) return null;
+    if (entry.kind !== "activity") return null;
+    // Find which groups claim this activity
+    const claiming = [];
+    day.groups.forEach((g, i) => {
+      if (g.label && entry.title) {
+        const firstWord = entry.title.split("(")[0].trim().split(" ")[0].toLowerCase();
+        if (g.label.toLowerCase().includes(firstWord) || g.label.toLowerCase().includes(entry.title.toLowerCase().slice(0, 8))) {
+          claiming.push(i);
+        }
+      }
+    });
+    // If no specific group claims it or all groups claim it → shared, no pill needed
+    if (claiming.length === 0 || claiming.length === day.groups.length) return null;
+    return claiming.map(i => ({
+      idx: i, travelers: day.groups[i].travelers,
+      label: day.groups[i].travelers.map(c => travelerNames[c] || c).join(", "),
+    }));
+  };
 
   const focusRef = React.useRef(null);
   React.useEffect(() => {
@@ -159,7 +234,7 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
         <span className="td-hourly__city">{day.city}</span>
       </div>
 
-      {/* Group sub-tabs */}
+      {/* Group sub-tabs (above timeline line) */}
       {groupTabs && (
         <div className="td-group-tabs">
           <button
@@ -170,24 +245,21 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
           {groupTabs.map((g, i) => (
             <button key={i}
               className={`td-group-tab ${activeGroupIdx === i ? "td-group-tab--active" : ""}`}
-              onClick={(e) => { e.stopPropagation(); onGroupChange && onGroupChange(i); }}>
+              onClick={(e) => { e.stopPropagation(); onGroupChange && onGroupChange(activeGroupIdx === i ? null : i); }}>
               {g.tabName}
             </button>
           ))}
-          {/* Show active group's plan */}
-          {activeGroupIdx != null && groupTabs[activeGroupIdx] && groupTabs[activeGroupIdx].label && (
-            <span className="td-group-tabs__plan">{groupTabs[activeGroupIdx].label}</span>
-          )}
         </div>
       )}
 
       <div className="td-hourly__timeline">
-        {entries.map((entry, i) => {
+        {filtered.map((entry, i) => {
           const isFocused = focusedEntry && entry.title === focusedEntry.title && entry.kind === focusedEntry.kind;
           const timeStr = formatHHMM(entry.sortTime);
+          const pills = getGroupPills(entry);
           return (
             <div
-              key={i}
+              key={entry.title + "-" + i}
               ref={isFocused ? focusRef : null}
               className={`td-hourly__entry td-hourly__entry--clickable ${isFocused ? "td-hourly__entry--focused" : ""}`}
               style={entry.transitColor ? { "--dot-color": entry.transitColor, "--line-color": entry.transitColor } : {}}
@@ -210,6 +282,10 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
                 <div className="td-hourly__entry-top">
                   <span className="td-hourly__entry-icon">{entry.icon}</span>
                   <span className="td-hourly__entry-title">{entry.title}</span>
+                  {/* Group pills inline */}
+                  {pills && pills.map(p => (
+                    <span key={p.idx} className="td-hourly__group-pill">{p.label}</span>
+                  ))}
                   <span className="td-hourly__entry-badge">{entry.type}</span>
                 </div>
                 <div className="td-hourly__entry-meta">

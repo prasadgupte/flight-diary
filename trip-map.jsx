@@ -65,9 +65,9 @@ function addDayLayers(map, day, trip, markersRef, onPinClick, focusedEntry) {
       el.className = "trip-map-pulse-green";
       el.style.cssText = `width:18px;height:18px;border-radius:50%;background:#00D2A0;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,210,160,0.4);cursor:pointer;`;
     } else {
-      el.style.cssText = `width:12px;height:12px;border-radius:50%;background:#9B97B0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer;transition:transform 150ms;`;
-      el.addEventListener("mouseenter", () => { el.style.transform = "scale(1.3)"; });
-      el.addEventListener("mouseleave", () => { el.style.transform = "scale(1)"; });
+      el.style.cssText = `width:12px;height:12px;border-radius:50%;background:#9B97B0;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer;transition:box-shadow 150ms;`;
+      el.addEventListener("mouseenter", () => { el.style.boxShadow = "0 0 0 4px rgba(108,92,231,0.3), 0 1px 4px rgba(0,0,0,0.2)"; });
+      el.addEventListener("mouseleave", () => { el.style.boxShadow = "0 1px 4px rgba(0,0,0,0.2)"; });
     }
     el.title = entry.title;
     el.addEventListener("click", (e) => { e.stopPropagation(); if (onPinClick) onPinClick(entry); });

@@ -410,6 +410,20 @@
   border-color: var(--t-acc-30);
 }
 
+/* Group pills inline with activity name */
+.td-hourly__group-pill {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--t-acc-06);
+  color: var(--t-fg3);
+  border: 1px solid var(--t-over-08);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .td-group-tabs__plan {
   font-family: var(--font-body);
   font-size: 12px;
@@ -700,6 +714,9 @@
   overflow-y: hidden;
   padding: 0 var(--space-2) var(--space-2);
   scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 .tl-scroll::-webkit-scrollbar { height: 3px; }
 .tl-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -848,14 +865,23 @@
 
 .tl-scrubber__handle {
   position: absolute;
-  top: -4px;
-  left: -4px;
-  width: 10px;
-  height: 10px;
+  top: -10px;
+  left: -8px;
+  width: 18px;
+  height: 12px;
   background: var(--t-accent);
-  border-radius: 2px;
-  transform: rotate(45deg);
+  border-radius: 4px 4px 2px 2px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tl-scrubber__handle::after {
+  content: "";
+  width: 8px;
+  height: 2px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 1px;
 }
 
 /* Play button in toggle bar */

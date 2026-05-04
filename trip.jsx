@@ -37,7 +37,7 @@ function TripSelector({ trips, onSelect }) {
   );
 }
 
-function TripView({ trips, lightMode }) {
+function TripView({ trips, lightMode, activeMembers }) {
   const [activeSlug, setActiveSlug] = React.useState(trips.length === 1 ? trips[0].slug : null);
   const [selectedDay, setSelectedDay] = React.useState(null);
   const [focusedEntry, setFocusedEntry] = React.useState(null);
@@ -84,7 +84,12 @@ function TripView({ trips, lightMode }) {
   };
 
   const handleActivityClick = (entry) => {
-    setFocusedEntry(entry);
+    // Toggle: clicking same entry closes it, clicking different opens it
+    if (focusedEntry && entry.title === focusedEntry.title && entry.kind === focusedEntry.kind) {
+      setFocusedEntry(null);
+    } else {
+      setFocusedEntry(entry);
+    }
   };
 
   const handleFocusClose = () => {
@@ -211,6 +216,7 @@ function TripView({ trips, lightMode }) {
                   focusedEntry={focusedEntry}
                   activeGroupIdx={activeGroupIdx}
                   onGroupChange={setActiveGroupIdx}
+                  activeMemberFilter={activeMembers}
                 />
               )}
             </div>
@@ -230,10 +236,10 @@ function TripView({ trips, lightMode }) {
             {/* Drawer pushes map down on desktop */}
             {focusedEntry && (
               <div className="trip-drawer-inline">
-                <div className="trip-drawer-inline__header">
+                <div className="trip-drawer-inline__header" onClick={handleFocusClose} style={{ cursor: "pointer" }}>
                   <span className="trip-drawer-inline__icon">{focusedEntry.icon}</span>
                   <span className="trip-drawer-inline__title">{focusedEntry.title}</span>
-                  <button className="trip-drawer-inline__close" onClick={handleFocusClose}>✕</button>
+                  <button className="trip-drawer-inline__close" onClick={(e) => { e.stopPropagation(); handleFocusClose(); }}>✕</button>
                 </div>
                 <div className="trip-drawer-inline__meta">
                   <span className="trip-drawer-inline__badge">{focusedEntry.type}</span>
