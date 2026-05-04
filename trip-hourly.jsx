@@ -103,7 +103,7 @@ function buildTimelineEntries(day, trip) {
     });
   });
 
-  // Activities
+  // Activities — include travelers from trip JSON
   (day.activities || []).forEach((a, idx) => {
     const startTime = a.time ? a.time.split("–")[0].split("-")[0].trim() : null;
     entries.push({
@@ -111,6 +111,7 @@ function buildTimelineEntries(day, trip) {
       icon: HOURLY_TYPE_ICONS[a.type] || "✨", title: a.name,
       time: a.time || "", cost: formatCost(a.cost),
       color: "#9B97B0", coords: a.coords, data: a, activityIndex: idx,
+      travelers: a.travelers || null,
     });
   });
 
@@ -126,20 +127,6 @@ function buildTimelineEntries(day, trip) {
 
   entries.sort((a, b) => a.sortTime - b.sortTime);
   return entries;
-}
-
-// Resolve which group(s) an activity belongs to based on day.groups labels
-function resolveActivityGroups(entry, day, trip) {
-  if (!day.groups || day.groups.length <= 1) return null;
-  // Match by group label containing activity name (heuristic)
-  const matched = [];
-  day.groups.forEach((g, i) => {
-    if (g.label && entry.title && g.label.toLowerCase().includes(entry.title.split(" ")[0].toLowerCase())) {
-      matched.push(i);
-    }
-  });
-  // If no match, it's a shared activity (everyone does it)
-  return matched.length > 0 ? matched : null;
 }
 
 // Build group tabs
@@ -161,64 +148,34 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
   const travelerNames = {};
   (trip.travelers || []).forEach(t => { travelerNames[t.code] = t.name; });
 
-  // Filter entries by active group or member filter
+  // Filter entries using entry.travelers (from trip JSON)
   const filtered = entries.filter(entry => {
-    // Member filter from header (activeMembers set)
+    const et = entry.travelers || day.travelers; // fallback: everyone on this day
+
+    // Member filter from header
     if (activeMemberFilter && activeMemberFilter.size > 0 && activeMemberFilter.size < (trip.travelers || []).length) {
-      // Transport/accommodation: always show. Activities: check if any group member matches.
-      if (entry.kind === "activity" && day.groups && day.groups.length > 1) {
-        // Check if this activity's group overlaps with filtered members
-        const activityGroups = day.groups.filter(g =>
-          g.label && entry.title && (
-            g.label.toLowerCase().includes(entry.title.split("(")[0].trim().split(" ")[0].toLowerCase()) ||
-            g.label.toLowerCase().includes(entry.title.toLowerCase().slice(0, 8))
-          )
-        );
-        if (activityGroups.length > 0) {
-          const groupMembers = activityGroups.flatMap(g => g.travelers);
-          if (!groupMembers.some(c => activeMemberFilter.has(c))) return false;
-        }
-      }
+      if (entry.kind === "activity" && !et.some(c => activeMemberFilter.has(c))) return false;
     }
+
     // Group tab filter
     if (activeGroupIdx != null && groupTabs && groupTabs[activeGroupIdx]) {
       const gMembers = groupTabs[activeGroupIdx].travelers;
-      if (entry.kind === "activity" && day.groups && day.groups.length > 1) {
-        const activityGroups = day.groups.filter(g =>
-          g.label && entry.title && (
-            g.label.toLowerCase().includes(entry.title.split("(")[0].trim().split(" ")[0].toLowerCase()) ||
-            g.label.toLowerCase().includes(entry.title.toLowerCase().slice(0, 8))
-          )
-        );
-        if (activityGroups.length > 0) {
-          const groupMembers = activityGroups.flatMap(g => g.travelers);
-          if (!groupMembers.some(c => gMembers.includes(c))) return false;
-        }
-      }
+      if (entry.kind === "activity" && !et.some(c => gMembers.includes(c))) return false;
     }
+
     return true;
   });
 
-  // Determine group pills for each entry
+  // Group pills: show traveler names if activity is NOT shared (subset of day travelers)
   const getGroupPills = (entry) => {
     if (!day.groups || day.groups.length <= 1) return null;
     if (entry.kind !== "activity") return null;
-    // Find which groups claim this activity
-    const claiming = [];
-    day.groups.forEach((g, i) => {
-      if (g.label && entry.title) {
-        const firstWord = entry.title.split("(")[0].trim().split(" ")[0].toLowerCase();
-        if (g.label.toLowerCase().includes(firstWord) || g.label.toLowerCase().includes(entry.title.toLowerCase().slice(0, 8))) {
-          claiming.push(i);
-        }
-      }
-    });
-    // If no specific group claims it or all groups claim it → shared, no pill needed
-    if (claiming.length === 0 || claiming.length === day.groups.length) return null;
-    return claiming.map(i => ({
-      idx: i, travelers: day.groups[i].travelers,
-      label: day.groups[i].travelers.map(c => travelerNames[c] || c).join(", "),
-    }));
+    const et = entry.travelers;
+    if (!et) return null;
+    // If same as day travelers → shared, no pill
+    if (et.length === day.travelers.length && et.every(c => day.travelers.includes(c))) return null;
+    // Show the traveler names as a pill
+    return [{ label: et.map(c => travelerNames[c] || c).join(", ") }];
   };
 
   const focusRef = React.useRef(null);
