@@ -1639,6 +1639,7 @@ function App() {
   const [focusedCity, setFocusedCity] = useState(null);
   const [focusedTrip, setFocusedTrip] = useState(null);
   const [focusedActivityType, setFocusedActivityType] = useState(null);
+  const [focusedBooking, setFocusedBooking] = useState(null);
   const [tripViewMode, setTripViewMode] = useState("day");
   const [focusedReason, setFocusedReason] = useState(null);
   const [focusedClass, setFocusedClass] = useState(null);
@@ -1675,7 +1676,7 @@ function App() {
   const clearFocus = () => {
     setFocusedAirport(null); setFocusedCountry(null); setFocusedAirline(null);
     setFocusedAircraft(null); setFocusedRoute(null); setFocusedCity(null);
-    setFocusedTrip(null); setFocusedActivityType(null); setFocusedReason(null);
+    setFocusedTrip(null); setFocusedActivityType(null); setFocusedBooking(null); setFocusedReason(null);
     setFocusedClass(null); setFocusedSeatType(null); setDetailView(null);
     setSelectedFlight(null);
   };
@@ -1812,6 +1813,7 @@ function App() {
       if (p.get("ac")) setFocusedAircraft(p.get("ac"));
       if (p.get("tr")) setFocusedTrip(p.get("tr"));
       if (p.get("at")) setFocusedActivityType(p.get("at"));
+      if (p.get("bk")) setFocusedBooking(p.get("bk"));
       if (p.get("tvm") === "list") setTripViewMode("list");
       if (p.get("ct")) setFocusedCity(p.get("ct"));
       if (p.get("ro")) {
@@ -1843,11 +1845,12 @@ function App() {
     if (focusedRoute) p.set("ro", focusedRoute.from + "-" + focusedRoute.to);
     if (focusedTrip) p.set("tr", focusedTrip);
     if (focusedActivityType) p.set("at", focusedActivityType);
+    if (focusedBooking) p.set("bk", focusedBooking);
     if (tripViewMode !== "day") p.set("tvm", tripViewMode);
     if (focusedCity) p.set("ct", focusedCity);
     const qs = p.toString();
     window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
-  }, [appMode, mode, activeMembers, year, detailView, focusedAirport, focusedCountry, focusedAirline, focusedAircraft, focusedRoute, focusedTrip, focusedActivityType, tripViewMode, focusedCity, arcColorMode, mapColorTheme]);
+  }, [appMode, mode, activeMembers, year, detailView, focusedAirport, focusedCountry, focusedAirline, focusedAircraft, focusedRoute, focusedTrip, focusedActivityType, focusedBooking, tripViewMode, focusedCity, arcColorMode, mapColorTheme]);
 
   useEffect(() => {
     const onLoaded = () => setDataReady(true);
@@ -2499,8 +2502,8 @@ function App() {
     if (tripOptions.length === 1 && !focusedTrip) setFocusedTrip(tripOptions[0].value);
   }, [tripOptions]);
 
-  // Clear activity filter when trip changes
-  useEffect(() => { setFocusedActivityType(null); }, [focusedTrip]);
+  // Clear activity/booking filters when trip changes
+  useEffect(() => { setFocusedActivityType(null); setFocusedBooking(null); }, [focusedTrip]);
 
   // Activity type options (grouped by category, with emoji prefixes)
   const activityTypeOptions = useMemo(() => {
@@ -2512,11 +2515,11 @@ function App() {
       window.buildTimelineEntries(d, trip).forEach(e => { if (e.type) counts[e.type] = (counts[e.type] || 0) + 1; });
     });
     const CATS = [
-      ["Transport", "\u{1F686}", ["flight","train","ferry","car","taxi"]],
-      ["Culture", "\u{1F3EF}", ["temple","shrine","castle","museum","palace","art"]],
-      ["Outdoor", "\u{1F33F}", ["park","garden","nature","theme park","observation","memorial"]],
-      ["Urban", "\u{1F3D9}", ["neighbourhood","market"]],
-      ["Experience", "\u2728", ["experience"]],
+      ["Transport", "\u{1F686}", ["flight","train","ferry","car","taxi","bus","metro"]],
+      ["Culture", "\u{1F3EF}", ["temple","shrine","castle","museum","palace","art","festival","immigration"]],
+      ["Outdoor", "\u{1F33F}", ["park","garden","nature","theme park","observation","memorial","hiking","onsen"]],
+      ["Urban", "\u{1F3D9}", ["neighbourhood","market","shopping"]],
+      ["Experience", "\u2728", ["experience","cruise"]],
       ["Food", "\u{1F35C}", ["restaurant","street food","food hall"]],
       ["Meals", "\u{1F37D}", ["breakfast","lunch","dinner"]],
       ["Stay", "\u{1F3E8}", ["hotel","apartment","ryokan"]],
@@ -2529,6 +2532,26 @@ function App() {
       });
     });
     Object.keys(counts).forEach(type => { if (!seen.has(type)) result.push({ value: type, label: type, count: counts[type] }); });
+    return result;
+  }, [focusedTrip, dataReady]);
+
+  // Booking filter options
+  const bookingOptions = useMemo(() => {
+    if (!window.TRIPS_DATA || !focusedTrip || !window.buildTimelineEntries) return [];
+    const trip = window.TRIPS_DATA.find(t => t.slug === focusedTrip);
+    if (!trip) return [];
+    const counts = { immediate: 0, ASAP: 0, relaxed: 0 };
+    trip.days.forEach(d => {
+      window.buildTimelineEntries(d, trip).forEach(e => {
+        if (e.bookingRequired && e.bookingUrgency && counts[e.bookingUrgency] !== undefined) {
+          counts[e.bookingUrgency]++;
+        }
+      });
+    });
+    const result = [];
+    if (counts.immediate) result.push({ value: "immediate", label: "\u{1F534} Book now", count: counts.immediate });
+    if (counts.ASAP) result.push({ value: "ASAP", label: "\u{1F7E1} Book soon", count: counts.ASAP });
+    if (counts.relaxed) result.push({ value: "relaxed", label: "\u{1F7E2} Book later", count: counts.relaxed });
     return result;
   }, [focusedTrip, dataReady]);
 
@@ -2976,6 +2999,14 @@ function App() {
               onSelect={(v) => setFocusedActivityType(v)}
               onClear={() => setFocusedActivityType(null)}
             />
+            {/* Booking urgency filter */}
+            {bookingOptions.length > 0 && (
+              <AutocompleteInput placeholder="Booking" value={focusedBooking}
+                options={bookingOptions}
+                onSelect={(v) => setFocusedBooking(v)}
+                onClear={() => setFocusedBooking(null)}
+              />
+            )}
           </div>
         )}
 
@@ -3081,6 +3112,7 @@ function App() {
             onSlugChange={setFocusedTrip}
             tripViewMode={tripViewMode}
             activityTypeFilter={focusedActivityType}
+            bookingFilter={focusedBooking}
           />
         ) : (
         <>

@@ -37,7 +37,7 @@ function TripSelector({ trips, onSelect }) {
   );
 }
 
-function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPlayToggle, activeSlug: activeSlugProp, onSlugChange, tripViewMode, activityTypeFilter }) {
+function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPlayToggle, activeSlug: activeSlugProp, onSlugChange, tripViewMode, activityTypeFilter, bookingFilter }) {
   const [localSlug, setLocalSlug] = React.useState(trips.length === 1 ? trips[0].slug : null);
   const activeSlug = activeSlugProp != null ? activeSlugProp : localSlug;
   const setActiveSlug = (slug) => { if (onSlugChange) onSlugChange(slug); else setLocalSlug(slug); };
@@ -213,6 +213,7 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
               {trip.days.map((dayObj, idx) => {
                 const entries = dayEntries[idx] || [];
                 if (activityTypeFilter && !entries.some(e => e.type === activityTypeFilter)) return null;
+                if (bookingFilter && !entries.some(e => e.bookingRequired && e.bookingUrgency === bookingFilter)) return null;
                 return (
                   <div key={dayObj.dayNum}>
                     {window.TripHourlyTimeline && (
@@ -225,6 +226,7 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
                         onGroupChange={() => {}}
                         activeMemberFilter={activeMembers}
                         activityTypeFilter={activityTypeFilter}
+                        bookingFilter={bookingFilter}
                       />
                     )}
                   </div>
@@ -255,6 +257,7 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
                   onGroupChange={setActiveGroupIdx}
                   activeMemberFilter={activeMembers}
                   activityTypeFilter={activityTypeFilter}
+                  bookingFilter={bookingFilter}
                 />
               )}
             </div>

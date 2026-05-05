@@ -2,6 +2,7 @@
 
 const HOURLY_TYPE_ICONS = {
   flight: "plane", train: "train-front", ferry: "ship", car: "car", taxi: "taxi",
+  bus: "bus", metro: "train-front",
   temple: "landmark", shrine: "landmark", castle: "castle", museum: "building-2",
   park: "tree-pine", garden: "flower-2", nature: "leaf", "theme park": "ferris-wheel",
   neighbourhood: "building", market: "shopping-bag", observation: "telescope", memorial: "heart",
@@ -9,6 +10,8 @@ const HOURLY_TYPE_ICONS = {
   "street food": "utensils", "food hall": "utensils", art: "palette", palace: "building-2",
   hotel: "hotel", apartment: "house", ryokan: "building-2",
   breakfast: "coffee", lunch: "soup", dinner: "utensils-crossed",
+  immigration: "shield", festival: "party-popper", onsen: "waves",
+  hiking: "mountain", cruise: "ship", shopping: "shopping-bag",
 };
 
 // 4 transit colors from the gradient signature (violet, coral, mint, sun)
@@ -31,12 +34,21 @@ function formatHHMM(decimalTime) {
 function buildTimelineEntries(day, trip) {
   const entries = [];
   const currency = trip.currency || {};
-  const formatCost = (cost) => {
+  const formatCost = (cost, priceConfirmed, freeReason) => {
     if (!cost) return null;
+    if (cost.amount === 0) {
+      if (freeReason === "free_admission") return "Free";
+      if (freeReason === "included_in_jr_pass") return "JR Pass";
+      if (freeReason === "included_in_hotel") return "Incl.";
+      if (freeReason === "included_in_park_entry") return "Incl.";
+      if (freeReason === "public_space") return null;
+      return null;
+    }
     const rate = currency[cost.currency] || 1;
     const eur = Math.round(cost.amount * rate);
     const sym = cost.currency === "JPY" ? "¥" : cost.currency === "KRW" ? "₩" : cost.currency === "CNY" ? "¥" : "€";
-    return `${sym}${cost.amount.toLocaleString()} (~€${eur})`;
+    const prefix = priceConfirmed === false ? "~" : "";
+    return `${prefix}${sym}${cost.amount.toLocaleString()} (~€${eur})`;
   };
 
 
@@ -77,7 +89,7 @@ function buildTimelineEntries(day, trip) {
       timeLabel: "Check-in",
       time: `${accom.dates.in} → ${accom.dates.out}`,
       subtitle: [accom.status, accom.ref ? `ref ${accom.ref}` : null].filter(Boolean).join(" · "),
-      cost: formatCost(accom.cost), color: "#9B97B0", coords: accom.coords, data: accom,
+      cost: formatCost(accom.cost, accom.price_confirmed), color: "#9B97B0", coords: accom.coords, data: accom,
     });
   }
 
@@ -109,9 +121,14 @@ function buildTimelineEntries(day, trip) {
     entries.push({
       sortTime: parseTime(startTime), kind: "activity", type: a.type || "experience",
       icon: HOURLY_TYPE_ICONS[a.type] || "sparkles", title: a.name,
-      time: a.time || "", cost: formatCost(a.cost),
+      time: a.time || "", cost: formatCost(a.cost, a.price_confirmed, a.free_reason),
       color: "#9B97B0", coords: a.coords, data: a, activityIndex: idx,
       travelers: a.travelers || null,
+      bookingRequired: a.booking_required || false,
+      bookingUrgency: a.booking_urgency || null,
+      bookingType: a.booking_type || null,
+      priceConfirmed: a.price_confirmed,
+      freeReason: a.free_reason,
     });
   });
 
@@ -121,7 +138,10 @@ function buildTimelineEntries(day, trip) {
     entries.push({
       sortTime: mealTimes[m.slot] || 12, kind: "meal", type: m.type || m.slot,
       icon: HOURLY_TYPE_ICONS[m.slot] || "utensils-crossed", title: m.name,
-      time: m.slot, color: "#9B97B0", data: m,
+      time: m.slot, cost: formatCost(m.cost, m.price_confirmed, m.free_reason),
+      color: "#9B97B0", data: m,
+      bookingRequired: m.booking_required || false,
+      bookingUrgency: m.booking_urgency || null,
     });
   });
 
@@ -140,7 +160,7 @@ function buildGroupTabs(day, trip) {
   }));
 }
 
-function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange, activeMemberFilter, activityTypeFilter }) {
+function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange, activeMemberFilter, activityTypeFilter, bookingFilter }) {
   if (!day) return null;
 
   const entries = buildTimelineEntries(day, trip);
@@ -165,6 +185,9 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
 
     // Activity type filter from header
     if (activityTypeFilter && entry.type !== activityTypeFilter) return false;
+
+    // Booking urgency filter
+    if (bookingFilter && (!entry.bookingRequired || entry.bookingUrgency !== bookingFilter)) return false;
 
     return true;
   });
@@ -258,6 +281,11 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
                     </span>
                   )}
                   {entry.jrPass && <span className="td-hourly__entry-jr"><LucideIcon name="ticket" size={12} /> JR Pass</span>}
+                  {entry.bookingRequired && entry.bookingUrgency && (
+                    <span className={`td-hourly__entry-booking td-hourly__entry-booking--${entry.bookingUrgency}`}>
+                      {entry.bookingUrgency === "immediate" ? "Book now" : entry.bookingUrgency === "ASAP" ? "Book soon" : "Book"}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
