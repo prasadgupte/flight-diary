@@ -37,7 +37,7 @@ function TripSelector({ trips, onSelect }) {
   );
 }
 
-function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPlayToggle, activeSlug: activeSlugProp, onSlugChange, tripViewMode, activityTypeFilter, bookingFilter }) {
+function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPlayToggle, activeSlug: activeSlugProp, onSlugChange, tripViewMode, activityTypeFilter, activityGroupFilter, bookingFilter, onActivityGroupFilter }) {
   const [localSlug, setLocalSlug] = React.useState(trips.length === 1 ? trips[0].slug : null);
   const activeSlug = activeSlugProp != null ? activeSlugProp : localSlug;
   const setActiveSlug = (slug) => { if (onSlugChange) onSlugChange(slug); else setLocalSlug(slug); };
@@ -213,6 +213,10 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
               {trip.days.map((dayObj, idx) => {
                 const entries = dayEntries[idx] || [];
                 if (activityTypeFilter && !entries.some(e => e.type === activityTypeFilter)) return null;
+                if (activityGroupFilter && window.ACTIVITY_TAXONOMY) {
+                  const grp = window.ACTIVITY_TAXONOMY.find(g => g.id === activityGroupFilter);
+                  if (grp && !entries.some(e => grp.types.includes(e.type))) return null;
+                }
                 if (bookingFilter && !entries.some(e => e.bookingRequired && e.bookingUrgency === bookingFilter)) return null;
                 return (
                   <div key={dayObj.dayNum}>
@@ -226,6 +230,7 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
                         onGroupChange={() => {}}
                         activeMemberFilter={activeMembers}
                         activityTypeFilter={activityTypeFilter}
+                        activityGroupFilter={activityGroupFilter}
                         bookingFilter={bookingFilter}
                       />
                     )}
@@ -257,12 +262,13 @@ function TripView({ trips, lightMode, activeMembers, playing: playingProp, onPla
                   onGroupChange={setActiveGroupIdx}
                   activeMemberFilter={activeMembers}
                   activityTypeFilter={activityTypeFilter}
+                  activityGroupFilter={activityGroupFilter}
                   bookingFilter={bookingFilter}
                 />
               )}
             </div>
           ) : (
-            window.TripSummary ? <window.TripSummary trip={trip} /> : null
+            window.TripSummary ? <window.TripSummary trip={trip} onActivityGroupFilter={onActivityGroupFilter} /> : null
           )}
         </div>
 

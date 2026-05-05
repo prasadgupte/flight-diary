@@ -23,7 +23,7 @@ echo
 for f in index.html app.jsx data.js globe.jsx charts.jsx map2d.jsx \
          timeline.jsx quiz.jsx tokens.css enrichment.js iso-lookup.js \
          autoplay.jsx tweaks-panel.jsx airport_enrichment.js icons.jsx \
-         trip.jsx trip.css trip-hourly.jsx trip-timeline.jsx trip-drawer.jsx \
+         trip.jsx trip.css trip-hourly.jsx trip-summary.jsx trip-timeline.jsx trip-drawer.jsx \
          trip-map.jsx; do
   upload "$SCRIPT_DIR/$f" "$f"
 done

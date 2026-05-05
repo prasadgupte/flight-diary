@@ -160,13 +160,20 @@ function buildGroupTabs(day, trip) {
   }));
 }
 
-function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange, activeMemberFilter, activityTypeFilter, bookingFilter }) {
+function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGroupIdx, onGroupChange, activeMemberFilter, activityTypeFilter, activityGroupFilter, bookingFilter }) {
   if (!day) return null;
 
   const entries = buildTimelineEntries(day, trip);
   const groupTabs = buildGroupTabs(day, trip);
   const travelerNames = {};
   (trip.travelers || []).forEach(t => { travelerNames[t.code] = t.name; });
+
+  // Resolve group filter to a set of types
+  const groupFilterTypes = React.useMemo(() => {
+    if (!activityGroupFilter || !window.ACTIVITY_TAXONOMY) return null;
+    const grp = window.ACTIVITY_TAXONOMY.find(g => g.id === activityGroupFilter);
+    return grp ? new Set(grp.types) : null;
+  }, [activityGroupFilter]);
 
   // Filter entries using entry.travelers (from trip JSON)
   const filtered = entries.filter(entry => {
@@ -185,6 +192,9 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
 
     // Activity type filter from header
     if (activityTypeFilter && entry.type !== activityTypeFilter) return false;
+
+    // Activity group filter (taxonomy group → set of types)
+    if (groupFilterTypes && !groupFilterTypes.has(entry.type)) return false;
 
     // Booking urgency filter
     if (bookingFilter && (!entry.bookingRequired || entry.bookingUrgency !== bookingFilter)) return false;
@@ -300,35 +310,5 @@ function TripHourlyTimeline({ day, trip, onActivityClick, focusedEntry, activeGr
   );
 }
 
-function TripSummary({ trip }) {
-  if (!trip) return null;
-  const flights = trip.transport ? trip.transport.filter(t => t.type === "flight").length : 0;
-  const trains = trip.transport ? trip.transport.filter(t => t.type === "train").length : 0;
-  const cities = trip.route ? trip.route.length : 0;
-  const countries = trip.phases ? [...new Set(trip.phases.map(p => p.country))].length : 0;
-
-  return (
-    <div className="td-summary">
-      <div className="td-summary__title">Trip Overview</div>
-      <div className="td-summary__stats">
-        <div className="td-summary__stat"><span className="td-summary__stat-num">{trip.days.length}</span><span className="td-summary__stat-label">days</span></div>
-        <div className="td-summary__stat"><span className="td-summary__stat-num">{cities}</span><span className="td-summary__stat-label">cities</span></div>
-        <div className="td-summary__stat"><span className="td-summary__stat-num">{countries}</span><span className="td-summary__stat-label">countries</span></div>
-        <div className="td-summary__stat"><span className="td-summary__stat-num">{flights}</span><span className="td-summary__stat-label">flights</span></div>
-        <div className="td-summary__stat"><span className="td-summary__stat-num">{trains}</span><span className="td-summary__stat-label">trains</span></div>
-      </div>
-      <div className="td-summary__phases">
-        {trip.phases.map(phase => (
-          <div key={phase.id} className="td-summary__phase" style={{ "--phase-color": phase.color }}>
-            <div className="td-summary__phase-name">{phase.name}</div>
-            <div className="td-summary__phase-days">{phase.days.length} {phase.days.length === 1 ? "day" : "days"}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 window.TripHourlyTimeline = TripHourlyTimeline;
-window.TripSummary = TripSummary;
 window.buildTimelineEntries = buildTimelineEntries;

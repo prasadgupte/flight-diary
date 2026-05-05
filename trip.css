@@ -613,10 +613,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: var(--space-6);
+  gap: var(--space-5);
   padding: var(--space-6);
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 .td-summary__title {
@@ -624,6 +624,29 @@
   font-size: 24px;
   font-weight: 600;
   color: var(--t-fg);
+}
+
+/* Sub-tabs */
+.td-summary__tabs {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.td-summary__tabs .td-group-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.td-summary__overview,
+.td-summary__costs,
+.td-summary__actmap {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
 .td-summary__stats {
@@ -662,6 +685,106 @@
   margin-top: var(--space-1);
 }
 
+/* ── Activity Group Chips ── */
+.td-summary__groups-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t-fg3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.td-summary__group-chips {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.td-summary__group-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid color-mix(in srgb, var(--chip-color) 30%, transparent);
+  background: color-mix(in srgb, var(--chip-color) 8%, transparent);
+  color: var(--chip-color);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 150ms, transform 100ms;
+}
+.td-summary__group-chip:hover {
+  background: color-mix(in srgb, var(--chip-color) 18%, transparent);
+  transform: translateY(-1px);
+}
+
+.td-summary__group-chip-label { font-weight: 600; }
+.td-summary__group-chip-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--chip-color) 20%, transparent);
+}
+
+/* ── Type Breakdown ── */
+.td-summary__type-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.td-summary__type-group {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--t-surf-70);
+  border: 1px solid var(--t-over-06);
+}
+
+.td-summary__type-group-header {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.td-summary__type-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.td-summary__type-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--t-acc-06);
+  color: var(--t-fg3);
+  cursor: pointer;
+  transition: background 150ms;
+}
+.td-summary__type-tag:hover { background: var(--t-acc-12); color: var(--t-fg); }
+
+.td-summary__type-tag-count {
+  font-weight: 700;
+  color: var(--t-fg);
+  margin-left: 2px;
+}
+
 .td-summary__phases {
   display: flex;
   gap: var(--space-3);
@@ -687,6 +810,244 @@
   font-family: var(--font-body);
   font-size: 12px;
   color: var(--t-fg3);
+}
+
+/* ── Cost Tab ── */
+.td-cost__grand {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-3);
+}
+.td-cost__grand-label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--t-fg3);
+}
+.td-cost__grand-value {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--t-stat-violet);
+}
+
+.td-cost__cat-row {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.td-cost__cat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 90px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  border-top: 3px solid var(--cat-color);
+  background: var(--t-surf-70);
+  color: var(--cat-color);
+}
+.td-cost__cat-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--t-fg3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.td-cost__cat-value {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--t-fg);
+}
+
+.td-cost__table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--t-over-06);
+}
+
+.td-cost__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+
+.td-cost__th {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--t-fg3);
+  border-bottom: 1px solid var(--t-over-08);
+  background: var(--t-surf-70);
+  white-space: nowrap;
+}
+.td-cost__th--num { text-align: right; }
+.td-cost__th--total { color: var(--t-fg); }
+.td-cost__th--day { width: 40px; }
+.td-cost__th--city { min-width: 100px; }
+
+.td-cost__tr { transition: background 100ms; }
+.td-cost__tr:hover { background: var(--t-acc-06); }
+
+.td-cost__td {
+  padding: var(--space-1) var(--space-3);
+  border-bottom: 1px solid var(--t-over-06);
+  color: var(--t-fg3);
+}
+.td-cost__td--day {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--t-fg);
+}
+.td-cost__td--city {
+  font-weight: 500;
+  color: var(--t-fg);
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.td-cost__td--num {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.td-cost__td--total {
+  font-weight: 700;
+  color: var(--t-fg);
+}
+
+.td-cost__tr--foot {
+  background: var(--t-surf-70);
+}
+.td-cost__tr--foot .td-cost__td {
+  font-weight: 700;
+  color: var(--t-fg);
+  border-top: 2px solid var(--t-over-08);
+  border-bottom: none;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+/* ── Activity Map Tab ── */
+.td-actmap__legend {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  flex-wrap: wrap;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--t-fg3);
+}
+
+.td-actmap__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.td-actmap__legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.td-actmap__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.td-actmap__row--trip {
+  padding: var(--space-3);
+  background: var(--t-surf-70);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--t-over-06);
+}
+
+.td-actmap__label {
+  flex-shrink: 0;
+  width: 120px;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.td-actmap__day-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--t-fg);
+  flex-shrink: 0;
+}
+
+.td-actmap__day-city {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--t-fg3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.td-actmap__bar-wrap { flex: 1; min-width: 0; }
+
+.td-actmap__bar {
+  display: flex;
+  height: 20px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.td-actmap__seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  transition: opacity 150ms;
+}
+.td-actmap__seg:hover { opacity: 0.8; }
+
+.td-actmap__seg-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  white-space: nowrap;
+}
+
+.td-actmap__days {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.td-actmap__row--trip .td-actmap__label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t-fg);
+}
+
+.td-actmap__row--trip .td-actmap__bar { height: 28px; }
+
+@media (max-width: 768px) {
+  .td-actmap__label { width: 60px; }
+  .td-actmap__day-city { display: none; }
+  .td-cost__th--city, .td-cost__td--city { display: none; }
 }
 
 /* ============================================

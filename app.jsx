@@ -1639,6 +1639,7 @@ function App() {
   const [focusedCity, setFocusedCity] = useState(null);
   const [focusedTrip, setFocusedTrip] = useState(null);
   const [focusedActivityType, setFocusedActivityType] = useState(null);
+  const [focusedActivityGroup, setFocusedActivityGroup] = useState(null); // taxonomy group id
   const [focusedBooking, setFocusedBooking] = useState(null);
   const [tripViewMode, setTripViewMode] = useState("day");
   const [focusedReason, setFocusedReason] = useState(null);
@@ -2503,9 +2504,9 @@ function App() {
   }, [tripOptions]);
 
   // Clear activity/booking filters when trip changes
-  useEffect(() => { setFocusedActivityType(null); setFocusedBooking(null); }, [focusedTrip]);
+  useEffect(() => { setFocusedActivityType(null); setFocusedActivityGroup(null); setFocusedBooking(null); }, [focusedTrip]);
 
-  // Activity type options (grouped by category, with emoji prefixes)
+  // Activity type options (grouped by taxonomy)
   const activityTypeOptions = useMemo(() => {
     if (!window.TRIPS_DATA || !focusedTrip || !window.buildTimelineEntries) return [];
     const trip = window.TRIPS_DATA.find(t => t.slug === focusedTrip);
@@ -2514,21 +2515,17 @@ function App() {
     trip.days.forEach(d => {
       window.buildTimelineEntries(d, trip).forEach(e => { if (e.type) counts[e.type] = (counts[e.type] || 0) + 1; });
     });
-    const CATS = [
-      ["Transport", "\u{1F686}", ["flight","train","ferry","car","taxi","bus","metro"]],
-      ["Culture", "\u{1F3EF}", ["temple","shrine","castle","museum","palace","art","festival","immigration"]],
-      ["Outdoor", "\u{1F33F}", ["park","garden","nature","theme park","observation","memorial","hiking","onsen"]],
-      ["Urban", "\u{1F3D9}", ["neighbourhood","market","shopping"]],
-      ["Experience", "\u2728", ["experience","cruise"]],
-      ["Food", "\u{1F35C}", ["restaurant","street food","food hall"]],
-      ["Meals", "\u{1F37D}", ["breakfast","lunch","dinner"]],
-      ["Stay", "\u{1F3E8}", ["hotel","apartment","ryokan"]],
+    const TAX = window.ACTIVITY_TAXONOMY || [
+      { types: ["flight","train","ferry","car","taxi","bus","metro","temple","shrine","castle","museum","palace","art","festival","immigration","park","garden","nature","theme park","observation","memorial","hiking","onsen","neighbourhood","market","shopping","experience","cruise","restaurant","street food","food hall","breakfast","lunch","dinner","hotel","apartment","ryokan"] },
     ];
     const result = [];
     const seen = new Set();
-    CATS.forEach(([, emoji, types]) => {
-      types.forEach(type => {
-        if (counts[type]) { result.push({ value: type, label: `${emoji} ${type}`, count: counts[type] }); seen.add(type); }
+    TAX.forEach(g => {
+      g.types.forEach(type => {
+        if (counts[type] && !seen.has(type)) {
+          result.push({ value: type, label: `${type}`, count: counts[type] });
+          seen.add(type);
+        }
       });
     });
     Object.keys(counts).forEach(type => { if (!seen.has(type)) result.push({ value: type, label: type, count: counts[type] }); });
@@ -3112,7 +3109,19 @@ function App() {
             onSlugChange={setFocusedTrip}
             tripViewMode={tripViewMode}
             activityTypeFilter={focusedActivityType}
+            activityGroupFilter={focusedActivityGroup}
             bookingFilter={focusedBooking}
+            onActivityGroupFilter={(group, type) => {
+              if (type) {
+                setFocusedActivityType(type);
+                setFocusedActivityGroup(null);
+                setTripViewMode("list");
+              } else if (group) {
+                setFocusedActivityGroup(group.id);
+                setFocusedActivityType(null);
+                setTripViewMode("list");
+              }
+            }}
           />
         ) : (
         <>
